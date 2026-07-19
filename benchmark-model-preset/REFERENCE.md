@@ -596,7 +596,36 @@ User's own codeneedle benchmark:
 - **SWE-rebench** (swe-rebench.com, fetched Jun 13) — 110 problems, tool-use agentic eval. Go model ranking: GLM-5.1 50.7% > Kimi K2.6 46.5% > MiniMax M3 45.6%。
 - **Build Fast with AI June 2026 Leaderboard** — 10-model comparison. Rates Qwen3.7 Max as "rational alternative to Opus 4.8 at 1/6 price."
 
-### Fresh Data Delta (Jul 14 2026 — this session)
+### Fresh Data Delta (Jul 18 2026 — this session)
+
+| Finding | Previous (Jul 14) | Live (Jul 18) |
+|---|---|---|
+| **OpenCode Go plan** | 13 models, request-count limits (req/5h, req/week, req/month) | **15 models, DOLLAR-VALUE limits** — limits now defined in $ usage per window, not request count. Cheaper models get more requests per $. Per-request cost computed from model pricing × assumed token mix (e.g. GLM-5.2: 700 in + 52K cached + 150 out → ~$1.40/req). |
+| **Go: Kimi K3** | Not on Go (OpenRouter only, launched Jul 16) | **ADDED to Go** at $3/$15/$0.30 cache. `opencode-go/kimi-k3` OpenAI-compatible endpoint. ~140 req/5h-equivalent (low due to high per-req cost). |
+| **Go: Grok 4.5** | Not on Go | **ADDED to Go** (SpaceXAI, proprietary). `opencode-go/grok-4.5`. |
+| **DeepSWE v1.1** | 10 models (Jul 1) | **16 models (Jul 17)** — added: GPT-5.6 Sol (73% SOTA), GPT-5.6 Terra (70%), **Kimi K3 (69%)**, GPT-5.6 Luna (67%), Grok 4.5 (54%), Muse Spark 1.1. GLM-5.2 still 44%±2%, kimi-k2.7-code still 31%±1%. |
+| **Arena Agent** | Jul 8: 947K sessions, 32 models | **Jul 12: 1M+ sessions, 35 models** — added Grok 4.5, GPT-5.6 Sol, Muse Spark 1.1. |
+| **GLM-5.2 Arena** | +6.54% | **+6.24%** (#9 overall, still #1 open model, Tool Hallucination leader at 1.33% — improved from 1.24%) |
+| **GLM-5.1 Arena** | +1.57% | **+1.19%** |
+| **Kimi K2.7 Code Arena** | +0.13% (recovered) | **−0.76%** (BACK TO NEGATIVE — recovery reversed) |
+| **Qwen3.7 Max Arena** | +0.36% (recovered) | **−0.81%** (BACK TO NEGATIVE — recovery reversed) |
+| **Kimi K2.6 Arena** | -1.61% | **-2.09%** (worse) |
+| **MiMo V2.5 Pro Arena** | -3.71% | **-3.17%** (slight improvement, still negative) |
+| **Minimax M3 Arena** | -3.08% | **-3.23%** (slight decline) |
+| **DeepSeek V4 Flash Arena** | -4.65% | **-4.64%** (unchanged, still worst Go agent) |
+| **AA Intelligence Index (Jul 17)** | GLM-5.2 = 51 | **GLM-5.2 = 51 (unchanged)**. NEW above it: Fable 5 (60), GPT-5.6 Sol (59), **Kimi K3 (57, NEW #3)**, Opus 4.8 (56), GPT-5.6 Terra (55), GPT-5.5 (55), Grok 4.5 (54). **Six labs now above 50** (was 2 in early June). |
+| **Kimi K3 (launched Jul 16)** | Not released | **2.8T params, 1M ctx, AA Intel 57 (#3), DeepSWE 69% (#4)**, AA Coding 76.2, Agentic 50.1. $3/$15 on OpenRouter AND Go. Effective $0.47/M input (93.6% cache hit). **Capacity warning: frequent 429s.** Only supports `reasoning_effort=max` currently. 99.96% uptime. |
+| **GPT-5.6 Sol/Terra/Luna (Jul 10)** | Not released | **NEW** — Sol DeepSWE 73% (new SOTA), Terra 70%, Luna 67%. Sol AA Intel 59 (#2), AA Coding 80 (new SOTA). $5/$30 (Sol), $2.50/$15 (Terra), $1/$6 (Luna). OpenRouter only, NOT on Zen/Go. |
+| **Grok 4.5 (Jul 8)** | Not released | **NEW** — AA Intel 54, DeepSWE 54%. Now on Go AND Zen ($2/$6). |
+| **Muse Spark 1.1 (Jul 10)** | Not released | **NEW** — Meta. AA Intel 51, AA Coding 69 (OpenCode variant). |
+| **AA cost frontier collapsed** | GLM-5.2 cheapest at AA≥50 (~$0.32/task) | **GPT-5.6 Luna $0.21/task, Muse Spark $0.26, Grok 4.5 $0.31** — all cheaper than GLM-5.2 ($0.32) at comparable intelligence. Kimi K3 at $0.94/task. |
+| **z.ai GLM-5.2 quota** | 3× peak / 2× off-peak, 1× off-peak promo thru Sept | **Unchanged** — promo still active, no GLM-5.2.x point release |
+| **MiniMax issue #47** | Passive timer drain bug, open | **STILL OPEN** — no fix shipped as of Jul 18 |
+| **Endpoint health** | Not tested | **14/14 Go models UP** (tested Jul 18 16:37 UTC): glm-5.2, glm-5.1, kimi-k2.7-code, kimi-k2.6, deepseek-v4-pro, deepseek-v4-flash, mimo-v2.5, mimo-v2.5-pro, minimax-m3, minimax-m2.7, minimax-m2.5, qwen3.7-max, qwen3.7-plus, qwen3.6-plus |
+
+**Key insight:** GLM-5.2 is now the **ONLY positive-Arena Go model** (+6.24%). All other Go models dropped back to negative — the Jul 8 recovery in kimi-k2.7-code (+0.13%) and qwen3.7-max (+0.36%) reversed. The gap to the next-best Go agent model widened dramatically. **Kimi K3** (NEW on Go) is the only credible challenger — DeepSWE 69% beats GLM-5.2's 44%, AA Intel 57 beats GLM-5.2's 51 — but Arena not yet evaluated and 429 capacity warnings make it risky for high-volume roles. Best K3 fit: low-volume reasoning slots (Oracle, Council delta).
+
+### Fresh Data Delta (Jul 14 2026)
 
 | Finding | Previous (Jul 13) | Live (Jul 14) |
 |---|---|---|
