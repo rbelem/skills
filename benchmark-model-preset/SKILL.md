@@ -63,6 +63,8 @@ Prerequisite: `npm i -g agent-browser && agent-browser install`. See REFERENCE.m
 - `openrouter_benchmarks source="design-arena"` — UI/UX ELO scores
 - `openrouter_rankings-daily` — model popularity
 
+**Task-specific live eval (spawn-ori-eval):** when static benchmarks disagree, or the deciding metric is the user's own workload, run the `spawn-ori-eval` skill instead of guessing. It spawns Ori as a subprocess to write and grade a throwaway eval on a pinned harness and judge model (`openai/gpt-5.6-terra`), so the bench is identical for every candidate and the score change comes only from the user's agent. Costs real OpenRouter credits (~$4–15/run, its appendix F) — use it to settle close calls between runner-up candidates, not for routine tier audits.
+
 **Provider-specific scraping (librarian + firecrawl):** for subscription plan limits (5-hr caps, weekly caps, multipliers), dispatch a librarian to scrape the provider's docs and pricing pages. Provider docs often hide the real limits behind JavaScript.
 
 ### Step 3: Test Endpoint Health
@@ -91,6 +93,7 @@ Before recommending models, verify they are actually serving inference:
 4. **Compare pricing**: Go (free within limits) vs Zen PAYG vs OpenRouter PAYG vs subscription flat-fee — see REFERENCE.md for rules
 5. **Check context window**: ≥128K for Orchestrator, Fixer
 6. **Check provider health** via OmniRoute dashboard before recommending
+7. **Tie-break with a live eval**: when two candidates are close on DeepSWE/AA and the seat is high-stakes (Oracle, Council, Fixer), run the `spawn-ori-eval` skill on the user's real workload instead of resolving by price alone
 
 ### Step 5: Build the Preset
 ```jsonc
@@ -116,6 +119,7 @@ Switch the active preset and run a real coding task end-to-end. Confirm:
 ## See Also
 
 - [REFERENCE.md](REFERENCE.md) — data sources, pricing tables, pool strategy, cost heuristics, data quality notes, manual scraping guide
+- [spawn-ori-eval](https://openrouter.ai/skills/spawn-ori-eval) — throwaway model eval on a pinned harness (Ori subprocess); live task-specific tie-break for preset choices. Install: `skills add https://openrouter.ai/skills/spawn-ori-eval -s spawn-ori-eval --agent opencode -g`
 - [scripts/fetch-pricing.sh](scripts/fetch-pricing.sh) — automated data fetcher (agent-browser + OpenRouter API)
 - [scripts/test-endpoints.sh](scripts/test-endpoints.sh) — live endpoint health checker for all OpenCode Go models
 - **OpenRouter MCP:** `openrouter_models-list`, `openrouter_benchmarks`, `openrouter_rankings-daily`, `openrouter_model-endpoints`
