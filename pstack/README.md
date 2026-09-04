@@ -1,6 +1,6 @@
 # pstack (OpenCode port)
 
-Port of the **pstack** Cursor plugin by Lauren Tan ([poteto](https://github.com/poteto)) — source: <https://github.com/cursor/plugins/tree/main/pstack>, v0.14.5, MIT (see `LICENSE.upstream`).
+Port of the **pstack** Cursor plugin by Lauren Tan ([poteto](https://github.com/poteto)) — source: <https://github.com/cursor/plugins/tree/main/pstack>, v0.14.8, MIT (see `LICENSE.upstream`).
 
 This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream prose with the mechanical substitutions below.
 
@@ -9,14 +9,14 @@ This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream pro
 | Upstream (Cursor) | Here (OpenCode) |
 |---|---|
 | the `Ask…Question` tool (one token upstream) | `question` tool |
-| Cursor rules file `pstack-models.mdc` (Cursor user config `rules` dir) | `~/.config/opencode/pstack-models.md` |
+| Cursor rules file `pstack-models.md` (Cursor user config `rules` dir) | `~/.config/opencode/pstack-models.md` |
 | Cursor skills paths (user-level `~/…cursor…/skills`, workspace `.cursor`-relative) | `~/.config/opencode/skills/` / `.opencode/skills/` |
-| "Cursor cloud agent" | "background agent" |
-| `generalPurpose` subagent type | `general` |
+| "background agent" | "background agent" |
+| `general` subagent type | `general` |
 | `deslop` skill from `cursor-team-kit` | `stop-slop` skill (`/stop-slop`) |
-| `control-cli` (CLI/TUI verification) | direct CLI runs |
-| `control-ui` / "control skill" (UI verification) | the `agent-browser` skill |
-| Cursor's built-in `create-skill` | the `write-a-skill` skill |
+| direct CLI runs (CLI/TUI verification) | direct CLI runs |
+| the `agent-browser` skill / "control skill" (UI verification) | the `agent-browser` skill |
+| the `write-a-skill` skill | the `write-a-skill` skill |
 | `agent-transcripts/` directory | session transcript store (`opencode` sessions; query via `opencode` session commands, not the filesystem) |
 | Leftover Cursor config paths and "Cursor" product references | adapted to OpenCode equivalents |
 
