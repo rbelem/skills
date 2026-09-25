@@ -1,6 +1,6 @@
 # pstack (OpenCode port)
 
-Port of the **pstack** Cursor plugin by Lauren Tan ([poteto](https://github.com/poteto)) — source: <https://github.com/cursor/plugins/tree/main/pstack>, v0.14.8, MIT (see `LICENSE.upstream`).
+Port of the **pstack** Cursor plugin by Lauren Tan ([poteto](https://github.com/poteto)) — source: <https://github.com/cursor/plugins/tree/main/pstack>, v0.15.5, MIT (see `LICENSE.upstream`).
 
 This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream prose with the mechanical substitutions below.
 
