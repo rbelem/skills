@@ -62,6 +62,22 @@ skills update --global --yes
 
 Without `--yes`, the command prompts for scope.
 
+Known failure mode (skills CLI v1.6.x): the bulk update can report
+`✗ Failed to update <name>` for every entry it finds. Its apply phase
+re-clones with shallow discovery and misses skills stored below the repo
+root. Fall back to one `skills add` per source, naming the skills
+explicitly:
+
+```bash
+skills add <github-repo>.git --skill <name> <name2> --full-depth -g -y < /dev/null
+```
+
+Redirect stdin so the CLI's prompt machinery cannot consume the next
+command in a list. A non-zero exit citing `PromptScript: PromptScript does
+not support global skill installation` is a per-agent-target limitation,
+not a copy failure. Trust the `✓ <name> (copied)` line, then verify the
+folder mtime and the lock file's `updatedAt`.
+
 Remove a global skill:
 
 ```bash
