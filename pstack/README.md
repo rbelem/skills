@@ -22,6 +22,8 @@ This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream pro
 
 `skills/unslop/SKILL.md` additionally carries `metadata: opencode/autoinvoke: "true"`.
 
+Skills with `disable-model-invocation: true` are user-invoked on Cursor via the slash menu. OpenCode (this build) does not derive slash commands from skills, so `commands/<name>.md` wraps each such skill (principles and `recall` excluded) in a slash command that loads the skill by exact id. `agents/` and `commands/` install by symlink like the skills below.
+
 ## Install
 
 ```sh
@@ -31,6 +33,9 @@ ln -s "$PWD/skills/<name>" ~/.config/opencode/skills/<name>   # for each dir und
 # agents
 ln -s "$PWD/agents/poteto-agent.md" ~/.config/opencode/agent/poteto-agent.md
 ln -s "$PWD/agents/comment-sicko.md" ~/.config/opencode/agent/comment-sicko.md
+
+# slash commands (one per user-invocable skill)
+ln -s "$PWD/commands/<name>.md" ~/.config/opencode/command/<name>.md   # for each file under commands/
 ```
 
 ## Not ported
