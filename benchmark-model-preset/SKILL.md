@@ -65,10 +65,98 @@ Released Jul 16; **Arena Agent +10.41% (#4 overall — best open model by far, A
 | **DeepSeek V4 Flash (0731)** | Jul 31 refresh replaced the old weights for **new** pricing; OpenRouter `deepseek/deepseek-v4-flash` (plain) still serves OLD weights (AA 42.1), refresh = `deepseek/deepseek-v4-flash-0731` (AA 51.8, Arena +3.99%) | Pin the `-0731` ID explicitly (or use Go/Zen "DeepSeek V4 Flash", which is the refresh). Plain OR ID silently downgrades quality. Peak/off-peak pricing: off-peak $0.22/$0.66, peak $0.44/$1.32. |
 | **MiniMax Max** | 5-hr + weekly windows, but **passive timer drain bug** (GitHub #47) | Quota can exhaust without active API calls. Heavy fixer work can burn the 5-hr window in 50min–5hr. Use `opencode-go/*` for non-critical work to avoid drain. |
 | **MiniMax Max** | All modalities (text/video/speech/music/image) share one quota pool | Video/speech usage eats LLM budget. |
-| **OpenCode Go** | **Dollar-based usage now**: $12/5h, $30/wk, $60/mo with per-model usage caps ($15 new frontier / $60 legacy) | Request counts vary by model. Cap-conscious model: LongCat-2.0 ($0.30/$1.20, ~57K/mo) and Muse Spark 1.2 Contributor ($0.10/$0.20, ~226K/mo) for high-volume lanes. |
+| **OpenCode Go** | **Per-model dollar caps (Oct 2026)**: each model has a monthly limit ($15 / $30 / $60 / $80); its 5-h cap = 20% of that, weekly = 50%. Go $10/mo, Go Plus $40/mo doubles the caps. Free previews are unlimited (LongCat 2.5 Preview, Step 5 Preview, Cat Jam — limited time). | Budget preset design = spread seats across models so no single bucket is the bottleneck. High-volume read-only seats go on free previews; writers stay on the verified cheap workhorse (glm-5.3-flash, $60 cap, 6,320 req/5h). |
 | **OpenCode Zen** | PAYG — Claude, GPT-5.x, DeepSeek | Use as overflow, not default. GLM-5.2 dropped to $1.40/$4.40; **GLM-5.3 & Qwen3.8 Max NOT on Zen**. |
 | **OpenRouter** | PAYG — many models, but credits can exhaust | Check `testStatus` in OmniRoute before recommending. |
 | **OmniRoute** | Unified gateway; provider `x-omniroute-provider` header in responses reveals actual routing | First `/`-segment in model ID is the **namespace** (e.g., `opencode-go/`, `zai/`, `minimax/`). Use this to verify the model actually hits the intended provider. |
+
+## Go-Only Budget Preset (shipped Oct 15, 2026)
+
+Live in `oh-my-opencode-slim.jsonc` as `presets.budget` (active) with
+`council.presets.budget`; `opencode.jsonc` main model, title agent, and the
+OptChat compactor all point at `opencode-go`. Full inventory + probe results:
+[findings/2026-10-15-benchmark-snapshot.md](findings/2026-10-15-benchmark-snapshot.md).
+
+| Seat | Chain (all `opencode-go/`) | Why |
+|---|---|---|
+| orchestrator | muse-spark-1.3-contributor#high → glm-5.3-flash#high → mimo-v2.6-flash → deepseek-v4.1-flash#high | Muse: same $60 cap but ~226.6K est req/mo vs GLM-Flash ~31.6K (~7×), cache-read 15× cheaper ($0.002 vs $0.03); GLM-Flash fallback |
+| oracle | glm-5.3#max → space-bunny#max → kimi-k3#max | verified DeepSWE 69; cheap $15 caps; K3 as quality escalation |
+| librarian | step-5-preview-free#low → deepseek-v4.1-flash#low → qwen3.8-flash#low | free unlimited; Kingbench 83.75% |
+| explorer | muse-spark-1.3-contributor#high → cat-jam-free#high → mimo-v2.6-flash | Muse for retrieval quality (verified live); cat-jam free fallback |
+| designer | qwen3.8-max#xhigh → glm-5.3-flash#high | WebDev ELO 1685 (best open-tier design) |
+| fixer | muse-spark-1.3-contributor#high → glm-5.3-flash#high → space-bunny#high → mimo-v2.6-flash | cheapest strong writer ($0.10/$0.20, 368M completed sessions on OpenCode); GLM-Flash demoted to fallback |
+| observer | glm-5.3-flash#high | vision QA-passed model; enabled 2026-10-15 (verified live on a test image) |
+| council (synth) | glm-5.3#max → mimo-v2.6-pro | |
+| fast-generic | cat-jam-free#high → glm-5.3-flash#low | free mechanical seat; paid entry only as fallback |
+| councillors | alpha kimi-k3#max (→ glm-5.3 fallback) · beta glm-5.3#max · gamma qwen3.8-max#xhigh · delta mimo-v2.6-pro | 4 families; alpha carries a fallback for K3's 429 history (added 2026-10-15) |
+
+**Late-Oct-15 tunings:** observer enabled; compaction + summary pinned to Muse
+in `opencode.jsonc`; fast-generic → cat-jam-free; explorer → Muse; council
+alpha fallback. **Free-tier finding:** `opencode/*-free` models (e.g.
+`opencode/deepseek-v4.1-flash-free`, `opencode/muse-spark-1.3-contributor-free`)
+are client-attested — raw curl gets `FreeTierError`, and they need a signed-in
+**OpenCode Console** (`OpencodeConsole.SignedOut` observed 2026-10-15; free
+attempts silently fail over via the retry hook). Reconnect the Console from the
+TUI, then free models become wireable. **Audit result (tool/MCP surface):** the
+~33K-token/turn main-session baseline is host-owned — preset `skills`/`mcps`
+edits and disabling MCP servers changed it by 0 tokens (32,932 → 32,979 → 32,979).
+No MCP trim needed; tools ride a deferred catalog. **Side finding:** local
+plugins `jev-measure.ts`, `dcg-guard.ts`, `jev-screen.ts`, `rtk.ts`,
+`model-announcer.ts` fail to load on the V2 host (`Schema.isStartsWith is not a
+function`) — fix pending.
+
+**Policy (2026-10-15, later same day):** the open-weight-only restriction and
+the no-data-training restriction were **removed** by user call. Proprietary and
+"used to improve our products" tiers are now allowed — Muse Spark 1.3
+Contributor became the orchestrator + fixer primary, and the bifrost OpenRouter
+allowlist was restored (24 → 39 models: Claude / GPT-6 / Gemini / Grok / Muse /
+Mercury added). Decision-quality signals for Muse: 368M completed sessions on
+OpenCode, #2 by tokens, 67% weekly retention, 95% cache ratio, $0.0010 avg
+cost/session. Quota: same $60/mo cap as GLM-5.3-Flash but ~226.6K est
+requests/mo vs ~31.6K (~7×), cache-read 15× cheaper ($0.002 vs $0.03). Go docs
+state the trade explicitly ("permission to use your prompts and completions to
+train future Meta models"; terms table: training Yes / Not ZDR).
+
+**V2 host mechanic (learned 2026-10-15):** the MAIN session model comes from the
+`opencode.jsonc` root `model`, **not** the preset's orchestrator entry. The
+preset orchestrator entry feeds the agent registry + the fallback chain
+(retry-hook steering on V2) and controls subagents. Switch the orchestrator by
+setting **both**: root `model` (session) and the preset chain (fallback). Root
+model retains no variant — the session runs Muse at its default effort.
+Verified live: fresh session resolved to `opencode-go/muse-spark-1.3-contributor`.
+
+**OpenRouter removed (later Oct 15, user call):** "if Go quota empties we stop"
+— no PAYG overflow. OR deleted from all routing: every preset chain
+(`default`, `privacy`, councillors, council agents) had its `openrouter/*`
+entries stripped, and `bifrost/config.json` lost the whole `openrouter`
+provider block plus OR entries in 8 governance failover chains (allowlist
+restored earlier the same day went with it). Backups:
+`oh-my-opencode-slim.jsonc.bak-20261015-drop-openrouter`,
+`config.json.bak-20261015-drop-openrouter`. Left in place, flagged: the
+`OPENROUTER_API_KEY` env in the `jev-mcp`/`jev-review` MCP servers (Jev judge
+calls) and the `openrouter` credential in `auth.json` (last manual path —
+remove on request). Go caps exhausted now = the session stops/errors.
+
+**Preset-design rules for Go-only mode**
+
+1. Free previews (cat-jam, step-5, longcat-2.5) go on **high-volume read-only
+   seats only** (explorer, librarian). A preview retirement then degrades to
+   the chain instead of breaking a writer seat. Check liveness each refresh —
+   `opencode run --model <id> 'x'` fails fast with "Model unavailable".
+2. Variant strings must exist in the model's models.dev `reasoning_options`
+   values (glm-5.3-flash: low/high/max; kimi-k3: max; qwen3.8-*: low/medium/
+   xhigh; space-bunny: low…max; mimo-v2.6-*: none). Unknown variant =
+   model-resolution error.
+3. Chains: per-entry `{id, variant}` objects; the agent-level `variant` is only
+   the chain[0] default. **Councillor seats** take the seat-level `variant`
+   (per-entry object variants are ignored there).
+4. `council.default_preset` is global — flip it with `preset` when switching
+   between normal and budget modes.
+5. Presets may override custom agents (e.g. `fast-generic`); effective map is
+   `deepMerge(config.agents, resolvedPreset.agents)`.
+6. Validate with `bunx oh-my-opencode-slim doctor --json` (config + preset
+   resolution) plus a live delegation run; `opencode api get
+   /api/session/<id>/message` shows each agent's *applied* provider/model/variant.
 
 ## Workflow
 
@@ -96,7 +184,9 @@ Prerequisite: `npm i -g agent-browser && agent-browser install`. See REFERENCE.m
 - OpenRouter catalog (prices + AA indices + ctx): `curl https://openrouter.ai/api/v1/models` (public, no key)
 - DeepSWE raw trials (pass/fail per task×model run): `https://deepswe.datacurve.ai/artifacts/v1/trials.json` — aggregate pass@1 per model yourself; v1.1-era set only (no k3/glm-5.3/qwen3.8-max yet) — see findings/2026-08-24-benchmark-snapshot.md for an example aggregation
 - Arena Agent: `curl -sL https://arena.ai/leaderboard/agent/` → parse the escaped `\"rows\":[...]` JSON in the RSC payload (snapshot date in `lastUpdated`)
-- OpenCode Go/Zen: `curl https://opencode.ai/docs/go.md` (and `zen.md`) — plain markdown
+- OpenCode Go/Zen: `curl https://opencode.ai/docs/go/` (HTML; note: the old
+  `go.md`/`zen.md` markdown routes were removed — 404 as of Oct 15, 2026) — the
+  page carries the full model list + per-model monthly/5-h/weekly caps
 - Design Arena: client-rendered; use `agent-browser eval` after load
 - DeepSWE/Arena pages are JS shells — curl alone gets nothing; agent-browser or the artifacts endpoint is required
 
@@ -117,7 +207,11 @@ Before recommending models, verify they are actually serving inference:
 - OpenAI-compatible models (`/chat/completions`): `Authorization: Bearer <key>`
 - Anthropic-compatible models (`/messages`): `x-api-key: <key>`
 
-**Expected results:** 13/14 models up. `qwen3.7-max` observed "temporarily unavailable" intermittently.
+**Expected results (Oct 15, 2026):** 24/24 up on the raw-HTTP subset (22
+OpenAI-protocol + 2 Anthropic-protocol), 7 closed-protocol models skipped
+(grok/gpt/gemini/muse — raw curl gets `ModelProtocolUnsupported`; they DO work
+through opencode, verified with `opencode run`). Raw curl requires a non-SDK
+`User-Agent` (Cloudflare 403/1010 otherwise) and `x-opencode-session`.
 
 **Via OmniRoute:** inspect `x-omniroute-provider` and `x-omniroute-response-cost` headers to confirm routing + cost.
 

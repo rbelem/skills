@@ -12,119 +12,119 @@
   - navigation "Main" [ref=e2]
     - list
       - listitem [level=1]
-        - link "Intro" [ref=e283]
+        - link "Intro" [ref=e390]
       - listitem [level=1]
-        - link "Config" [ref=e284]
+        - link "Config" [ref=e391]
       - listitem [level=1]
-        - link "Providers" [ref=e285]
+        - link "Providers" [ref=e392]
       - listitem [level=1]
-        - link "Network" [ref=e286]
+        - link "Network" [ref=e393]
       - listitem [level=1]
-        - link "Enterprise" [ref=e287]
+        - link "Enterprise" [ref=e394]
       - listitem [level=1]
-        - link "Troubleshooting" [ref=e288]
+        - link "Troubleshooting" [ref=e395]
       - listitem [level=1]
-        - link "Windows" [ref=e289]
+        - link "Windows" [ref=e396]
       - listitem [level=1]
         - group
           - DisclosureTriangle "Usage" [expanded=true]
             - StaticText "Usage"
           - list
             - listitem [level=2]
-              - link "Go" [ref=e315]
+              - link "Go" [ref=e422]
             - listitem [level=2]
-              - link "TUI" [ref=e316]
+              - link "TUI" [ref=e423]
             - listitem [level=2]
-              - link "CLI" [ref=e317]
+              - link "CLI" [ref=e424]
             - listitem [level=2]
-              - link "Web" [ref=e318]
+              - link "Web" [ref=e425]
             - listitem [level=2]
-              - link "IDE" [ref=e319]
+              - link "IDE" [ref=e426]
             - listitem [level=2]
-              - link "Zen" [ref=e320]
+              - link "Zen" [ref=e427]
             - listitem [level=2]
-              - link "Share" [ref=e321]
+              - link "Share" [ref=e428]
             - listitem [level=2]
-              - link "GitHub" [ref=e322]
+              - link "GitHub" [ref=e429]
             - listitem [level=2]
-              - link "GitLab" [ref=e323]
+              - link "GitLab" [ref=e430]
       - listitem [level=1]
         - group
           - DisclosureTriangle "Configure" [expanded=true]
             - StaticText "Configure"
           - list
             - listitem [level=2]
-              - link "Tools" [ref=e324]
+              - link "Tools" [ref=e431]
             - listitem [level=2]
-              - link "Rules" [ref=e325]
+              - link "Rules" [ref=e432]
             - listitem [level=2]
-              - link "Agents" [ref=e326]
+              - link "Agents" [ref=e433]
             - listitem [level=2]
-              - link "Models" [ref=e327]
+              - link "Models" [ref=e434]
             - listitem [level=2]
-              - link "Themes" [ref=e328]
+              - link "Themes" [ref=e435]
             - listitem [level=2]
-              - link "Keybinds" [ref=e329]
+              - link "Keybinds" [ref=e436]
             - listitem [level=2]
-              - link "Commands" [ref=e330]
+              - link "Commands" [ref=e437]
             - listitem [level=2]
-              - link "Formatters" [ref=e331]
+              - link "Formatters" [ref=e438]
             - listitem [level=2]
-              - link "Permissions" [ref=e332]
+              - link "Permissions" [ref=e439]
             - listitem [level=2]
-              - link "Policies" [ref=e333]
+              - link "Policies" [ref=e440]
             - listitem [level=2]
-              - link "LSP Servers" [ref=e334]
+              - link "LSP Servers" [ref=e441]
             - listitem [level=2]
-              - link "MCP servers" [ref=e335]
+              - link "MCP servers" [ref=e442]
             - listitem [level=2]
-              - link "ACP Support" [ref=e336]
+              - link "ACP Support" [ref=e443]
             - listitem [level=2]
-              - link "Agent Skills" [ref=e337]
+              - link "Agent Skills" [ref=e444]
             - listitem [level=2]
-              - link "References" [ref=e338]
+              - link "References" [ref=e445]
             - listitem [level=2]
-              - link "Custom Tools" [ref=e339]
+              - link "Custom Tools" [ref=e446]
       - listitem [level=1]
         - group
           - DisclosureTriangle "Develop" [expanded=true]
             - StaticText "Develop"
           - list
             - listitem [level=2]
-              - link "SDK" [ref=e340]
+              - link "SDK" [ref=e447]
             - listitem [level=2]
-              - link "Server" [ref=e341]
+              - link "Server" [ref=e448]
             - listitem [level=2]
-              - link "Plugins" [ref=e342]
+              - link "Plugins" [ref=e449]
             - listitem [level=2]
-              - link "Ecosystem" [ref=e343]
+              - link "Ecosystem" [ref=e450]
   - complementary
     - generic
       - navigation "On this page" [ref=e30]
-        - heading "On this page" [level=2, ref=e266]
+        - heading "On this page" [level=2, ref=e370]
         - list
           - listitem [level=1]
-            - link "Overview" [ref=e290]
+            - link "Overview" [ref=e397]
           - listitem [level=1]
-            - link "Background" [ref=e291]
+            - link "Background" [ref=e398]
           - listitem [level=1]
-            - link "How it works" [ref=e292]
+            - link "How it works" [ref=e399]
           - listitem [level=1]
-            - link "Usage limits" [ref=e293]
+            - link "Usage limits" [ref=e400]
             - list
               - listitem [level=2]
-                - link "Usage beyond limits" [ref=e344]
+                - link "Usage beyond limits" [ref=e451]
               - listitem [level=2]
-                - link "Why some models have lower usage" [ref=e345]
+                - link "Why some models have lower usage" [ref=e452]
           - listitem [level=1]
-            - link "Endpoints" [ref=e294]
+            - link "Endpoints" [ref=e401]
             - list
               - listitem [level=2]
-                - link "Models" [ref=e346]
+                - link "Models" [ref=e453]
           - listitem [level=1]
-            - link "Privacy" [ref=e295]
+            - link "Privacy" [ref=e402]
           - listitem [level=1]
-            - link "Goals" [ref=e296]
+            - link "Goals" [ref=e403]
   - main
     - heading "Go" [level=1, ref=e7]
     - paragraph
@@ -143,7 +143,7 @@
         - StaticText "completely optional"
       - StaticText " and you don’t need to use it to use OpenCode."
     - paragraph
-      - StaticText "It is designed primarily for international users, with models hosted in the US, EU, and Singapore for stable global access."
+      - StaticText "It is designed primarily for international users and provides stable global access."
     - separator
     - heading "Background" [level=2, ref=e8]
       - link "Background" [ref=e17]
@@ -180,7 +180,7 @@
       - listitem [level=1]
         - StaticText "You sign in to "
         - strong
-          - link "OpenCode Zen" [ref=e267]
+          - link "OpenCode Zen" [ref=e371]
         - StaticText ", subscribe to Go, and copy your API key."
       - listitem [level=1]
         - StaticText "You run the "
@@ -218,6 +218,9 @@
           - StaticText "GLM-5.1"
       - listitem [level=1]
         - strong
+          - StaticText "GPT 5.6 Luna"
+      - listitem [level=1]
+        - strong
           - StaticText "Kimi K3"
       - listitem [level=1]
         - strong
@@ -239,6 +242,9 @@
           - StaticText "MiniMax M2.7"
       - listitem [level=1]
         - strong
+          - StaticText "Qwen3.8 Max"
+      - listitem [level=1]
+        - strong
           - StaticText "Qwen3.7 Max"
       - listitem [level=1]
         - strong
@@ -252,6 +258,9 @@
       - listitem [level=1]
         - strong
           - StaticText "DeepSeek V4 Flash"
+      - listitem [level=1]
+        - strong
+          - StaticText "Hy3"
     - paragraph
       - StaticText "The list of models may change as we test and add new ones."
     - separator
@@ -279,94 +288,113 @@
     - table
       - rowgroup
         - row
-          - columnheader "MODEL" [ref=e268]
-          - columnheader "REQUESTS PER 5 HOUR" [ref=e269]
-          - columnheader "REQUESTS PER WEEK" [ref=e270]
-          - columnheader "REQUESTS PER MONTH" [ref=e271]
+          - columnheader "MODEL" [ref=e372]
+          - columnheader "REQUESTS PER 5 HOUR" [ref=e373]
+          - columnheader "REQUESTS PER WEEK" [ref=e374]
+          - columnheader "REQUESTS PER MONTH" [ref=e375]
       - row
         - cell "Grok 4.5" [ref=e31]
-        - cell "80" [ref=e32]
-        - cell "190" [ref=e33]
-        - cell "380" [ref=e34]
+        - cell "120" [ref=e32]
+        - cell "300" [ref=e33]
+        - cell "600" [ref=e34]
       - row
-        - cell "GLM-5.2" [ref=e35]
-        - cell "880" [ref=e36]
-        - cell "2,150" [ref=e37]
-        - cell "4,300" [ref=e38]
+        - cell "GPT 5.6 Luna" [ref=e35]
+        - cell "2,050" [ref=e36]
+        - cell "5,100" [ref=e37]
+        - cell "10,250" [ref=e38]
       - row
-        - cell "GLM-5.1" [ref=e39]
+        - cell "GLM-5.2" [ref=e39]
         - cell "880" [ref=e40]
         - cell "2,150" [ref=e41]
         - cell "4,300" [ref=e42]
       - row
-        - cell "Kimi K3" [ref=e43]
-        - cell "140" [ref=e44]
-        - cell "340" [ref=e45]
-        - cell "680" [ref=e46]
+        - cell "GLM-5.1" [ref=e43]
+        - cell "880" [ref=e44]
+        - cell "2,150" [ref=e45]
+        - cell "4,300" [ref=e46]
       - row
-        - cell "Kimi K2.7 Code" [ref=e47]
-        - cell "1,350" [ref=e48]
-        - cell "4,630" [ref=e49]
-        - cell "9,250" [ref=e50]
+        - cell "Kimi K3" [ref=e47]
+        - cell "110" [ref=e48]
+        - cell "250" [ref=e49]
+        - cell "490" [ref=e50]
       - row
-        - cell "Kimi K2.6" [ref=e51]
-        - cell "1,150" [ref=e52]
-        - cell "2,880" [ref=e53]
-        - cell "5,750" [ref=e54]
+        - cell "Kimi K2.7 Code" [ref=e51]
+        - cell "1,350" [ref=e52]
+        - cell "3,380" [ref=e53]
+        - cell "6,750" [ref=e54]
       - row
-        - cell "MiMo-V2.5" [ref=e55]
-        - cell "30,100" [ref=e56]
-        - cell "75,200" [ref=e57]
-        - cell "150,400" [ref=e58]
+        - cell "Kimi K2.6" [ref=e55]
+        - cell "1,150" [ref=e56]
+        - cell "2,880" [ref=e57]
+        - cell "5,750" [ref=e58]
       - row
-        - cell "MiMo-V2.5-Pro" [ref=e59]
-        - cell "3,250" [ref=e60]
-        - cell "8,150" [ref=e61]
-        - cell "16,300" [ref=e62]
+        - cell "MiMo-V2.5" [ref=e59]
+        - cell "30,100" [ref=e60]
+        - cell "75,200" [ref=e61]
+        - cell "150,400" [ref=e62]
       - row
-        - cell "MiniMax M3" [ref=e63]
-        - cell "3,200" [ref=e64]
-        - cell "8,000" [ref=e65]
-        - cell "16,000" [ref=e66]
+        - cell "MiMo-V2.5-Pro" [ref=e63]
+        - cell "3,250" [ref=e64]
+        - cell "8,150" [ref=e65]
+        - cell "16,300" [ref=e66]
       - row
-        - cell "MiniMax M2.7" [ref=e67]
-        - cell "3,400" [ref=e68]
-        - cell "8,500" [ref=e69]
-        - cell "17,000" [ref=e70]
+        - cell "MiniMax M3" [ref=e67]
+        - cell "3,200" [ref=e68]
+        - cell "8,000" [ref=e69]
+        - cell "16,000" [ref=e70]
       - row
-        - cell "Qwen3.7 Max" [ref=e71]
-        - cell "950" [ref=e72]
-        - cell "2,390" [ref=e73]
-        - cell "4,770" [ref=e74]
+        - cell "MiniMax M2.7" [ref=e71]
+        - cell "3,400" [ref=e72]
+        - cell "8,500" [ref=e73]
+        - cell "17,000" [ref=e74]
       - row
-        - cell "Qwen3.7 Plus" [ref=e75]
-        - cell "4,300" [ref=e76]
-        - cell "10,800" [ref=e77]
-        - cell "21,600" [ref=e78]
+        - cell "Qwen3.8 Max" [ref=e75]
+        - cell "160" [ref=e76]
+        - cell "400" [ref=e77]
+        - cell "810" [ref=e78]
       - row
-        - cell "Qwen3.6 Plus" [ref=e79]
-        - cell "3,300" [ref=e80]
-        - cell "8,200" [ref=e81]
-        - cell "16,300" [ref=e82]
+        - cell "Qwen3.7 Max" [ref=e79]
+        - cell "340" [ref=e80]
+        - cell "840" [ref=e81]
+        - cell "1,690" [ref=e82]
       - row
-        - cell "DeepSeek V4 Pro" [ref=e83]
-        - cell "3,450" [ref=e84]
-        - cell "8,550" [ref=e85]
-        - cell "17,150" [ref=e86]
+        - cell "Qwen3.7 Plus" [ref=e83]
+        - cell "4,300" [ref=e84]
+        - cell "10,800" [ref=e85]
+        - cell "21,600" [ref=e86]
       - row
-        - cell "DeepSeek V4 Flash" [ref=e87]
-        - cell "31,650" [ref=e88]
-        - cell "79,050" [ref=e89]
-        - cell "158,150" [ref=e90]
+        - cell "Qwen3.6 Plus" [ref=e87]
+        - cell "3,300" [ref=e88]
+        - cell "8,200" [ref=e89]
+        - cell "16,300" [ref=e90]
+      - row
+        - cell "DeepSeek V4 Pro" [ref=e91]
+        - cell "3,450" [ref=e92]
+        - cell "8,550" [ref=e93]
+        - cell "17,150" [ref=e94]
+      - row
+        - cell "DeepSeek V4 Flash" [ref=e95]
+        - cell "31,650" [ref=e96]
+        - cell "79,050" [ref=e97]
+        - cell "158,150" [ref=e98]
+      - row
+        - cell "Hy3" [ref=e99]
+        - cell "4,300" [ref=e100]
+        - cell "10,750" [ref=e101]
+        - cell "21,500" [ref=e102]
     - paragraph
-      - StaticText "The estimates are based on observed average request patterns:"
+      - StaticText "The estimates are based on observed request patterns:"
     - list
       - listitem [level=1]
         - StaticText "Grok 4.5 — 1,100 input, 71,500 cached, 220 output tokens per request"
       - listitem [level=1]
         - StaticText "GLM-5.2/5.1 — 700 input, 52,000 cached, 150 output tokens per request"
       - listitem [level=1]
-        - StaticText "Kimi K3/K2.7/K2.6 — 870 input, 55,000 cached, 200 output tokens per request"
+        - StaticText "GPT 5.6 Luna — 1,000 input, 50,000 cached, 220 output tokens per request"
+      - listitem [level=1]
+        - StaticText "Kimi K3 — 1,050 input, 76,500 cached, 300 output tokens per request"
+      - listitem [level=1]
+        - StaticText "Kimi K2.7/K2.6 — 870 input, 55,000 cached, 200 output tokens per request"
       - listitem [level=1]
         - StaticText "DeepSeek V4 Pro — 750 input, 82,000 cached, 290 output tokens per request"
       - listitem [level=1]
@@ -380,152 +408,184 @@
       - listitem [level=1]
         - StaticText "MiMo-V2.5-Pro — 790 input, 86,000 cached, 305 output tokens per request"
       - listitem [level=1]
+        - StaticText "Qwen3.8 Max — 420 input, 66,000 cached, 200 output tokens per request"
+      - listitem [level=1]
         - StaticText "Qwen3.7 Max — 420 input, 66,000 cached, 200 output tokens per request"
       - listitem [level=1]
         - StaticText "Qwen3.7 Plus — 500 input, 57,000 cached, 190 output tokens per request"
       - listitem [level=1]
         - StaticText "Qwen3.6 Plus — 500 input, 57,000 cached, 190 output tokens per request"
+      - listitem [level=1]
+        - StaticText "Hy3 — 830 input, 71,500 cached, 295 output tokens per request"
     - paragraph
       - StaticText "The estimates are also based on the following prices per 1M tokens and the monthly usage included with each model:"
     - table
       - rowgroup
         - row
-          - columnheader "MODEL" [ref=e272]
-          - columnheader "INPUT" [ref=e273]
-          - columnheader "OUTPUT" [ref=e274]
-          - columnheader "CACHED READ" [ref=e275]
-          - columnheader "CACHED WRITE" [ref=e276]
-          - columnheader "USAGE" [ref=e277]
+          - columnheader "MODEL" [ref=e376]
+          - columnheader "INPUT" [ref=e377]
+          - columnheader "OUTPUT" [ref=e378]
+          - columnheader "CACHED READ" [ref=e379]
+          - columnheader "CACHED WRITE" [ref=e380]
+          - columnheader "USAGE" [ref=e381]
       - row
-        - cell "Grok 4.5" [ref=e91]
-        - cell "$2.00" [ref=e92]
-        - cell "$6.00" [ref=e93]
-        - cell "$0.50" [ref=e94]
-        - cell "-" [ref=e95]
-        - cell "$15" [ref=e96]
-      - row
-        - cell "GLM-5.2" [ref=e97]
-        - cell "$1.40" [ref=e98]
-        - cell "$4.40" [ref=e99]
-        - cell "$0.26" [ref=e100]
-        - cell "-" [ref=e101]
-        - cell "$60" [ref=e102]
-      - row
-        - cell "GLM-5.1" [ref=e103]
-        - cell "$1.40" [ref=e104]
-        - cell "$4.40" [ref=e105]
-        - cell "$0.26" [ref=e106]
+        - cell "Grok 4.5" [ref=e103]
+        - cell "$2.00" [ref=e104]
+        - cell "$6.00" [ref=e105]
+        - cell "$0.30" [ref=e106]
         - cell "-" [ref=e107]
-        - cell "$60" [ref=e108]
+        - cell "$15" [ref=e108]
       - row
-        - cell "Kimi K3" [ref=e109]
-        - cell "$3.00" [ref=e110]
-        - cell "$15.00" [ref=e111]
-        - cell "$0.30" [ref=e112]
-        - cell "-" [ref=e113]
+        - cell "GPT 5.6 Luna (≤ 272K tokens)" [ref=e109]
+        - cell "$0.20" [ref=e110]
+        - cell "$1.20" [ref=e111]
+        - cell "$0.02" [ref=e112]
+        - cell "$0.25" [ref=e113]
         - cell "$15" [ref=e114]
       - row
-        - cell "Kimi K2.7 Code" [ref=e115]
-        - cell "$0.95" [ref=e116]
-        - cell "$4.00" [ref=e117]
-        - cell "$0.19" [ref=e118]
-        - cell "-" [ref=e119]
-        - cell "$60" [ref=e120]
+        - cell "GPT 5.6 Luna (> 272K tokens)" [ref=e115]
+        - cell "$0.40" [ref=e116]
+        - cell "$1.80" [ref=e117]
+        - cell "$0.04" [ref=e118]
+        - cell "$0.50" [ref=e119]
+        - cell "$15" [ref=e120]
       - row
-        - cell "Kimi K2.6" [ref=e121]
-        - cell "$0.95" [ref=e122]
-        - cell "$4.00" [ref=e123]
-        - cell "$0.16" [ref=e124]
+        - cell "GLM-5.2" [ref=e121]
+        - cell "$1.40" [ref=e122]
+        - cell "$4.40" [ref=e123]
+        - cell "$0.26" [ref=e124]
         - cell "-" [ref=e125]
         - cell "$60" [ref=e126]
       - row
-        - cell "MiMo V2.5" [ref=e127]
-        - cell "$0.14" [ref=e128]
-        - cell "$0.28" [ref=e129]
-        - cell "$0.0028" [ref=e130]
+        - cell "GLM-5.1" [ref=e127]
+        - cell "$1.40" [ref=e128]
+        - cell "$4.40" [ref=e129]
+        - cell "$0.26" [ref=e130]
         - cell "-" [ref=e131]
         - cell "$60" [ref=e132]
       - row
-        - cell "MiMo V2.5 Pro" [ref=e133]
-        - cell "$0.435" [ref=e134]
-        - cell "$0.87" [ref=e135]
-        - cell "$0.003625" [ref=e136]
+        - cell "Kimi K3" [ref=e133]
+        - cell "$3.00" [ref=e134]
+        - cell "$15.00" [ref=e135]
+        - cell "$0.30" [ref=e136]
         - cell "-" [ref=e137]
         - cell "$15" [ref=e138]
       - row
-        - cell "MiniMax M3" [ref=e139]
-        - cell "$0.30" [ref=e140]
-        - cell "$1.20" [ref=e141]
-        - cell "$0.06" [ref=e142]
+        - cell "Kimi K2.7 Code" [ref=e139]
+        - cell "$0.95" [ref=e140]
+        - cell "$4.00" [ref=e141]
+        - cell "$0.19" [ref=e142]
         - cell "-" [ref=e143]
         - cell "$60" [ref=e144]
       - row
-        - cell "MiniMax M2.7" [ref=e145]
-        - cell "$0.30" [ref=e146]
-        - cell "$1.20" [ref=e147]
-        - cell "$0.06" [ref=e148]
-        - cell "$0.375" [ref=e149]
+        - cell "Kimi K2.6" [ref=e145]
+        - cell "$0.95" [ref=e146]
+        - cell "$4.00" [ref=e147]
+        - cell "$0.16" [ref=e148]
+        - cell "-" [ref=e149]
         - cell "$60" [ref=e150]
       - row
-        - cell "MiniMax M2.5" [ref=e151]
-        - cell "$0.30" [ref=e152]
-        - cell "$1.20" [ref=e153]
-        - cell "$0.06" [ref=e154]
-        - cell "$0.375" [ref=e155]
+        - cell "MiMo V2.5" [ref=e151]
+        - cell "$0.14" [ref=e152]
+        - cell "$0.28" [ref=e153]
+        - cell "$0.0028" [ref=e154]
+        - cell "-" [ref=e155]
         - cell "$60" [ref=e156]
       - row
-        - cell "Qwen3.7 Max" [ref=e157]
-        - cell "$2.50" [ref=e158]
-        - cell "$7.50" [ref=e159]
-        - cell "$0.50" [ref=e160]
-        - cell "$3.125" [ref=e161]
-        - cell "$60" [ref=e162]
+        - cell "MiMo V2.5 Pro" [ref=e157]
+        - cell "$0.435" [ref=e158]
+        - cell "$0.87" [ref=e159]
+        - cell "$0.003625" [ref=e160]
+        - cell "-" [ref=e161]
+        - cell "$15" [ref=e162]
       - row
-        - cell "Qwen3.7 Plus (≤ 256K tokens)" [ref=e163]
-        - cell "$0.40" [ref=e164]
-        - cell "$1.60" [ref=e165]
-        - cell "$0.04" [ref=e166]
-        - cell "$0.50" [ref=e167]
+        - cell "MiniMax M3" [ref=e163]
+        - cell "$0.30" [ref=e164]
+        - cell "$1.20" [ref=e165]
+        - cell "$0.06" [ref=e166]
+        - cell "-" [ref=e167]
         - cell "$60" [ref=e168]
       - row
-        - cell "Qwen3.7 Plus (> 256K tokens)" [ref=e169]
-        - cell "$1.20" [ref=e170]
-        - cell "$4.80" [ref=e171]
-        - cell "$0.12" [ref=e172]
-        - cell "$1.50" [ref=e173]
+        - cell "MiniMax M2.7" [ref=e169]
+        - cell "$0.30" [ref=e170]
+        - cell "$1.20" [ref=e171]
+        - cell "$0.06" [ref=e172]
+        - cell "$0.375" [ref=e173]
         - cell "$60" [ref=e174]
       - row
-        - cell "Qwen3.6 Plus (≤ 256K tokens)" [ref=e175]
-        - cell "$0.50" [ref=e176]
-        - cell "$3.00" [ref=e177]
-        - cell "$0.05" [ref=e178]
-        - cell "$0.625" [ref=e179]
+        - cell "MiniMax M2.5" [ref=e175]
+        - cell "$0.30" [ref=e176]
+        - cell "$1.20" [ref=e177]
+        - cell "$0.06" [ref=e178]
+        - cell "$0.375" [ref=e179]
         - cell "$60" [ref=e180]
       - row
-        - cell "Qwen3.6 Plus (> 256K tokens)" [ref=e181]
+        - cell "Qwen3.8 Max" [ref=e181]
         - cell "$2.00" [ref=e182]
         - cell "$6.00" [ref=e183]
-        - cell "$0.20" [ref=e184]
+        - cell "$0.25" [ref=e184]
         - cell "$2.50" [ref=e185]
-        - cell "$60" [ref=e186]
+        - cell "$15" [ref=e186]
       - row
-        - cell "DeepSeek V4 Pro" [ref=e187]
-        - cell "$0.435" [ref=e188]
-        - cell "$0.87" [ref=e189]
-        - cell "$0.003625" [ref=e190]
-        - cell "-" [ref=e191]
-        - cell "$15" [ref=e192]
+        - cell "Qwen3.7 Max" [ref=e187]
+        - cell "$2.50" [ref=e188]
+        - cell "$7.50" [ref=e189]
+        - cell "$0.50" [ref=e190]
+        - cell "$3.125" [ref=e191]
+        - cell "$60" [ref=e192]
       - row
-        - cell "DeepSeek V4 Flash" [ref=e193]
-        - cell "$0.14" [ref=e194]
-        - cell "$0.28" [ref=e195]
-        - cell "$0.0028" [ref=e196]
-        - cell "-" [ref=e197]
+        - cell "Qwen3.7 Plus (≤ 256K tokens)" [ref=e193]
+        - cell "$0.40" [ref=e194]
+        - cell "$1.60" [ref=e195]
+        - cell "$0.04" [ref=e196]
+        - cell "$0.50" [ref=e197]
         - cell "$60" [ref=e198]
+      - row
+        - cell "Qwen3.7 Plus (> 256K tokens)" [ref=e199]
+        - cell "$1.20" [ref=e200]
+        - cell "$4.80" [ref=e201]
+        - cell "$0.12" [ref=e202]
+        - cell "$1.50" [ref=e203]
+        - cell "$60" [ref=e204]
+      - row
+        - cell "Qwen3.6 Plus (≤ 256K tokens)" [ref=e205]
+        - cell "$0.50" [ref=e206]
+        - cell "$3.00" [ref=e207]
+        - cell "$0.05" [ref=e208]
+        - cell "$0.625" [ref=e209]
+        - cell "$60" [ref=e210]
+      - row
+        - cell "Qwen3.6 Plus (> 256K tokens)" [ref=e211]
+        - cell "$2.00" [ref=e212]
+        - cell "$6.00" [ref=e213]
+        - cell "$0.20" [ref=e214]
+        - cell "$2.50" [ref=e215]
+        - cell "$60" [ref=e216]
+      - row
+        - cell "DeepSeek V4 Pro" [ref=e217]
+        - cell "$0.435" [ref=e218]
+        - cell "$0.87" [ref=e219]
+        - cell "$0.003625" [ref=e220]
+        - cell "-" [ref=e221]
+        - cell "$15" [ref=e222]
+      - row
+        - cell "DeepSeek V4 Flash" [ref=e223]
+        - cell "$0.14" [ref=e224]
+        - cell "$0.28" [ref=e225]
+        - cell "$0.0028" [ref=e226]
+        - cell "-" [ref=e227]
+        - cell "$60" [ref=e228]
+      - row
+        - cell "Hy3" [ref=e229]
+        - cell "$0.14" [ref=e230]
+        - cell "$0.58" [ref=e231]
+        - cell "$0.035" [ref=e232]
+        - cell "-" [ref=e233]
+        - cell "$60" [ref=e234]
     - paragraph
       - StaticText "You can track your current usage in the "
       - strong
-        - link "console" [ref=e199]
+        - link "console" [ref=e235]
       - StaticText "."
     - complementary "Tip"
       - paragraph
@@ -559,121 +619,142 @@
     - table
       - rowgroup
         - row
-          - columnheader "MODEL" [ref=e278]
-          - columnheader "MODEL ID" [ref=e279]
-          - columnheader "ENDPOINT" [ref=e280]
-          - columnheader "AI SDK PACKAGE" [ref=e281]
+          - columnheader "MODEL" [ref=e382]
+          - columnheader "MODEL ID" [ref=e383]
+          - columnheader "ENDPOINT" [ref=e384]
+          - columnheader "AI SDK PACKAGE" [ref=e385]
       - row
-        - cell "Grok 4.5" [ref=e200]
-        - cell "grok-4.5" [ref=e201]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e202]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e203]
-          - code
-      - row
-        - cell "GLM-5.2" [ref=e204]
-        - cell "glm-5.2" [ref=e205]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e206]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e207]
-          - code
-      - row
-        - cell "GLM-5.1" [ref=e208]
-        - cell "glm-5.1" [ref=e209]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e210]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e211]
-          - code
-      - row
-        - cell "Kimi K3" [ref=e212]
-        - cell "kimi-k3" [ref=e213]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e214]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e215]
-          - code
-      - row
-        - cell "Kimi K2.7 Code" [ref=e216]
-        - cell "kimi-k2.7-code" [ref=e217]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e218]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e219]
-          - code
-      - row
-        - cell "Kimi K2.6" [ref=e220]
-        - cell "kimi-k2.6" [ref=e221]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e222]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e223]
-          - code
-      - row
-        - cell "DeepSeek V4 Pro" [ref=e224]
-        - cell "deepseek-v4-pro" [ref=e225]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e226]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e227]
-          - code
-      - row
-        - cell "DeepSeek V4 Flash" [ref=e228]
-        - cell "deepseek-v4-flash" [ref=e229]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e230]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e231]
-          - code
-      - row
-        - cell "MiMo-V2.5" [ref=e232]
-        - cell "mimo-v2.5" [ref=e233]
-        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e234]
-          - code
-        - cell "`@ai-sdk/openai-compatible`" [ref=e235]
-          - code
-      - row
-        - cell "MiMo-V2.5-Pro" [ref=e236]
-        - cell "mimo-v2.5-pro" [ref=e237]
+        - cell "Grok 4.5" [ref=e236]
+        - cell "grok-4.5" [ref=e237]
         - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e238]
           - code
         - cell "`@ai-sdk/openai-compatible`" [ref=e239]
           - code
       - row
-        - cell "MiniMax M3" [ref=e240]
-        - cell "minimax-m3" [ref=e241]
-        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e242]
+        - cell "GPT 5.6 Luna" [ref=e240]
+        - cell "gpt-5.6-luna" [ref=e241]
+        - cell "`https://opencode.ai/zen/go/v1/responses`" [ref=e242]
           - code
-        - cell "`@ai-sdk/anthropic`" [ref=e243]
-          - code
-      - row
-        - cell "MiniMax M2.7" [ref=e244]
-        - cell "minimax-m2.7" [ref=e245]
-        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e246]
-          - code
-        - cell "`@ai-sdk/anthropic`" [ref=e247]
+        - cell "`@ai-sdk/openai`" [ref=e243]
           - code
       - row
-        - cell "MiniMax M2.5" [ref=e248]
-        - cell "minimax-m2.5" [ref=e249]
-        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e250]
+        - cell "GLM-5.2" [ref=e244]
+        - cell "glm-5.2" [ref=e245]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e246]
           - code
-        - cell "`@ai-sdk/anthropic`" [ref=e251]
-          - code
-      - row
-        - cell "Qwen3.7 Max" [ref=e252]
-        - cell "qwen3.7-max" [ref=e253]
-        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e254]
-          - code
-        - cell "`@ai-sdk/anthropic`" [ref=e255]
+        - cell "`@ai-sdk/openai-compatible`" [ref=e247]
           - code
       - row
-        - cell "Qwen3.7 Plus" [ref=e256]
-        - cell "qwen3.7-plus" [ref=e257]
-        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e258]
+        - cell "GLM-5.1" [ref=e248]
+        - cell "glm-5.1" [ref=e249]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e250]
           - code
-        - cell "`@ai-sdk/anthropic`" [ref=e259]
+        - cell "`@ai-sdk/openai-compatible`" [ref=e251]
           - code
       - row
-        - cell "Qwen3.6 Plus" [ref=e260]
-        - cell "qwen3.6-plus" [ref=e261]
-        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e262]
+        - cell "Kimi K3" [ref=e252]
+        - cell "kimi-k3" [ref=e253]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e254]
           - code
-        - cell "`@ai-sdk/anthropic`" [ref=e263]
+        - cell "`@ai-sdk/openai-compatible`" [ref=e255]
+          - code
+      - row
+        - cell "Kimi K2.7 Code" [ref=e256]
+        - cell "kimi-k2.7-code" [ref=e257]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e258]
+          - code
+        - cell "`@ai-sdk/openai-compatible`" [ref=e259]
+          - code
+      - row
+        - cell "Kimi K2.6" [ref=e260]
+        - cell "kimi-k2.6" [ref=e261]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e262]
+          - code
+        - cell "`@ai-sdk/openai-compatible`" [ref=e263]
+          - code
+      - row
+        - cell "DeepSeek V4 Pro" [ref=e264]
+        - cell "deepseek-v4-pro" [ref=e265]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e266]
+          - code
+        - cell "`@ai-sdk/openai-compatible`" [ref=e267]
+          - code
+      - row
+        - cell "DeepSeek V4 Flash" [ref=e268]
+        - cell "deepseek-v4-flash" [ref=e269]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e270]
+          - code
+        - cell "`@ai-sdk/openai-compatible`" [ref=e271]
+          - code
+      - row
+        - cell "MiMo-V2.5" [ref=e272]
+        - cell "mimo-v2.5" [ref=e273]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e274]
+          - code
+        - cell "`@ai-sdk/openai-compatible`" [ref=e275]
+          - code
+      - row
+        - cell "MiMo-V2.5-Pro" [ref=e276]
+        - cell "mimo-v2.5-pro" [ref=e277]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e278]
+          - code
+        - cell "`@ai-sdk/openai-compatible`" [ref=e279]
+          - code
+      - row
+        - cell "MiniMax M3" [ref=e280]
+        - cell "minimax-m3" [ref=e281]
+        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e282]
+          - code
+        - cell "`@ai-sdk/anthropic`" [ref=e283]
+          - code
+      - row
+        - cell "MiniMax M2.7" [ref=e284]
+        - cell "minimax-m2.7" [ref=e285]
+        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e286]
+          - code
+        - cell "`@ai-sdk/anthropic`" [ref=e287]
+          - code
+      - row
+        - cell "MiniMax M2.5" [ref=e288]
+        - cell "minimax-m2.5" [ref=e289]
+        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e290]
+          - code
+        - cell "`@ai-sdk/anthropic`" [ref=e291]
+          - code
+      - row
+        - cell "Qwen3.8 Max" [ref=e292]
+        - cell "qwen3.8-max" [ref=e293]
+        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e294]
+          - code
+        - cell "`@ai-sdk/anthropic`" [ref=e295]
+          - code
+      - row
+        - cell "Qwen3.7 Max" [ref=e296]
+        - cell "qwen3.7-max" [ref=e297]
+        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e298]
+          - code
+        - cell "`@ai-sdk/anthropic`" [ref=e299]
+          - code
+      - row
+        - cell "Qwen3.7 Plus" [ref=e300]
+        - cell "qwen3.7-plus" [ref=e301]
+        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e302]
+          - code
+        - cell "`@ai-sdk/anthropic`" [ref=e303]
+          - code
+      - row
+        - cell "Qwen3.6 Plus" [ref=e304]
+        - cell "qwen3.6-plus" [ref=e305]
+        - cell "`https://opencode.ai/zen/go/v1/messages`" [ref=e306]
+          - code
+        - cell "`@ai-sdk/anthropic`" [ref=e307]
+          - code
+      - row
+        - cell "Hy3" [ref=e308]
+        - cell "hy3" [ref=e309]
+        - cell "`https://opencode.ai/zen/go/v1/chat/completions`" [ref=e310]
+          - code
+        - cell "`@ai-sdk/openai-compatible`" [ref=e311]
           - code
     - paragraph
       - StaticText "The "
@@ -698,12 +779,105 @@
       - code
         - StaticText "https://opencode.ai/zen/go/v1/models"
       - generic
-        - button "Copy to clipboard" [ref=e264]
+        - button "Copy to clipboard" [ref=e312]
     - separator
     - heading "Privacy" [level=2, ref=e15]
       - link "Privacy" [ref=e25]
-    - paragraph
-      - StaticText "The plan is designed primarily for international users, with models hosted in the US, EU, and Singapore for stable global access. Our providers follow a zero-retention policy and do not use your data for model training."
+    - table
+      - rowgroup
+        - row
+          - columnheader "MODEL" [ref=e386]
+          - columnheader "MODEL TRAINING" [ref=e387]
+          - columnheader "DATA RETENTION" [ref=e388]
+      - row
+        - cell "Grok 4.5" [ref=e313]
+        - cell "Not used" [ref=e314]
+        - cell "30 days" [ref=e315]
+      - row
+        - cell "GPT 5.6 Luna" [ref=e316]
+        - cell "Not used" [ref=e317]
+        - cell "30 days" [ref=e318]
+      - row
+        - cell "GLM-5.2" [ref=e319]
+        - cell "Not used" [ref=e320]
+        - cell "0 days" [ref=e321]
+      - row
+        - cell "GLM-5.1" [ref=e322]
+        - cell "Not used" [ref=e323]
+        - cell "0 days" [ref=e324]
+      - row
+        - cell "Kimi K3" [ref=e325]
+        - cell "Not used" [ref=e326]
+        - cell "0 days" [ref=e327]
+      - row
+        - cell "Kimi K2.7 Code" [ref=e328]
+        - cell "Not used" [ref=e329]
+        - cell "0 days" [ref=e330]
+      - row
+        - cell "Kimi K2.6" [ref=e331]
+        - cell "Not used" [ref=e332]
+        - cell "0 days" [ref=e333]
+      - row
+        - cell "MiMo-V2.5-Pro" [ref=e334]
+        - cell "Not used" [ref=e335]
+        - cell "0 days" [ref=e336]
+      - row
+        - cell "MiMo-V2.5" [ref=e337]
+        - cell "Not used" [ref=e338]
+        - cell "0 days" [ref=e339]
+      - row
+        - cell "Qwen3.8 Max" [ref=e340]
+        - cell "Not used" [ref=e341]
+        - cell "0 days" [ref=e342]
+      - row
+        - cell "Qwen3.7 Max" [ref=e343]
+        - cell "Not used" [ref=e344]
+        - cell "0 days" [ref=e345]
+      - row
+        - cell "Qwen3.7 Plus" [ref=e346]
+        - cell "Not used" [ref=e347]
+        - cell "0 days" [ref=e348]
+      - row
+        - cell "Qwen3.6 Plus" [ref=e349]
+        - cell "Not used" [ref=e350]
+        - cell "0 days" [ref=e351]
+      - row
+        - cell "MiniMax M3" [ref=e352]
+        - cell "Not used" [ref=e353]
+        - cell "0 days" [ref=e354]
+      - row
+        - cell "MiniMax M2.7" [ref=e355]
+        - cell "Not used" [ref=e356]
+        - cell "0 days" [ref=e357]
+      - row
+        - cell "DeepSeek V4 Pro" [ref=e358]
+        - cell "Not used" [ref=e359]
+        - cell "0 days" [ref=e360]
+      - row
+        - cell "DeepSeek V4 Flash" [ref=e361]
+        - cell "Not used" [ref=e362]
+        - cell "0 days" [ref=e363]
+      - row
+        - cell "Hy3" [ref=e364]
+        - cell "Not used" [ref=e365]
+        - cell "0 days" [ref=e366]
+    - list
+      - listitem [level=1]
+        - strong
+          - StaticText "Grok 4.5:"
+        - StaticText " ZDR disables important API features that depend on stored data, including the stateful Responses API, Files and Collections, and the Batch API. "
+        - link "Learn more" [ref=e367]
+        - StaticText "."
+      - listitem [level=1]
+        - strong
+          - StaticText "GPT 5.6 Luna:"
+        - StaticText " Abuse monitoring logs are generated for all API feature usage and retained for up to 30 days. "
+        - link "Learn more" [ref=e368]
+        - StaticText "."
+      - listitem [level=1]
+        - strong
+          - StaticText "DeepSeek V4 Flash:"
+        - StaticText " ZDR agreement is renewed monthly. The current agreement is valid through August 31, 2026."
     - separator
     - heading "Goals" [level=2, ref=e16]
       - link "Goals" [ref=e26]
@@ -736,27 +910,27 @@
       - link "Join our Discord community" [ref=e29]
       - LabelText
         - StaticText "Select language"
-        - combobox "Select language" [expanded=false, ref=e282]: English
+        - combobox "Select language" [expanded=false, ref=e389]: English
           - MenuListPopup
-            - option "English" [selected, ref=e297]
-            - option "العربية" [ref=e298]
-            - option "Bosanski" [ref=e299]
-            - option "Dansk" [ref=e300]
-            - option "Deutsch" [ref=e301]
-            - option "Español" [ref=e302]
-            - option "Français" [ref=e303]
-            - option "Italiano" [ref=e304]
-            - option "日本語" [ref=e305]
-            - option "한국어" [ref=e306]
-            - option "Norsk Bokmål" [ref=e307]
-            - option "Polski" [ref=e308]
-            - option "Português (Brasil)" [ref=e309]
-            - option "Русский" [ref=e310]
-            - option "ไทย" [ref=e311]
-            - option "Türkçe" [ref=e312]
-            - option "简体中文" [ref=e313]
-            - option "繁體中文" [ref=e314]
+            - option "English" [selected, ref=e404]
+            - option "العربية" [ref=e405]
+            - option "Bosanski" [ref=e406]
+            - option "Dansk" [ref=e407]
+            - option "Deutsch" [ref=e408]
+            - option "Español" [ref=e409]
+            - option "Français" [ref=e410]
+            - option "Italiano" [ref=e411]
+            - option "日本語" [ref=e412]
+            - option "한국어" [ref=e413]
+            - option "Norsk Bokmål" [ref=e414]
+            - option "Polski" [ref=e415]
+            - option "Português (Brasil)" [ref=e416]
+            - option "Русский" [ref=e417]
+            - option "ไทย" [ref=e418]
+            - option "Türkçe" [ref=e419]
+            - option "简体中文" [ref=e420]
+            - option "繁體中文" [ref=e421]
       - paragraph
-        - link "Anomaly" [ref=e265]
+        - link "Anomaly" [ref=e369]
       - paragraph
         - StaticText "Last updated: "

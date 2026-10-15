@@ -207,6 +207,7 @@ Source: https://arena.ai/leaderboard/agent — fetched via firecrawl.
 | Kimi K2.7 Code | +0.13%±2.60% | **31%±1%** | Recovering — coding focus shows in DeepSWE |
 
 **Key insight:** GLM-5.2 widened its lead. DeepSWE independently confirms 44%, Arena jumped to +6.54%. The gap to the next Go model (kimi-k2.7-code at +0.13% Arena / 31% DeepSWE) is now **50× on agentic tasks**. GLM-5.2 is the only Go model that excels at **both** agentic orchestration and code generation.
+**Update (Aug 24):** Kimi K3 (+10.41% Arena, #4 overall), Qwen3.8 Max (+6.20%), GLM-5.3 (AA Agentic 59.1 — highest ever), and deepseek-v4-flash-0731 (+3.99%) have since surpassed GLM-5.2's +5.82% (Aug 19 snapshot). See Fresh Data Delta (Aug 24).
 
 ### GLM-5.2 Full Benchmark Table (Z.ai Official, Jun 16, 2026)
 
@@ -347,28 +348,49 @@ Based on independently verified benchmarks available:
 9. **DeepSeek V4 Pro** — DeepSWE 8%, Arena -0.83%. Slow. Not recommended.
 10. **DeepSeek V4 Flash** — Est ~8-12% DeepSWE, Arena **-4.65%**. 158K/mo, fastest, cheapest. Quality continues to decline on agentic tasks.
 
-## OpenCode Go Plan (July 9, 2026 — unchanged since Jun 17)
+## OpenCode Go Plan (Sep 10, 2026 — dollar-based usage)
 
-$10/mo ($5 first month). Limits in request count per model.
-**NEW models:** GLM-5.2 (4,300/mo), Qwen3.7 Plus (21,600/mo).
-**REMOVED:** Qwen3.5 Plus, GLM-5, Kimi K2.5, MiniMax M2.5.
-**Active models on Go:** 13 models (listed below).
+$10/mo. Usage limits are **dollar-valued**: $12/5h, $30/week, $60/month (≈6× multiplier on $10).
+Per-model usage caps: $15 (new frontier), $30, or $60 (legacy) of usage included in the base $10 plan.
 
-| Model | Req/5h | Req/week | Req/month |
-|---|---|---|---|
-| DeepSeek V4 Flash | 31,650 | 79,050 | 158,150 |
-| MiMo-V2.5 | 30,100 | 75,200 | 150,400 |
-| Qwen3.7 Plus | 4,300 | 10,800 | 21,600 |
-| MiniMax M2.7 | 3,400 | 8,500 | 17,000 |
-| DeepSeek V4 Pro | 3,450 | 8,550 | 17,150 |
-| MiniMax M3 | 3,200 | 8,000 | 16,000 |
-| MiMo-V2.5-Pro | 3,250 | 8,150 | 16,300 |
-| Qwen3.6 Plus | 3,300 | 8,200 | 16,300 |
-| Kimi K2.7 Code | 1,350 | 4,630 | 9,250 |
-| Kimi K2.6 | 1,150 | 2,880 | 5,750 |
-| Qwen3.7 Max | 950 | 2,390 | 4,770 |
-| **GLM-5.2** | **880** | **2,150** | **4,300** |
-| GLM-5.1 | 880 | 2,150 | 4,300 |
+**Model list (current)**
+
+New/changed rows (Sep 10) are at the top; historical rows below are unchanged except where marked superseded. Req columns are `—` where request counts were not published this cycle. GPT 5.6 Luna ($0.20/$1.20, $15) was already present and is unchanged.
+
+| Model | Req/5h | Req/week | Req/month | Usage | Price I/O |
+|---|---|---|---|---|---|
+| **Qwen3.8 Flash** | — | — | — | $30 | $0.15/$0.47 |
+| **DeepSeek V4.1 Flash** | — | — | — | $15 | $0.15/$0.60 off-peak (id `deepseek-flash`) |
+| **Hy4 preview** | — | — | — | $30 | $0.834/$2.501 |
+| **Grok 4.6** | — | — | — | $15 | $2.00/$6.00 |
+| **GLM-5.3-Flash** | — | — | — | $60 | $0.15/$0.50 |
+| Grok 4.5 | 120 | 300 | 600 | $15 | $2.00/$6.00 |
+| GPT 5.6 Luna | 2,050 | 5,100 | 10,250 | $15 | $0.20/$1.20 |
+| GLM-5.3 | **220** | 540 | **1,080** | $15 | $1.40/$4.40 |
+| GLM-5.2 | 880 | 2,150 | 4,300 | $60 | $1.40/$4.40 |
+| GLM-5.1 | 880 | 2,150 | 4,300 | $60 | $1.40/$4.40 |
+| Kimi K3 | **110** | 250 | **490** | $15 | $3.00/$15.00 |
+| Kimi K2.7 Code | 1,350 | 3,380 | 6,750 | $60 | $0.95/$4.00 |
+| Kimi K2.6 | 1,150 | 2,880 | 5,750 | $60 | $0.95/$4.00 |
+| LongCat-2.0 | 11,400 | 28,600 | 57,200 | $60 | $0.30/$1.20 |
+| MiMo-V2.5 | 30,100 | 75,200 | 150,400 | $60 | $0.14/$0.28 |
+| MiMo-V2.5-Pro | 3,250 | 8,150 | 16,300 | $15 | $0.435/$0.87 |
+| MiniMax M3 | 3,200 | 8,000 | 16,000 | $60 | $0.30/$1.20 |
+| MiniMax M2.7 | 3,400 | 8,500 | 17,000 | $60 | $0.30/$1.20 |
+| Muse Spark 1.2 Contributor | 45,300 | 113,300 | 226,600 | $60 | $0.10/$0.20 |
+| Qwen3.8 Max | **160** | 400 | **810** | $15 | $2.00/$6.00 |
+| Qwen3.7 Max | 340 | 840 | 1,690 | $60 | $2.50/$7.50 |
+| Qwen3.7 Plus | 4,300 | 10,800 | 21,600 | $60 | $0.40/$1.60 |
+| Qwen3.6 Plus | 3,300 | 8,200 | 16,300 | $60 | $0.50/$3.00 |
+| DeepSeek V4 Pro ⛔ | 1,050 | 2,600 | 5,200 | $15 | $0.66/$1.98 off-peak, $1.32/$3.96 peak |
+| DeepSeek V4 Flash ⛔ | 7,600 | 18,900 | 37,800 | $30 | $0.22/$0.66 off-peak, $0.44/$1.32 peak |
+| DeepSeek V4 Flash Vision Exp ⛔ | 3,800 | 9,450 | 18,900 | $15 | $0.22/$0.66 off-peak, $0.44/$1.32 peak |
+| Hy3 | 4,300 | 10,750 | 21,500 | $60 | $0.14/$0.58 |
+| Ox Alpha | Free (limited time) | — | — | — | Free |
+
+⛔ = **retired** — DeepSeek V4 Flash and V4 Flash Vision Exp retired **Sep 10, 2026** (legacy IDs reroute); DeepSeek V4 Pro retired **Sep 14, 2026**. DeepSeek V4.1 Flash supersedes all three.
+
+DeepSeek peak hours: 01:00–04:00 & 06:00–10:00 UTC Mon–Fri; all else off-peak. Request estimates based on observed token patterns (e.g. GLM-5.x ≈700 in/52K cached/150 out per req). Exceeding usage → auto-fallback to Zen balance if enabled, else free models (Ox Alpha).
 
 ## OpenRouter Pricing (Live via MCP)
 
@@ -595,6 +617,120 @@ User's own codeneedle benchmark:
 - **Kilo.ai Live Leaderboard** (kilo.ai/leaderboard) — Real token usage from 3M+ developers. MiniMax M3 at 47.6% completion rate, $10.35/attempt.
 - **SWE-rebench** (swe-rebench.com, fetched Jun 13) — 110 problems, tool-use agentic eval. Go model ranking: GLM-5.1 50.7% > Kimi K2.6 46.5% > MiniMax M3 45.6%。
 - **Build Fast with AI June 2026 Leaderboard** — 10-model comparison. Rates Qwen3.7 Max as "rational alternative to Opus 4.8 at 1/6 price."
+
+### Fresh Data Delta (Oct 15 2026 — budget session)
+
+Raw snapshot: `findings/2026-10-15-benchmark-snapshot.md` (live Go inventory,
+probes, config mechanics). Trigger: user left their job → Go $10/mo is the only
+paid route → shipped a Go-only `budget` preset.
+
+| Finding | Previous (Sep 10) | Live (Oct 15) |
+|---|---|---|
+| **Go usage model** | per-model caps $15–$60 | per-model monthly caps **$15 / $30 / $60 / $80**; 5h = 20% of cap, week = 50%; Go Plus $40 doubles them. No account-wide bucket in the docs. |
+| **Go model list** | 30ish models | **+ MiMo-V2.6-Flash/Pro (MIT, Sep 21–22, vendor DeepSWE 67.9 / 72.57), Space Bunny (anon stealth, Sep 23, $0.15/$0.60), LongCat 2.5 Preview (free), Step 5 Preview (free, Oct 8, Kingbench 83.75%), Cat Jam (stealth, free, Oct 13, "very fast"), Hy4 preview, Grok 4.7, GPT 6 Luna, GPT 5.6 Luna, Claude Haiku 5.5, Gemini 4 Argon Contributor.** `space-bunny-free` **removed** (paid `space-bunny` replaced it — the old council delta was dead). DeepSeek V4.1 Flash cap raised $15 → **$80**. |
+| **Independent signal** | — | None yet for MiMo-V2.6 / Space Bunny / Step 5 / Cat Jam / LongCat 2.5 — all vendor or unbenchmarked. Only GLM-5.3 (69 DeepSWE), GLM-5.3-Flash (63, AA 42), Qwen3.8-Max (WebDev 1685), Kimi K3 (Arena +6.59) carry independent numbers on Go. |
+| **Free previews** | — | Unlimited on Go; console docs: LongCat 2.5 / Step 5 / Space Bunny Free zero-retention + no training; Cat Jam no training + 30-day safety retention (region-restricted). |
+| **Probe** | — | 10/10 candidates returned correct tool calls with `reasoning_effort`. Fastest: glm-5.3-flash & cat-jam 1.1s; slowest: longcat-2.5 21.9s, deepseek-v4.1-flash 16s. Raw curl needs a `User-Agent` (Cloudflare 403/1010) + `x-opencode-session`. Three access modes: open-weight → `/chat/completions`, claude-haiku-5-5 + minimax-m2.7 → `/messages`, grok/gpt/gemini/muse → client-only (raw curl `ModelProtocolUnsupported`; works via `opencode run`). Healthcheck script updated: 24/24 up + 7 skipped. |
+| **Preset shipped** | budget preset did not exist | `presets.budget` (Go-only, seat map in SKILL.md) + `council.presets.budget`; `council.default_preset` and `preset` both set to `budget`; opencode.jsonc main/title/compactor → opencode-go. Verified end-to-end via delegated runs + session message inspection. Council roster finalized Oct 15: kimi-k3#max / glm-5.3#max / qwen3.8-max#xhigh / mimo-v2.6-pro (space-bunny dropped); `default` council preset mirrored to the same Go-only roster. **Later Oct 15: open-weight-only + no-training restrictions removed — OR allowlist restored (24→39 models), fixer → muse-spark-1.3-contributor#high (glm-5.3-flash fallback), orchestrator → Muse via opencode.jsonc root `model` (V2: main session model = root model, not the preset orchestrator entry) with muse → glm-5.3-flash → mimo → deepseek chain. Late tunings: observer enabled, compaction/summary → Muse, explorer → Muse (cat-jam fallback), fast-generic → cat-jam-free, council alpha fallback (glm-5.3 behind kimi-k3). Free `opencode/*-free` models blocked until Console reconnects (SignedOut). Tool-surface audit: ~33K/turn baseline is host-owned — MCP/preset trims gain ~0 tokens. **OpenRouter removed from all routing (bifrost provider + 8 failover fallbacks, every preset chain) — Go caps exhausted = stop, no PAYG overflow; auth key + jev MCP env left.** |
+| **Config mechanics** | — | Variant must exist in catalog (unknown ⇒ resolution error); chains use per-entry `{id,variant}`; councillor seats use seat-level `variant`; presets override custom agents; `council.default_preset` is global; doctor validates without restart. |
+
+
+
+### Fresh Data Delta (Sep 10 2026 — this session)
+
+Raw snapshot: `findings/2026-09-10-benchmark-snapshot.md`. AA = Intelligence Index v4.3 (standalone Coding/Agentic indices no longer exposed); DeepSWE = datacurve leaderboard; WebDev ELO = arena.ai Code/Website (text-to-HTML, Sep 8) — **NOT Design Arena** (designarena.ai is JS/Firebase-rendered, not statically extractable).
+
+| Finding | Previous | Live (Sep 10) |
+|---|---|---|
+| **OpenRouter account** | ~$0 as of Aug 25 (top-up warning) | **EXHAUSTED** — total_credits $40 / total_usage $40.20 → every `openrouter/*` call returns 502 `upstream_credentials_exhausted`. OR-only registrations are dead weight until funding. |
+| **z.ai GLM-5.3** | Active | **429** — plan weekly/monthly cap, resets 2026-09-13; account-wide (glm-5.3-flash also 429 direct). **Bifrost does NOT fail glm-5.3 over** (8/8 429 on unique-prompt retest) → oracle kept off z.ai; council alpha moved to `alibaba-token-plan/glm-5.2` (working). |
+| **Open-weight cohort** | GLM-5.3 (AA 59.5 agentic), K3, Qwen3.8 Max | **GLM-5.3 (AA 45, DeepSWE 69%) vs GLM-5.3-Flash (AA 42, DeepSWE 63%)** — Flash ≈95% of GLM-5.3 at ~1/10 cost (6,320 vs 220 req/5h) → orchestrator/fixer/observer stay Flash. **DeepSeek V4.1 Flash (Sep 10, MIT, id `deepseek-flash`) replaces V4 Flash + V4 Flash Vision Exp** (both retired; legacy IDs reroute; V4 Pro retired Sep 14). **Hy4 preview** (Aug 28, Apache 2.0) routable on Go/Zen. **K2 Horizon 375B-A23B** (Sep 3, MBZUAI, Apache 2.0) AA 47 = highest open-weight AA, but **NOT on Go/Zen/OR — unrouted**. |
+| **Closed frontier registered** | — | **Fable 5.1** (Sep 1, #1 AA 53.4, #1 Arena Agent +14.51%), **GPT-6 Astra/Pro** (Sep 3, AA 52.8), **Gemini 3.8 Flash** (Sep 2) — all listed on Zen but **unrouted** (open-weight-only user decision). |
+| **Qwen3.8-Max-0902** | Qwen3.8 Max (production, AA 58.1/71.8/58.4) | **NEW post-trained API snapshot (Sep 3)** — WebDev ELO **1685** (best open-tier design); AA 40, DeepSWE 57%, Arena +3.90%. Hosted API proprietary; usable open sibling is Qwen3.8-27B (Apache 2.0). |
+| **Muse Spark 1.3** | Muse Spark 1.2 Contributor | **NEW (Sep 2)** — Meta-**proprietary** (not open-weight) despite leading DeepSWE in some sources; Go Contributor $60. |
+| **No-shows this window** | — | **No GLM-5.4/5.5** (projected Oct–Nov), **no Kimi K4**, **no MiniMax M3 Pro**. |
+| **Go list changes** | GLM-5.3-Flash $15 | **NEW/changed:** GLM-5.3-Flash $60 cap; Qwen3.8 Flash $30; DeepSeek V4.1 Flash $15 (id `deepseek-flash`); Hy4 preview $30; Grok 4.6 $15; GPT 5.6 Luna $15; Muse Spark 1.3 Contributor $60. **Not on Go:** GPT-6 Astra, Fable 5.1, Gemini. |
+| **Zen list changes** | GLM-5.3 + GLM-5.3-Flash present | GLM-5.3 + GLM-5.3-Flash still present; **Qwen3.8 Max absent** (tops at Qwen3.7 Max); GPT-6 Astra, Fable 5.1, Gemini 3.8 Flash, Grok 4.6, Muse Spark 1.3 listed. GPT 5.6 Sol 50% off through Sep 18. |
+| **Config changes applied** | — | (i) `opencode.jsonc` += `opencode-go/deepseek-flash` + `alibaba-token-plan/glm-5.2`; (ii) **pruned 9 non-open-weight models** (Grok/GPT/Claude/Gemini/Muse/Mercury) from `opencode.jsonc` + bifrost OR allowlist → 37 open-weight models remain; (iii) `oh-my-opencode-slim.jsonc` oracle stays `qwen3.8-max` (a `zai/glm-5.3` trial was reverted — cap + no failover), council alpha → `alibaba-token-plan/glm-5.2`; (iv) `bifrost/config.json` refreshed `glm-5.3-failover-chain`, extended `kimi-k3-failover-chain`, added `qwen3.8-max-` (p10), `qwen3.8-flash-` (p11), `deepseek-v4.1-flash-` (p12) chains. |
+| **Endpoint health** | Not re-tested (Aug 24) | Live-OK (Sep 10): kimi-for-coding/k3, deepseek/deepseek-v4-flash, minimax/MiniMax-M3, alibaba-token-plan/qwen3.8-max. **Go models require `x-opencode-session` header** (present in opencode, absent in raw curl). |
+
+**Key insight (Sep 10):** Cost pressure cleared the dead weight — **OpenRouter exhaustion + z.ai's GLM-5.3 cap** make the Go pool the only reliable frontier route. The open-weight tier is now **GLM-5.3-Flash for volume** (orchestrator/fixer/observer), **Qwen3.8-Max for reasoning** (oracle — GLM-5.3 blocked by the z.ai cap + missing bifrost failover until Sep 13), **Qwen3.8-Max-0902 for design** (WebDev 1685), and **DeepSeek V4.1 Flash as the cheap long-ctx explorer** (its 74.2 DeepSWE is provider-run/self-reported — provisional). K2 Horizon (AA 47, highest open-weight) is the one to watch if it ever routes. Closed leaders Fable 5.1 / GPT-6 Astra are registered but intentionally unrouted.
+
+### Fresh Data Delta (Aug 24 2026 — this session)
+
+Raw scrape artifacts in `findings/2026-08-24-benchmark-snapshot.md` (DeepSWE trials aggregation, Arena Agent Aug 19 payload, Design Arena, Go/Zen docs, OR catalog, GLM-5.3 launch data).
+
+| Finding | Previous (Jul 25) | Live (Aug 24) |
+|---|---|---|
+| **GLM-5.3** (Aug 14) | Not released | **NEW** — post-training upgrade on GLM-5.2 base (744B/40B MoE, 1M ctx). Thinking REQUIRED (low/high/max, default max). **AA Intel 59.5 / Coding 74.8 / Agentic 59.1** (agentic = highest of ANY model incl. GPT-5.6 Sol 57.8). Design Arena 1347 (#5). Vendor DeepSWE 66.9 / TB3 28.3 / Toolathlon 73.0 (unverified). $1.40/$4.40 Go (usage $15, ~1,080/mo) + OR. Not on DeepSWE/Arena leaderboards yet. Open weights ~Aug 28. |
+| **Kimi K3 Arena** | N/A (no score) | **+10.41% (#4 overall)** — best open model by a wide margin (Aug 19 snapshot, 1.91M sessions, 51 models). Design Arena **#1 overall 1407 + #1 fullstack 1361**. AA 59.7/76.2/54.3 unchanged. 429-capacity risk persists. |
+| **Qwen3.8 Max** | Preview (Jul 19) | **Production.** AA 58.1/71.8/58.4, Arena **+6.20% (#15)**, Design 1321 / fullstack 1331 (#3) / backend 7.0 (#3=t). $2/$6 Go (usage $15, ~810/mo) + alibaba-token-plan + OR; NOT on Zen. |
+| **DeepSeek V4 Flash refresh (0731)** | Not released | **NEW Jul 31.** AA 51.8/69.1/48.4 (old: 42.1). **Arena −4.64% → +3.99% (#20)** — full recovery. **OpenRouter plain `deepseek/deepseek-v4-flash` still serves OLD weights;** refresh = `-0731` ID. Go/Zen flash = refresh (new off-peak $0.22/$0.66 pricing). 1.31M ctx. |
+| **DeepSeek V4 Pro refresh (0813)** | Not released | **NEW Aug 13.** AA 53.2/68.8/49.6. **Arena +0.05% → +6.26% (#14)**. Vendor DeepSWE 62.7. $1.12/$3.37 OR; Go usage $15. |
+| **Hy3 on Go** | OR-only | **ADDED to Go** ($0.14/$0.58, usage $60 → ~21.5K/mo). AA updated 42.2/58.8/31.4. Arena −2.38%. |
+| **Ox Alpha** (stealth) | Not present | **NEW, FREE** — 1M ctx, text+img+video in, reasoning model for coding/agentic. Go (limited time) + OR `stealth/ox-alpha`. No benchmarks yet. |
+| **Go plan structure** | Request-count limits | **Dollar-based**: $12/5h, $30/wk, $60/mo; per-model usage caps $15–$60 (6× multiplier) |
+| **Go: GLM-5.2 price** | $2.80/$8.80 | **$1.40/$4.40 (halved)**, usage $60 (4,300/mo) |
+| **Go: GLM-5.3 / K3 / Qwen3.8 Max** | — | All usage $15: GLM-5.3 ~1,080/mo, K3 ~490/mo, Qwen3.8 Max ~810/mo |
+| **Go: new cheap volume models** | — | **LongCat-2.0** $0.30/$1.20 (~57.2K/mo), **Muse Spark 1.2 Contributor** $0.10/$0.20 (~226.6K/mo), **GPT 5.6 Luna** $0.20/$1.20 (~10.25K/mo), **DS V4 Flash Vision Exp** |
+| **Zen new** | — | Claude **Opus 5** $5/$25, Gemini **3.7 Flash** $1.50/$7.50, Grok **4.6** $2/$6, Kimi K3 $3/$15 |
+| **Zen removed/absent** | — | **GLM-5.3, Qwen3.8 Max, Hy3 NOT on Zen.** GLM 5 still listed ($1/$3.20). |
+| **OR price drops** | — | GLM-5.2 $0.97/$3.04, GPT-5.6 Sol $2/$10, Luna $0.20/$1.20, Cat-Coder air v2.5 $0.15/$0.60, laguna-s-2.1 $0.09/$0.18 |
+| **Arena Agent snapshot** | Jul 12: 1M sessions, 35 models | **Aug 19: 1.91M sessions, 51 models** — new: Opus 5 (+12.47% #1), K3 (+10.41% #4), Grok 4.5, Qwen3.8 Max |
+| **Design Arena** | GLM-5.2 #1 (1356) | **Kimi K3 #1 (1407, + fullstack #1 1361); GLM-5.3 1347 (#5), GLM-5.2 1331**; Qwen3.8 Max 1321 (fullstack #3 1331); GLM-5.2 backend score weak (4.7/10) |
+| **DeepSWE leaderboard** | 16 models (Jul 17) | **Unchanged 21-model trials set** — no glm-5.3/k3/qwen3.8-max/0731 runs. GLM-5.2 [max] 42%, kimi-k2.6 23.9%, minimax-m3 20.4%, mimo-v2.5-pro 19.5%, qwen3.7-max 17.7% (from trials.json, all-effort aggregation) |
+| **kimi-for-coding plan** | — | `k3-256k` = Kimi K3 256K-ctx variant via kimi.com/code plan; text+img in; fits designer/council slots |
+| **MiniMax #47** | Open | Status **unverified** — treat as still open (observer is low-volume; bifrost fallback to Go minimax-m3 exists) |
+| **Endpoint health** | 14/14 up (Jul 18) | Not re-tested this session — rerun `scripts/test-endpoints.sh` before switching |
+
+**Key insight:** The value triangle flipped. **Kimi K3** is now the independent king of agentic orchestration (Arena #4) AND design (Design #1) AND coding (AA 76.2), at $3/$15 — but volume-capped (490/mo Go, 429s). **GLM-5.3** has the best AA agentic index ever recorded (59.1) but zero independent leaderboard entries yet. **Qwen3.8 Max** is the balanced #2 across all three axes. **deepseek-v4-flash-0731** is the new value-fixer champion (Arena +3.99%, AA coding 69.1, $0.07–$0.22 range, 37.8K/mo Go). GLM-5.2's Design Arena backend weakness (4.7) explains why the current preset already moved designer off it.
+
+### Fresh Data Delta (Jul 25 2026 — this session)
+
+| Finding | Previous (Jul 18) | Live (Jul 25) |
+|---|---|---|
+| **Qwen 3.8-Max** (Jul 19) | Not released | **NEW** — Alibaba, ~2.4T MoE, 1M ctx, native multimodal. **Open-weight confirmed (Bloomberg), release date TBD.** Code Arena Elo ~47–48 (between Fable 5 ~60 and Kimi K3 ~41–42; trails Fable 5 by ~12.6pts, beats K3 by ~6pts). **No DeepSWE / AA Intelligence Index score yet** (preview only, no official leaderboard entry). API access via Alibaba Token Plan, Qoder, QoderWork. Subscription $6–$68/mo. Released via "kaleb" stealth preview on Code Arena Jul 18 — community ID'd via `PostalCodesNL` Qwen tokenizer fingerprint. Reported strengths: frontend, 3D rendering (Three.js/WebGL). Self-reported rank: "second only to Claude Fable 5" (no methodology published). |
+| **Inkling** (Jul 15) | Not released | **NEW** — Thinking Machines Lab (Mira Murati), 975B MoE / 12B active, BF16 (1.9TB), **Apache 2.0**, multimodal (image+audio input). **SWE-bench 77.6%**, Terminal-Bench strong. Controllable thinking-effort dial, Tinker fine-tuning API. **Positioning: best customization base — not #1 overall.** HuggingFace weights only, NOT on OpenCode Go/Zen/OpenRouter yet. |
+| **Gemma 4** (Jul 1) | Not in REFERENCE | **ADDED** — Google DeepMind, multimodal + MoE, encoder-free multimodal inputs, optional thinking mode. Multiple sizes incl. E2B (3.7M+ HF downloads, trending #1 open). No specific DeepSWE/AA score posted yet — placeholder. |
+| **KAT-Coder V2.5 Dev** (Jul 23) | Not released | **NEW — STRONG FIXER CANDIDATE** — Kwaipilot (Kuaishou), 35B total / 3B active MoE (text-only, vision weights excluded), **OpenMDW-style license** (Apache-2.0-derived). Built on Qwen3.6-35B-A3B base, SFT + RL post-training. **SWE-bench Verified 69.4%** (frontier-tier, ahead of all open weights except Fable 5 69.7%), SWE-bench Multilingual 63.0%, SWE-bench Pro 45.96, Terminal-Bench 2.1 41.02, PinchBench 93.43, Scicode 44.20. Beats Qwen3.5-27B on every benchmark. HuggingFace only — **NOT on Go/Zen/OpenRouter yet.** |
+| **Laguna-S-2.1** (Jul 13) | Not released | **NEW — IMMEDIATE FIXER IMPACT** — Poolside, 118B total / 8B active MoE, 1M ctx, **OpenMDW-1.1 license** (commercial OK). **DeepSWE 40.4%, Terminal-Bench 2.1 70.2%, SWE-bench Multilingual 78.5%, SWE-Bench Pro 59.4%, SWE Atlas 46.2%, Toolathlon Verified 49.7%.** Beats kimi-k2.7-code on DeepSWE (40.4 vs 31%) and SWE-Bench Pro (59.4 vs 41.9). Native reasoning, speculative decoding (DFlash draft). **ALREADY on OpenRouter** (`poolside/laguna-s-2.1`) — immediately routable. |
+| **Ring-Zero** (Jul 13) | Not released | **NEW** — inclusionAI, trillion-parameter MoE, **zero-RL reasoning** (no human-labeled CoT, emergent reasoning via RL alone). Open weights. No DeepSWE/AA benchmarks posted. Reasoning model variant — could compete with K3 if quality holds. |
+| **Intern-S2-Preview-397B** (Jul 16) | Not released | **NEW** — InternLM/Shanghai AI Lab, 397B multimodal, **Apache 2.0**. Vision-language. Open weights. No specific DeepSWE score yet. Multimodal observer candidate. |
+| **Soofi S** (Jul 16) | Not released | **NEW** — German consortium, 30B dense, EN+DE benchmark top marks. EU multilingual niche. |
+| **Solar Open2 250B** (Jul 22) | Not released | **NEW** — Upstage (Korea), 250B MoE, EN/KR tuned. Open weights. Not relevant unless KR locale required. |
+| **Motif 3 Beta** (Jul 20) | Not released | **NEW** — Motif Technologies (Korea), MoE, long-context multilingual. Beta preview. |
+| **Microsoft Fara1.5-27B** (Jul 17) | Not released | **NEW** — 27B VLM, computer-use agent target (browser/desktop). MIT license. Small footprint, niche use. |
+| **Microsoft Mage-Flow** (Jul 21) | Not released | **NEW** — 4B text→image + image editing, MIT. Image-gen only, not LLM. |
+| **Audio-Visual Flamingo** (Jul 16) | Not released | **NEW** — NVIDIA, audio+image+video reasoning, fully open multimodal. Observer candidate. |
+| **MOSS-VL-Realtime** (Jul 14) | Not released | **NEW** — OpenMOSS, streaming video understanding VLM. Niche (live video). |
+| **Nemotron-3-Embed 8B / 1B** (Jul 14-16) | Not released | **NEW** — NVIDIA, RTEB retrieval leader at both sizes. Embedding model, not LLM. |
+| **Open-weight field velocity** | ~1 frontier-class open-weight launch/month | **Jul 2026: 13+ open-weight releases in 25 days** — KAT-Coder V2.5 Dev (Jul 23), Solar Open2 (Jul 22), Mage-Flow (Jul 21), Motif 3 Beta (Jul 20), Qwen 3.8-Max (Jul 19), Fara1.5-27B (Jul 17), Inkling (Jul 15), Soofi S (Jul 16), Intern-S2 (Jul 16), AV-Flamingo (Jul 16), Ring-Zero (Jul 13), **Laguna-S-2.1 (Jul 13)**, MOSS-VL-Realtime (Jul 14). Frontier cycle is now ~weekly. |
+| **Open-weight pendulum** | Qwen3.6 Apache 2.0 → Qwen3.7 proprietary → K3 confirmed open-weight | **Reversal confirmed**: Qwen3.8-Max returning to open-weight after Qwen3.7 proprietary phase. DeepSeek playbook (build behind closed doors, release weights when competitive) now standard for Chinese frontier labs. Poolside (Laguna) and Thinking Machines (Inkling) follow same playbook. |
+| **Open-weight → closed gap** | Open models trail Fable 5 by ~18pts DeepSWE | **Laguna-S-2.1 at DeepSWE 40.4% — beats GLM-5.2 SWE-Bench Pro (59.4 vs 62.1 close) and Terminal-Bench 2.1 70.2**. SWE-bench Verified 69.4% (KAT-Coder) and 77.6% (Inkling) close the gap to closed frontier (Fable 5 69.7%, GPT-5.6 Sol 73%). |
+| **Provider availability (Go/Zen/OR)** | 14 Go models, 0 open-weight frontier beyond K3 | **Laguna-S-2.1 NOW on OpenRouter** (`poolside/laguna-s-2.1`) — first new open-weight frontier model with immediate routing. KAT-Coder, Inkling, Qwen 3.8-Max, Ring-Zero still HuggingFace-only. Watch for OR routing. |
+
+### Updated Coder Models Leaderboard (Jul 25, 2026)
+
+| Model | DeepSWE | SWE-bench Ver. | SWE-bench Pro | Terminal-Bench 2.1 | License | Provider |
+|---|---|---|---|---|---|---|
+| Claude Fable 5 | 70% | — | 80.3% | 88% | Proprietary | Zen |
+| GPT-5.6 Sol | 73% | — | — | — | Proprietary | OpenRouter |
+| **Inkling** (Jul 15) | — | 77.6% | 54.3% | 63.8% | Apache 2.0 | HF only |
+| **KAT-Coder V2.5 Dev** (Jul 23) | — | 69.4% | 45.96% | 41.02% | Apache 2.0 | HF only |
+| **Laguna-S-2.1** (Jul 13) | 40.4% | — | 59.4% | 70.2% | OpenMDW-1.1 | **OpenRouter ✓** |
+| Kimi K3 | 69% | — | — | 88.3% | Open (Jul 27) | Go + OR |
+| GLM-5.2 | 44% | — | 62.1% | 81.0% | MIT | Go + Zen + OR |
+| Hy3 (Tencent) | 28 (self) | 78 (self) | 57.9 (self) | 71.7% | Apache 2.0 | OR only |
+| Qwen3.7 Max | 18% | — | 60.6% | 75.0% | Proprietary | Go + Zen |
+| kimi-k2.7-code | 31% | — | — | — | Open | Go + Zen |
+| Muse Spark 1.1 | 53.3% | — | 61.5% | 80% | Open? | OR |
+
+**Key insight for preset design:**
+- **CHEAP preset — fixer upgrade opportunity:** KAT-Coder V2.5 Dev (SWE-bench Ver 69.4%, 35B/3B MoE) once on OR. Will be MUCH cheaper than kimi-k2.7-code. HuggingFace-only currently.
+- **VALUE preset — IMMEDIATE upgrade available:** Swap VALUE's fixer from `moonshotai/kimi-k2.7-code-highspeed` to **`poolside/laguna-s-2.1`** (via OpenRouter). DeepSWE 40.4% vs 31% (+9.4pp), SWE-Bench Pro 59.4% vs ~42% (+17pp). Pricing TBD — likely comparable or cheaper.
+- **QUALITY preset — STRONGER upgrade available:** Replace `opencode-go/glm-5.2` (DeepSWE 44%) with **KAT-Coder** (SWE-bench Ver 69.4%, but no DeepSWE) or **Laguna-S-2.1** (DeepSWE 40.4% — actually lower). **Decision:** for QUALITY's DeepSWE-specific optimization, keep GLM-5.2. For SWE-bench-specific, KAT-Coder wins but no DeepSWE score to compare. WAIT for KAT-Coder DeepSWE run.
+- **COUNCIL diversification (immediate):** Laguna-S-2.1 (Poolside) is on OpenRouter — add as a new family in the council lineup.
+- **OBSERVER multimodal alternatives:** Intern-S2-397B (Apache 2.0, multimodal) and Inkling (image+audio) are open alternatives to M3 once routable. Currently HuggingFace-only.
 
 ### Fresh Data Delta (Jul 18 2026 — this session)
 

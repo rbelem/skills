@@ -1,149 +1,173 @@
 #!/bin/bash
-# Test all OpenCode Go model endpoints for liveness
+# OpenCode Go endpoint liveness check — current model list (Oct 15, 2026).
+#
 # Usage: ./scripts/test-endpoints.sh [API_KEY]
-# If no API_KEY provided, tries $OPENAI_API_KEY, then $OPENCODE_GO_API_KEY
+# Key resolution order: $1 → $OPENCODE_GO_API_KEY → opencode auth.json
+# (provider "opencode-go").
+#
+# Go serves three access modes (discovered 2026-10-15):
+#   1. OpenAI-compatible  POST /chat/completions  (all open-weight models)
+#   2. Anthropic-compatible POST /messages        (claude-haiku-5-5, minimax-m2.7)
+#   3. client-only protocol                        (grok/gpt/gemini/muse — raw curl
+#      returns 400 ModelProtocolUnsupported; verify with
+#      `opencode run --model opencode-go/<id> 'Reply with exactly: OK'`)
+#
+# Raw curl requirements: non-SDK User-Agent (Cloudflare bans generic signatures
+# with 403 code 1010) + x-opencode-session (Go routes agents by it).
+# Free previews (longcat-2.5-preview-free, step-5-preview-free, cat-jam-free)
+# are unlimited but "limited time" — re-check them each refresh.
 
 set -uo pipefail
 
-BASE_URL="${OPENAI_BASE_URL:-https://opencode.ai/zen/go/v1}"
-API_KEY="${1:-${OPENAI_API_KEY:-${OPENCODE_GO_API_KEY:-}}}"
+BASE_URL="${OPENCODE_GO_BASE_URL:-https://opencode.ai/inference/go/v1}"
 
-if [ -z "$API_KEY" ]; then
-    echo "Error: No API key provided."
-    echo "Usage: $0 [API_KEY]"
-    echo "Or set OPENAI_API_KEY or OPENCODE_GO_API_KEY environment variable."
+if [ -n "${1:-}" ]; then
+    API_KEY="$1"
+elif [ -n "${OPENCODE_GO_API_KEY:-}" ]; then
+    API_KEY="$OPENCODE_GO_API_KEY"
+else
+    API_KEY=$(python3 - <<'PY' 2>/dev/null
+import json, os
+p = os.path.expanduser("~/.local/share/opencode/auth.json")
+try:
+    print(json.load(open(p))["opencode-go"]["key"])
+except Exception:
+    pass
+PY
+)
+fi
+
+if [ -z "${API_KEY:-}" ]; then
+    echo "Error: no API key (arg, \$OPENCODE_GO_API_KEY, or auth.json opencode-go)."
     exit 1
 fi
 
-# Models using OpenAI-compatible /chat/completions endpoint
+# OpenAI-compatible /chat/completions
 declare -a OPENAI_MODELS=(
-    "glm-5.2"
-    "glm-5.1"
-    "kimi-k2.7-code"
-    "kimi-k2.6"
+    "cat-jam-free"
     "deepseek-v4-pro"
-    "deepseek-v4-flash"
+    "deepseek-v4.1-flash"
+    "glm-5.2"
+    "glm-5.3"
+    "glm-5.3-flash"
+    "hy3"
+    "hy4-preview"
+    "kimi-k2.7-code"
+    "kimi-k3"
+    "longcat-2.0"
+    "longcat-2.5-preview-free"
     "mimo-v2.5"
     "mimo-v2.5-pro"
-)
-
-# Models using Anthropic-compatible /messages endpoint
-declare -a ANTHROPIC_MODELS=(
+    "mimo-v2.6-flash"
+    "mimo-v2.6-pro"
     "minimax-m3"
-    "minimax-m2.7"
-    "minimax-m2.5"
-    "qwen3.7-max"
     "qwen3.7-plus"
-    "qwen3.6-plus"
+    "qwen3.8-flash"
+    "qwen3.8-max"
+    "space-bunny"
+    "step-5-preview-free"
 )
 
-TEST_PROMPT="Say OK"
-MAX_TOKENS=5
-CONNECT_TIMEOUT=8
-MAX_TIME=15
+# Anthropic-compatible /messages
+declare -a ANTHROPIC_MODELS=(
+    "claude-haiku-5-5"
+    "minimax-m2.7"
+)
+
+# Client-only protocol: raw HTTP not supported. Verify via `opencode run`.
+declare -a CLIENT_ONLY_MODELS=(
+    "gemini-4-argon-contributor"
+    "gpt-5.6-luna"
+    "gpt-6-luna"
+    "grok-4.6"
+    "grok-4.7"
+    "muse-spark-1.2-contributor"
+    "muse-spark-1.3-contributor"
+)
+
+TEST_PROMPT="Reply with exactly: OK"
+MAX_TOKENS=512
+CONNECT_TIMEOUT=10
+MAX_TIME=90
 
 echo "=============================================="
-echo "OpenCode Go Endpoint Health Check"
+echo "OpenCode Go Endpoint Health Check ($(date -u +%FT%TZ))"
 echo "Base URL: $BASE_URL"
+echo "Models: $(( ${#OPENAI_MODELS[@]} + ${#ANTHROPIC_MODELS[@]} + ${#CLIENT_ONLY_MODELS[@]} ))"
 echo "=============================================="
-echo ""
 
-# Temporary directory for parallel results
 TMPDIR=$(mktemp -d)
 trap "rm -rf $TMPDIR" EXIT
 
-# Test a single OpenAI-compatible model
-test_openai_model() {
-    local model=$1
+run_probe() {
+    # run_probe <protocol> <model> ; protocol: openai|anthropic
+    local proto=$1 model=$2
     local outfile="$TMPDIR/${model}.txt"
-    
-    response=$(curl -s -X POST \
-        -H "Content-Type: application/json" \
-        -H "Authorization: Bearer $API_KEY" \
-        -d "{\"model\":\"$model\",\"messages\":[{\"role\":\"user\",\"content\":\"$TEST_PROMPT\"}],\"max_tokens\":$MAX_TOKENS}" \
-        "${BASE_URL}/chat/completions" \
-        --connect-timeout $CONNECT_TIMEOUT \
-        --max-time $MAX_TIME 2>/dev/null || echo '{"error":{"message":"Connection failed"}}')
-    
-    if echo "$response" | grep -q '"choices"' 2>/dev/null; then
-        content=$(echo "$response" | grep -oP '"content":\s*"[^"]*"' | head -1 | cut -d'"' -f4)
-        echo "✅ UP (response: ${content:-<empty>})" > "$outfile"
-    elif echo "$response" | grep -q '"error"' 2>/dev/null; then
-        error_msg=$(echo "$response" | grep -oP '"message":\s*"[^"]*"' | head -1 | cut -d'"' -f4 || echo "unknown error")
-        echo "❌ DOWN: $error_msg" > "$outfile"
+    local response http_code time_total
+
+    if [ "$proto" = "openai" ]; then
+        response=$(curl -s -w '\n%{http_code} %{time_total}' -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $API_KEY" \
+            -H "User-Agent: opencode-go-healthcheck/1.0" \
+            -H "x-opencode-session: healthcheck-${model}" \
+            -d "{\"model\":\"$model\",\"messages\":[{\"role\":\"user\",\"content\":\"$TEST_PROMPT\"}],\"max_tokens\":$MAX_TOKENS}" \
+            "${BASE_URL}/chat/completions" \
+            --connect-timeout $CONNECT_TIMEOUT --max-time $MAX_TIME 2>/dev/null \
+            || echo '{"error":{"message":"Connection failed"}}')
     else
-        echo "❌ DOWN: No valid response" > "$outfile"
+        response=$(curl -s -w '\n%{http_code} %{time_total}' -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "User-Agent: opencode-go-healthcheck/1.0" \
+            -H "x-opencode-session: healthcheck-${model}" \
+            -d "{\"model\":\"$model\",\"max_tokens\":$MAX_TOKENS,\"messages\":[{\"role\":\"user\",\"content\":\"$TEST_PROMPT\"}]}" \
+            "${BASE_URL}/messages" \
+            --connect-timeout $CONNECT_TIMEOUT --max-time $MAX_TIME 2>/dev/null \
+            || echo '{"error":{"message":"Connection failed"}}')
+    fi
+
+    local meta body
+    meta=$(printf '%s' "$response" | tail -1)
+    http_code=$(printf '%s' "$meta" | awk '{print $1}')
+    time_total=$(printf '%s' "$meta" | awk '{print $2}')
+    body=$(printf '%s' "$response" | sed '$d')
+
+    if [[ "$http_code" == "200" ]] && { printf '%s' "$body" | grep -q '"choices"'; printf '%s' "$body" | grep -q '"content"'; }; then
+        echo "✅ UP (${time_total}s)" > "$outfile"
+    elif printf '%s' "$body" | grep -q '"error"'; then
+        local error_msg
+        error_msg=$(printf '%s' "$body" | grep -oP '"message":\s*"[^"]*"' | head -1 | cut -d'"' -f4 || echo "unknown error")
+        echo "❌ DOWN [${http_code:-?}]: $error_msg" > "$outfile"
+    else
+        echo "❌ DOWN [${http_code:-?}]: no valid response" > "$outfile"
     fi
 }
 
-# Test a single Anthropic-compatible model
-test_anthropic_model() {
-    local model=$1
-    local outfile="$TMPDIR/${model}.txt"
-    
-    response=$(curl -s -X POST \
-        -H "Content-Type: application/json" \
-        -H "x-api-key: $API_KEY" \
-        -d "{\"model\":\"$model\",\"messages\":[{\"role\":\"user\",\"content\":\"$TEST_PROMPT\"}],\"max_tokens\":$MAX_TOKENS}" \
-        "${BASE_URL}/messages" \
-        --connect-timeout $CONNECT_TIMEOUT \
-        --max-time $MAX_TIME 2>/dev/null || echo '{"error":{"message":"Connection failed"}}')
-    
-    if echo "$response" | grep -q '"content"' 2>/dev/null; then
-        text=$(echo "$response" | grep -oP '"text":\s*"[^"]*"' | head -1 | cut -d'"' -f4)
-        echo "✅ UP (response: ${text:-<empty>})" > "$outfile"
-    elif echo "$response" | grep -q '"error"' 2>/dev/null; then
-        error_msg=$(echo "$response" | grep -oP '"message":\s*"[^"]*"' | head -1 | cut -d'"' -f4 || echo "unknown error")
-        echo "❌ DOWN: $error_msg" > "$outfile"
-    else
-        echo "❌ DOWN: No valid response" > "$outfile"
-    fi
-}
-
-# Launch all tests in parallel
 for model in "${OPENAI_MODELS[@]}"; do
-    test_openai_model "$model" &
+    run_probe openai "$model" &
 done
-
 for model in "${ANTHROPIC_MODELS[@]}"; do
-    test_anthropic_model "$model" &
+    run_probe anthropic "$model" &
 done
-
-# Wait for all background jobs
 wait
 
-# Collect results
-UP_COUNT=0
-DOWN_COUNT=0
-
-for model in "${OPENAI_MODELS[@]}"; do
+UP=0
+DOWN=0
+for model in "${OPENAI_MODELS[@]}" "${ANTHROPIC_MODELS[@]}"; do
     result=$(cat "$TMPDIR/${model}.txt" 2>/dev/null || echo "? No result")
-    echo "Testing $model ... $result"
-    if [[ "$result" == *"✅ UP"* ]]; then
-        ((UP_COUNT++))
-    else
-        ((DOWN_COUNT++))
-    fi
+    printf '%-32s %s\n' "$model" "$result"
+    if [[ "$result" == *"✅ UP"* ]]; then ((UP++)); else ((DOWN++)); fi
 done
-
-echo ""
-
-for model in "${ANTHROPIC_MODELS[@]}"; do
-    result=$(cat "$TMPDIR/${model}.txt" 2>/dev/null || echo "? No result")
-    echo "Testing $model ... $result"
-    if [[ "$result" == *"✅ UP"* ]]; then
-        ((UP_COUNT++))
-    else
-        ((DOWN_COUNT++))
-    fi
+for model in "${CLIENT_ONLY_MODELS[@]}"; do
+    printf '%-32s ➖ SKIP (client-only protocol; verify via opencode run)\n' "$model"
 done
 
 echo ""
 echo "=============================================="
-echo "Results: $UP_COUNT up, $DOWN_COUNT down"
+echo "Results: $UP up, $DOWN down (raw-HTTP subset; ${#CLIENT_ONLY_MODELS[@]} client-only skipped)"
 echo "=============================================="
 
-if [ $DOWN_COUNT -gt 0 ]; then
-    exit 1
-fi
+[ $DOWN -gt 0 ] && exit 1
 exit 0
