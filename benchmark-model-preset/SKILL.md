@@ -75,20 +75,26 @@ Released Jul 16; **Arena Agent +10.41% (#4 overall — best open model by far, A
 Live in `oh-my-opencode-slim.jsonc` as `presets.budget` (active) with
 `council.presets.budget`; `opencode.jsonc` main model, title agent, and the
 OptChat compactor all point at `opencode-go`. Full inventory + probe results:
-[findings/2026-10-15-benchmark-snapshot.md](findings/2026-10-15-benchmark-snapshot.md).
+[findings/2026-10-15-benchmark-snapshot.md](findings/2026-10-15-benchmark-snapshot.md);
+Oct-16 refresh (beam-free, muse-1.2, luna, haiku, `opencode/*-free` wiring):
+[findings/2026-10-16-go-refresh.md](findings/2026-10-16-go-refresh.md).
 
-| Seat | Chain (all `opencode-go/`) | Why |
-|---|---|---|
-| orchestrator | muse-spark-1.3-contributor#high → glm-5.3-flash#high → mimo-v2.6-flash → deepseek-v4.1-flash#high | Muse: same $60 cap but ~226.6K est req/mo vs GLM-Flash ~31.6K (~7×), cache-read 15× cheaper ($0.002 vs $0.03); GLM-Flash fallback |
-| oracle | glm-5.3#max → space-bunny#max → kimi-k3#max | verified DeepSWE 69; cheap $15 caps; K3 as quality escalation |
-| librarian | step-5-preview-free#low → deepseek-v4.1-flash#low → qwen3.8-flash#low | free unlimited; Kingbench 83.75% |
-| explorer | muse-spark-1.3-contributor#high → cat-jam-free#high → mimo-v2.6-flash | Muse for retrieval quality (verified live); cat-jam free fallback |
-| designer | qwen3.8-max#xhigh → glm-5.3-flash#high | WebDev ELO 1685 (best open-tier design) |
-| fixer | muse-spark-1.3-contributor#high → glm-5.3-flash#high → space-bunny#high → mimo-v2.6-flash | cheapest strong writer ($0.10/$0.20, 368M completed sessions on OpenCode); GLM-Flash demoted to fallback |
-| observer | glm-5.3-flash#high | vision QA-passed model; enabled 2026-10-15 (verified live on a test image) |
-| council (synth) | glm-5.3#max → mimo-v2.6-pro | |
-| fast-generic | cat-jam-free#high → glm-5.3-flash#low | free mechanical seat; paid entry only as fallback |
-| councillors | alpha kimi-k3#max (→ glm-5.3 fallback) · beta glm-5.3#max · gamma qwen3.8-max#xhigh · delta mimo-v2.6-pro | 4 families; alpha carries a fallback for K3's 429 history (added 2026-10-15) |
+Live chains live in `oh-my-opencode-slim.jsonc` `presets.budget` — read them
+there, never from a copy in this file. Seat rationale (the part the config
+cannot confess):
+
+| Seat | Why this head |
+|---|---|
+| orchestrator | cheapest strong writer per request (Muse $60 cap ≈226.6K req/mo, ~7× GLM-Flash; cache-read 15× cheaper); 1.2 second (separate $60 bucket = quota-spread) |
+| oracle | verified DeepSWE 69 (GLM-5.3); K3 as quality escalation despite 429 history |
+| librarian | free first (`opencode/` GLM-Flash = proven quality at $0; beam-free = Go-gated backup); paid Luna/deepseek behind |
+| explorer | Muse for retrieval quality (verified live); free GLM-Flash/beam behind |
+| designer | qwen3.8-max WebDev ELO 1685 (best open-tier design) |
+| fixer | Muse 1.3 → 1.2 (quota-spread) → GLM-Flash; writers stay off free tiers (stop-not-overflow policy) |
+| observer | GLM-5.3-Flash vision QA-passed |
+| council (synth) | GLM-5.3 reasoning |
+| fast-generic | free first (GLM-Flash, then beam); haiku (verified tool use) before paid GLM-Flash |
+| councillors | 4 families (K3 / GLM-5.3 / qwen3.8-max / mimo-pro); alpha carries a GLM-5.3 fallback for K3's 429s |
 
 **Late-Oct-15 tunings:** observer enabled; compaction + summary pinned to Muse
 in `opencode.jsonc`; fast-generic → cat-jam-free; explorer → Muse; council
@@ -139,10 +145,16 @@ remove on request). Go caps exhausted now = the session stops/errors.
 
 **Preset-design rules for Go-only mode**
 
-1. Free previews (cat-jam, step-5, longcat-2.5) go on **high-volume read-only
-   seats only** (explorer, librarian). A preview retirement then degrades to
-   the chain instead of breaking a writer seat. Check liveness each refresh —
-   `opencode run --model <id> 'x'` fails fast with "Model unavailable".
+1. Free tiers go on **high-volume read-only/mechanical seats only**
+   (explorer, librarian, fast-generic) — never on writers. A retirement then
+   degrades to the chain instead of breaking a writer seat. Two namespaces
+   exist: `opencode-go/*-free` (Go quota) and `opencode/*-free`
+   (Console-attested, needs signed-in Console; lapses fail over silently).
+   Probe a free name under **both** namespaces before declaring it dead, and
+   mix namespaces inside a chain so either gate dropping still leaves a path.
+   Check liveness every refresh with `./scripts/probe-heads.sh` — `doctor`
+   passes with dead models still in chains (Oct-16 lesson: two lanes
+   dispatched onto retired previews).
 2. Variant strings must exist in the model's models.dev `reasoning_options`
    values (glm-5.3-flash: low/high/max; kimi-k3: max; qwen3.8-*: low/medium/
    xhigh; space-bunny: low…max; mimo-v2.6-*: none). Unknown variant =
@@ -155,8 +167,11 @@ remove on request). Go caps exhausted now = the session stops/errors.
 5. Presets may override custom agents (e.g. `fast-generic`); effective map is
    `deepMerge(config.agents, resolvedPreset.agents)`.
 6. Validate with `bunx oh-my-opencode-slim doctor --json` (config + preset
-   resolution) plus a live delegation run; `opencode api get
+   resolution) **plus `./scripts/probe-heads.sh <preset>`** (every chain head
+   serving live — doctor cannot see server-side retirements) plus a live
+   delegation run; `opencode api get
    /api/session/<id>/message` shows each agent's *applied* provider/model/variant.
+   For one-off checks: `./scripts/probe-model.sh <provider/model[#variant]>`.
 
 ## Workflow
 
@@ -193,7 +208,21 @@ Prerequisite: `npm i -g agent-browser && agent-browser install`. See REFERENCE.m
 **Provider-specific scraping (librarian + firecrawl):** for subscription plan limits (5-hr caps, weekly caps, multipliers), dispatch a librarian to scrape the provider's docs and pricing pages. Provider docs often hide the real limits behind JavaScript.
 
 ### Step 3: Test Endpoint Health
-Before recommending models, verify they are actually serving inference:
+Before recommending models, verify they are actually serving inference.
+Prefer the in-stack probes (they resolve variants and report the *applied*
+model + cost via the message API — raw curl cannot see failover):
+
+```bash
+# Every chain head in the preset, live (run before dispatching lanes,
+# and after any preset edit — doctor passes with dead models in chains)
+./scripts/probe-heads.sh budget
+
+# One model, e.g. a free name under both namespaces before declaring it dead
+./scripts/probe-model.sh opencode/glm-5.3-flash-free#low
+./scripts/probe-model.sh opencode-go/glm-5.3-flash-free#low
+```
+
+Raw-HTTP fallback (`test-endpoints.sh`) when the stack itself is down:
 
 ```bash
 # Quick ping (checks endpoint exists)
