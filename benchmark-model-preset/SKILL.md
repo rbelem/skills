@@ -217,6 +217,10 @@ model + cost via the message API — raw curl cannot see failover):
 # and after any preset edit — doctor passes with dead models in chains)
 ./scripts/probe-heads.sh budget
 
+# Only the seats a refresh touched (a full run burns ~$0.40 of paid quota;
+# filtered runs are the daily habit, full runs are for structural edits)
+./scripts/probe-heads.sh budget librarian fast-generic
+
 # One model, e.g. a free name under both namespaces before declaring it dead
 ./scripts/probe-model.sh opencode/glm-5.3-flash-free#low
 ./scripts/probe-model.sh opencode-go/glm-5.3-flash-free#low
