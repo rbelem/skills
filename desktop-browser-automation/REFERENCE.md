@@ -10,6 +10,13 @@ Gotchas per tool, plus the desktop boundaries and the failure taxonomy. Open the
 - Focus-gated pages take `cdp("Emulation.setFocusEmulationEnabled", enabled=True)` inside a `try/finally`. Keep work in the background.
 - A dead or stale daemon gets `browser-harness --doctor`. Recover before replacing anything.
 
+## Browser Use family
+
+- The `browser-use` CLI is the harness (same code, `--version` reports the harness version). Its 3.0 rewrite removed `--cdp-url` and `--code`: set `BU_CDP_URL` and pipe Python on stdin. `--headed` does nothing — local control attaches to the visible Chrome. Session recording was removed; screenshot per step instead.
+- Devbox trap: this desktop exports `PYTHONPATH` into the nix Python 3.14 site-packages, and a `uvx`/`uv tool` run of `browser-use` then imports that pydantic and dies with `ModuleNotFoundError: No module named 'pydantic_core._pydantic_core'`. Strip it: `env -u PYTHONPATH uvx --from browser-use browser-use ...`.
+- Daemon state: local runs share one default daemon; `BU_NAME` names cloud ones. `doctor --json` reports install, daemon, and browser health (`browser_ready`).
+- Recordings: `recordings enable` saves browser actions locally, `recordings --latest` prints the newest directory, and `video init`/`video review`/`video export --reviewed` compile one to MP4 — a debugging artifact for a failed session.
+
 ## jev-ultrafast
 
 - Prerequisites: Chrome attachable through browser-harness (`browser-harness --doctor`), `TYPESAFE_API_KEY`, and `TEXT_MODEL_API_KEY`. A missing key surfaces at tool-call time. A run that stalls at browser attach means no attachable Chrome.
