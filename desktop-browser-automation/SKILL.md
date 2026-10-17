@@ -12,7 +12,7 @@ Route the task to one tool, then drive it through the recipes below. Chrome and 
 | Surface | Tool |
 |---|---|
 | Public page, plain read | curl or the fetch tool. Leave the browser alone. |
-| Chrome or Chromium page content (click, type, extract, JS) | browser-harness over CDP. The `browser-use` CLI is the same harness under another name; `browser-use --mcp` serves it to MCP clients. |
+| Chrome or Chromium page content (click, type, extract, JS) | browser-harness over CDP. The `browser-use` CLI is a thin wrapper over that harness; `browser-use --mcp` runs its own MCP server. |
 | Goal-driven loop over a page | jev-ultrafast, which rides browser-harness; the Python `browser-use` Agent can attach to the same browser. |
 | Browser-process chrome: permission bubbles, native dialogs, extension e2e | cua-driver over AT-SPI. CDP cannot see this surface, so no Browser Use tool reaches it. |
 | Firefox page content | firefox-devtools MCP against port 9222. cua-driver typed mutation does not support Firefox; the Browser Use family is Chromium-only. |
@@ -66,11 +66,11 @@ Run the smoke probe before depending on the tree: poll `cua-driver call list_win
 
 ## Browser Use family
 
-`browser-harness`, `browser-harness-mcp`, and the `browser-use` Python package are Browser Use projects (MIT). The `browser-use` CLI ships the same harness code — `browser-use --version` prints the harness version (0.1.13 here), not the Python package version — so the CLI, the MCP server, and the Python agent reach a browser through one CDP layer:
+`browser-harness`, `browser-harness-mcp`, and the `browser-use` Python package are Browser Use projects (MIT). The package pins `browser-harness==0.1.13`, and its CLI is a thin wrapper over it: `browser_use/cli.py` delegates the default path to `browser_harness.run.main()` and adds only brand text, `install`/`init`/`skill` subcommands, and the MCP entry points. `browser-use --version` therefore prints the harness version, not the package version (0.13.13). Both sit on `cdp-use==1.4.5`:
 
 - Attach, never spawn (flatpak rule 4): `BU_CDP_URL=http://127.0.0.1:<port>` for the CLI, the MCP server, and the agent alike. A dedicated automation profile (not the default profile) avoids Chrome's per-connection remote-debugging popup and the default-profile lockdown.
-- CLI and MCP: `echo 'print(page_info())' | browser-use` runs raw Python in the persistent session; `--mcp` serves the helpers to MCP clients; `--reload` restarts the daemon. The CLI's 3.0 rewrite removed `--code` and `--cdp-url`: pipe Python on stdin and set `BU_CDP_URL` instead.
-- Python agent, for open-ended tasks: `Browser(cdp_url=...)` plus an LLM, or `Browser(use_cloud=True)` for a cloud browser after `browser-harness auth login`. Keep deterministic steps in the harness's stdin code mode; the agent is LLM-driven.
+- CLI and MCP: `echo 'print(page_info())' | browser-use` runs raw Python in the harness's persistent session; `--mcp` starts browser-use's agent MCP server, `--cli-mcp` exposes the harness exec model; `--reload` restarts the daemon. The CLI's 3.0 rewrite removed `--code`, `--cdp-url`, and `--headed` (each prints a migration hint): pipe Python on stdin and set `BU_CDP_URL` instead.
+- Python agent, for open-ended tasks: `Browser(cdp_url=...)` plus an LLM — its own CDP client on the same `cdp-use` stack — or `Browser(use_cloud=True)` for a cloud browser after `browser-harness auth login`. Keep deterministic steps in the harness's stdin code mode; the agent is LLM-driven.
 - `BU_CDP_URL` also blocks cloud auto-bootstrap by design, so a local attach on a machine with cloud auth never silently starts a billed cloud browser.
 - Limits: CDP only — native browser chrome stays with cua-driver; Chromium only — Firefox stays with firefox-devtools MCP.
 
