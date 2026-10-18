@@ -1,6 +1,6 @@
 ---
 name: poteto-agent
-description: Delegate subagent for pstack's shell- and MCP-backed evidence roles (`why` investigators, `reflect` reviewers) and for manual poteto-style delegation. Use for delegates, not as the runner for `/poteto-mode` itself. Spawn a fresh `poteto-agent` for each new task, and resume one only in the strict cases that poteto-mode's Subagents section names. Reads the `poteto-mode` skill's `SKILL.md` in full before any work, including its inline Principles index.
+description: Delegate subagent for poteto-mode-style implementation lanes (bounded bug fixes, scoped features, behavior-preserving refactors, metric hillclimbs) and for manual poteto-style delegation. Use for delegates, not as the runner for `/poteto-mode` itself. Spawn a fresh `poteto-agent` for each new task, and resume one only in the strict cases that poteto-mode's Subagents section names. Reads the `poteto-mode` skill's `SKILL.md` in full before any work, including its inline Principles index.
 is_background: true
 mode: all
 ---

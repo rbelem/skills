@@ -12,7 +12,7 @@ This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream pro
 | Cursor rules file `pstack-models.md` (Cursor user config `rules` dir) | `~/.config/opencode/pstack-models.md` |
 | Cursor skills paths (user-level `~/…cursor…/skills`, workspace `.cursor`-relative) | `~/.config/opencode/skills/` / `.opencode/skills/` |
 | "background agent" | "background agent" |
-| `generalPurpose` / `general` subagent type | oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`); `poteto-agent` where a role needs shell or MCP |
+| `generalPurpose` / `general` subagent type | oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`); `investigator` where a role needs shell or MCP |
 | `deslop` skill from `cursor-team-kit` | `stop-slop` skill (`/stop-slop`) |
 | direct CLI runs (CLI/TUI verification) | direct CLI runs |
 | the `agent-browser` skill / "control skill" (UI verification) | the `agent-browser` skill |
@@ -33,10 +33,10 @@ Subagent spawns route through the oh-my-opencode-slim seats, whose model chains 
 | code delegates (`feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`) and ad-hoc helpers | `fixer`, no `model` |
 | judgment, prose, and design review (`how` explainer, second opinions, hardest-change design passes) | `oracle`, no `model` |
 | read-only reconnaissance (`how` explorers, recall slices, transcript mining) | `explorer`, no `model` |
-| evidence roles needing shell + MCP (`why` investigators/synthesizer, `reflect` reviewers/synthesizer) | `poteto-agent`, no `model` unless the rule sets one |
+| evidence roles needing shell + MCP (`why` investigators/synthesizer, `reflect` reviewers/synthesizer) | `investigator`, no `model` unless the rule sets one |
 | panels (`arena`, `architect`, `interrogate`, `swarm` runners, workers, judges, reviewers) | `fixer` (writers) / `oracle` (judges), no `model` unless the rule sets one |
 
-Every subagent runs on its oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or on `poteto-agent` for the `why`/`reflect` evidence roles, and passes no `model`; the seat chains in `oh-my-opencode-slim.jsonc` and the agents own the models. No model names ship in the skills. Optional per-role overrides for the multi-model roles live in `~/.config/opencode/pstack-models.md` (`/setup-pstack` writes them and their budget: `unlimited` top, `large` as picked, `medium` one step down, `small` floor; the reasoning variant rides the slug as a `#` suffix). Upstream's speed modes are dropped. A re-port re-applies this mapping; `pstack-update` step 6 greps for retired slugs and model-slug residue.
+Every subagent runs on its oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or on `investigator` for the `why`/`reflect` evidence roles, and passes no `model`; the seat chains in `oh-my-opencode-slim.jsonc` and the agents own the models. No model names ship in the skills. Optional per-role overrides for the multi-model roles live in `~/.config/opencode/pstack-models.md` (`/setup-pstack` writes them and their budget: `unlimited` top, `large` as picked, `medium` one step down, `small` floor; the reasoning variant rides the slug as a `#` suffix). Upstream's speed modes are dropped. A re-port re-applies this mapping; `pstack-update` step 6 greps for the retired slugs.
 
 ## Install
 

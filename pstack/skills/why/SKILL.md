@@ -10,7 +10,7 @@ Investigate the motivation and intent behind code. The companion `how` skill ans
 
 Each spawn below names a role line in the `pstack-models.md` rule. Set `model` to that line's value when the rule sets one; otherwise omit `model` and let the agent's own configuration apply. Leave `model` unset when the value is `auto` or `inherit-parent`. If the Task tool rejects a slug, drop the `model` and say so. Pick each subagent's reasoning variant for the job, per the Subagents section of the **poteto-mode** skill.
 
-Every spawn is `poteto-agent` with `readonly: false` (agent mode). Investigations need shell access (`git`, `gh`) and the session's MCP tools, which the read-only seats deny, so this skill spawns the full-access delegate. **Do not use readonly/Ask mode.** It strips MCP access, which disables the MCP-backed investigators and the synthesizer's citation spot-checks. Investigators still shouldn't write anything.
+Every spawn is `investigator`, the oh-my-opencode-slim evidence agent, in agent mode (`readonly: false`). Investigations need shell access (`git`, `gh`) and the session's MCP tools, which the read-only seats deny; the evidence agent carries both. **Do not use readonly mode.** It strips MCP access, which disables the MCP-backed investigators and the synthesizer's citation spot-checks. Investigators still shouldn't write anything.
 
 ## Operating Posture
 
@@ -46,7 +46,7 @@ Map each available MCP to one evidence category:
 
 Source control is always available through git and `gh`. For the other six, classify using the MCP name, server instructions, tool names, and resource descriptors. If an MCP could fit more than one category, choose the one matching its primary evidence. Record ambiguous cases in the coverage map.
 
-Spawn one investigator per category that has a matching MCP, all in a single message so they run concurrently, each owning exactly one tool or MCP. Don't ask one agent to cover multiple MCPs. Spawn each investigator as `poteto-agent`, passing a `model` from the `why investigators` line only when the rule sets one.
+Spawn one investigator per category that has a matching MCP, all in a single message so they run concurrently, each owning exactly one tool or MCP. Don't ask one agent to cover multiple MCPs. Spawn each investigator as `investigator`, passing a `model` from the `why investigators` line only when the rule sets one.
 
 Each investigator's prompt is `references/investigator-prompt.md` filled in, plus:
 - the category playbook `references/sources/<source>.md` for the selected MCP, adapted from the examples in `references/source-playbook.md`
@@ -76,7 +76,7 @@ If your scope assessment suggests a single-commit trivial target where the PR de
 
 ## Step 4. Synthesize
 
-Spawn one synthesizer as `poteto-agent`. `model`: the `why synthesizer` line, when the rule sets one. It gets:
+Spawn one synthesizer as `investigator`. `model`: the `why synthesizer` line, when the rule sets one. It gets:
 1. The investigator findings, including any null results and any categories skipped with justification
 2. The code anchor
 3. The user's original question

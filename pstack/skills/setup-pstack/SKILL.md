@@ -1,11 +1,11 @@
 ---
 name: setup-pstack
-description: Configure optional model overrides for pstack's multi-model roles and their reasoning budget. Detects your available models and writes an always-applied rule. Every pstack subagent runs on its oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or the `poteto-agent` evidence role, and no model names ship in the skills. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
+description: Configure optional model overrides for pstack's multi-model roles and their reasoning budget. Detects your available models and writes an always-applied rule. Every pstack subagent runs on its oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or the `investigator` evidence agent, and no model names ship in the skills. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
 ---
 
 # Setup pstack
 
-Write `~/.config/opencode/pstack-models.md`, an always-applied rule with optional per-role model overrides. Every pstack subagent runs on an oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or on `poteto-agent` for the `why`/`reflect` evidence roles, and passes no `model` unless this rule sets one. The rule exists for one need: specific models on the multi-model roles (the `why` and `reflect` evidence roles, the `arena`, `architect`, and `interrogate` panels, and `swarm workers`); skip this skill when the seats' own choices suit you.
+Write `~/.config/opencode/pstack-models.md`, an always-applied rule with optional per-role model overrides. Every pstack subagent runs on an oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or on `investigator` for the `why`/`reflect` evidence roles, and passes no `model` unless this rule sets one. The rule exists for one need: specific models on the multi-model roles (the `why` and `reflect` evidence roles, the `arena`, `architect`, and `interrogate` panels, and `swarm workers`); skip this skill when the seats' own choices suit you.
 
 ## Steps
 
@@ -57,7 +57,7 @@ arena runners: <model>, <model>
 
 ### 6. Confirm
 
-Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it. Roles not listed run on their oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or the `poteto-agent` default; the seat chains live in `oh-my-opencode-slim.jsonc`.
+Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it. Roles not listed run on their oh-my-opencode-slim agent (`fixer`, `oracle`, `explorer`, or `investigator`); the seat chains live in `oh-my-opencode-slim.jsonc`.
 
 ### 7. Offer a verification skill (optional)
 
