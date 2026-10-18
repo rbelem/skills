@@ -33,10 +33,10 @@ Subagent spawns route through the oh-my-opencode-slim seats, whose model chains 
 | code delegates (`feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`) and ad-hoc helpers | `fixer`, no `model` |
 | judgment, prose, and design review (`how` explainer, second opinions, hardest-change design passes) | `oracle`, no `model` |
 | read-only reconnaissance (`how` explorers, recall slices, transcript mining) | `explorer`, no `model` |
-| evidence roles needing shell + MCP (`why` investigators/synthesizer, `reflect` reviewers/synthesizer) | `poteto-agent` + rule `model` |
-| panels (`arena`, `architect`, `interrogate`, `swarm` runners, workers, judges, reviewers) | `fixer` (writers) / `oracle` (judges) + rule `model` |
+| evidence roles needing shell + MCP (`why` investigators/synthesizer, `reflect` reviewers/synthesizer) | `poteto-agent`, no `model` unless the rule sets one |
+| panels (`arena`, `architect`, `interrogate`, `swarm` runners, workers, judges, reviewers) | `fixer` (writers) / `oracle` (judges), no `model` unless the rule sets one |
 
-Multi-model roles keep per-entry models from `~/.config/opencode/pstack-models.md`. `/setup-pstack` writes that rule and its budget (`unlimited` top, `large` shipped, `medium` one step down, `small` floor). Defaults come from the local `benchmark-model-preset` recommendations; the reasoning variant rides the slug as a `#` suffix. Seat chains already pin these same models as their heads, so the seat swap changes nothing about which model leads each role. Upstream's speed modes are dropped. A re-port re-applies this mapping; `pstack-update` step 6 greps for the retired slugs.
+Every subagent runs on its oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or on `poteto-agent` for the `why`/`reflect` evidence roles, and passes no `model`; the seat chains in `oh-my-opencode-slim.jsonc` and the agents own the models. No model names ship in the skills. Optional per-role overrides for the multi-model roles live in `~/.config/opencode/pstack-models.md` (`/setup-pstack` writes them and their budget: `unlimited` top, `large` as picked, `medium` one step down, `small` floor; the reasoning variant rides the slug as a `#` suffix). Upstream's speed modes are dropped. A re-port re-applies this mapping; `pstack-update` step 6 greps for retired slugs and model-slug residue.
 
 ## Install
 

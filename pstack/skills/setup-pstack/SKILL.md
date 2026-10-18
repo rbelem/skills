@@ -1,11 +1,11 @@
 ---
 name: setup-pstack
-description: Configure the models pstack's multi-model roles use and their reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Code, judgment, and reconnaissance run on oh-my-opencode-slim seats and are not configured here. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
+description: Configure optional model overrides for pstack's multi-model roles and their reasoning budget. Detects your available models and writes an always-applied rule. Every pstack subagent runs on its oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or the `poteto-agent` evidence role, and no model names ship in the skills. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
 ---
 
 # Setup pstack
 
-Write `~/.config/opencode/pstack-models.md`, an always-applied rule that sets the model for pstack's multi-model roles: the `why` and `reflect` evidence roles (spawned as `poteto-agent`), the `arena`, `architect`, and `interrogate` panels, and `swarm workers`. Everything else runs on oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`) whose models live in `oh-my-opencode-slim.jsonc`.
+Write `~/.config/opencode/pstack-models.md`, an always-applied rule with optional per-role model overrides. Every pstack subagent runs on an oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or on `poteto-agent` for the `why`/`reflect` evidence roles, and passes no `model` unless this rule sets one. The rule exists for one need: specific models on the multi-model roles (the `why` and `reflect` evidence roles, the `arena`, `architect`, and `interrogate` panels, and `swarm workers`); skip this skill when the seats' own choices suit you.
 
 ## Steps
 
@@ -15,20 +15,24 @@ Enumerate the model slugs you can pass to a `Task` subagent in this session. Tha
 
 ### 2. Load current state
 
-The default role-to-model mapping is the rule shape shown in step 5 below. If `~/.config/opencode/pstack-models.md` already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `how explorer` or `bug-fix`, is from a retired role or now runs on a seat. Drop it.
+If `~/.config/opencode/pstack-models.md` already exists, read it and treat its `# budget` line and its role values as the current choices. If it does not, start from an empty slate: no role has an override. A line whose role is not in step 5, such as `how explorer` or `bug-fix`, is from a retired role or now runs on a seat. Drop it.
 
-### 3. Budget, map, and confirm
+### 3. Ask, map, and confirm
 
-**(a) Ask for a budget.** Prefer question over free text. Offer these four options with these exact labels, and name the current budget when the rule records one. With no rule, say that `large` matches the skill defaults.
+**(a) Ask which roles get overrides.** Prefer question over free text. List the nine role lines from step 5 and ask which, if any, should get a specific model. If the user wants none, stop here: every role runs on its seat chain or agent default (remove the role lines from an existing rule, or delete it).
+
+**(b) Pick models.** For each chosen role, offer the detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model, which is how Auto users stay on Auto). Prefer question over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count; each entry spawns a seat (`fixer` for runners and workers, `oracle` for judges and reviewers) with that `model`. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model family differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm. A multi-model panel needs two or more entries with different families.
+
+**(c) Ask for a budget** when any role got a real model. Offer these four options with these exact labels, and name the current budget when the rule records one.
 
 - `unlimited — top reasoning`
-- `large — the shipped levels`
+- `large — as picked`
 - `medium — one step down`
 - `small — floor reasoning`
 
-**(b) Apply it.** Build the working table from the skill defaults, and on a re-run keep any role you changed by family, list, or alias (`inherit-parent`, `auto`). The budget sets the reasoning variant of every real slug, panel entries included. `unlimited` moves each role to the model's top variant (`#max` where the model ships it). `large` keeps the shipped levels. `medium` lowers each role one step. `small` moves each role to the model's floor (`#low`, or the model's lowest). The variant is the `#` suffix on the slug, on the ladder `max` > `xhigh` > `high` > `medium` > `low` (models ship their own subset). When the model ships no variant at the target, use its nearest variant at or below the target. If the result is not a detected slug, use the same family's detected slug at the highest variant at or below the target, else mark the role as needing a choice. `inherit-parent` and `auto` do not change. So `unlimited` turns `opencode-go/deepseek-v4.1-flash#high` into `opencode-go/deepseek-v4.1-flash#max` and `opencode-go/muse-spark-1.3-contributor#high` into `opencode-go/muse-spark-1.3-contributor#xhigh` (its top). `large` keeps the defaults. `medium` turns `opencode-go/glm-5.3#max` into `opencode-go/glm-5.3#high` (no `xhigh` on its ladder). `small` turns them into `opencode-go/deepseek-v4.1-flash#low` and `opencode-go/muse-spark-1.3-contributor#minimal`.
+**(d) Apply the budget.** The budget sets the reasoning variant of every real slug in the working table, panel entries included. `unlimited` moves each model to its top variant (`#max` where the model ships it). `large` keeps the picked levels. `medium` lowers each model one step. `small` moves each model to its floor (`#low`, or the model's lowest). The variant is the `#` suffix on the slug, on the ladder `max` > `xhigh` > `high` > `medium` > `low` (models ship their own subset). When the model ships no variant at the target, use its nearest variant at or below the target. If the result is not a detected slug, use the same family's detected slug at the highest variant at or below the target, else mark the role as needing a choice. `inherit-parent` and `auto` do not change.
 
-**(c) Show the roles and confirm.** Show every role with its model, marking any real slug not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model, which is how Auto users stay on Auto) as the options. Prefer question over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count; each entry spawns a seat (`fixer` for runners and workers, `oracle` for judges and reviewers) with that `model`. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model family differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+**(e) Show the roles and confirm.** Show every override with its model, marking any real slug not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles.
 
 ### 4. Validate
 
@@ -36,31 +40,24 @@ Every real slug written must be in the detected set. `inherit-parent` and `auto`
 
 ### 5. Write the rule
 
-Write `~/.config/opencode/pstack-models.md` with `alwaysApply: true`, a `# budget` line with the chosen label and its recorded target (`top`, `shipped`, `one step down`, `floor`), and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape (seat roles are deliberately absent; they run on their `fixer`/`oracle`/`explorer` chains):
+Write `~/.config/opencode/pstack-models.md` with `alwaysApply: true`, a `# budget` line with the chosen label and its recorded target (`top`, `as picked`, `one step down`, `floor`), and one line per overridden role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. The role lines to choose from, in order: `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment, divergent, synthesizer`, `arena runners`, `arena cross-judge pool`, `swarm workers`, `architect runners`, `interrogate reviewers`. Shape (write only the chosen roles; `<model>` stands for a detected slug, and panel roles take a comma-separated list):
 
 ```
 ---
-description: pstack per-role model choices (overrides skill defaults)
+description: pstack per-role model overrides (unlisted roles run on their seat or agent default)
 alwaysApply: true
 ---
-# pstack model configuration for the multi-model roles. One line per role. Delete a line to fall back to the skill default.
+# pstack model overrides for the multi-model roles. One line per overridden role; delete a line to fall back to the seat chain or the agent default.
 # Seat roles (code, judgment, `how` explorers and explainer) are not listed; they run on their oh-my-opencode-slim chains.
 # `inherit-parent` or `auto` as a value: the role runs on the parent chat model (omit Task `model`). Alias entries in a panel list still count toward its fan-out.
-# budget: large (shipped)
-why investigators: opencode-go/muse-spark-1.3-contributor#high
-why synthesizer: opencode-go/glm-5.3#max
-reflect tooling: opencode-go/muse-spark-1.3-contributor#high
-reflect judgment, divergent, synthesizer: opencode-go/glm-5.3#max
-arena runners: opencode-go/glm-5.3#max, opencode-go/deepseek-v4.1-flash#high
-arena cross-judge pool: opencode-go/glm-5.3#max, opencode-go/deepseek-v4.1-flash#high
-swarm workers: opencode-go/deepseek-v4.1-flash#high
-architect runners: opencode-go/glm-5.3#max, opencode-go/deepseek-v4.1-flash#high
-interrogate reviewers: opencode-go/glm-5.3#max, opencode-go/deepseek-v4.1-flash#high
+# budget: <label>
+why investigators: <model>
+arena runners: <model>, <model>
 ```
 
 ### 6. Confirm
 
-Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it. Mention that the seat roles (`fixer`, `oracle`, `explorer`) take their models from `oh-my-opencode-slim.jsonc`, not this rule.
+Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it. Roles not listed run on their oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or the `poteto-agent` default; the seat chains live in `oh-my-opencode-slim.jsonc`.
 
 ### 7. Offer a verification skill (optional)
 

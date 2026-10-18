@@ -24,25 +24,25 @@ Infer the need from the message and the conversation. A named situation, such as
 
 Check the state that changes the answer, and mention it only when it does:
 
-- No `~/.config/opencode/pstack-models.md` means `/setup-pstack` hasn't run for this user, so the multi-model roles use their default models (seat roles always run on oh-my-opencode-slim).
+- No `~/.config/opencode/pstack-models.md` is fine: every role runs on its oh-my-opencode-slim seat or `poteto-agent`, and no model names ship in the skills. `/setup-pstack` writes overrides only when the user wants specific models on the multi-model roles.
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/create-verification-skill` when the question is about proving a change works.
 
 When the model rule is missing and it matters, ask whether the user wants to pick a model for the multi-model roles and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
 
 - Now: give them `/setup-pstack` to type, and answer their question too.
-- Later: answer their question, and add one line saying the multi-model roles keep their default models until they run `/setup-pstack`.
+- Later: answer their question, and add one line saying the multi-model roles run on their seat chains unless they pin models with `/setup-pstack`.
 
 ## Get set up
 
 1. Install with the `skills` CLI (`skills add rbelem/skills -g`) or symlink each directory under `skills/` into `~/.config/opencode/skills/` and the two files under `agents/` into `~/.config/opencode/agent/` (see the repo README).
-2. Run [`/setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each multi-model role, and writes a rule. The rule applies to new chats. Code, judgment, and reconnaissance run on the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`) from `oh-my-opencode-slim.jsonc`.
+2. Optional: run [`/setup-pstack`](../setup-pstack/SKILL.md) only if you want specific models on the multi-model roles; it writes per-role overrides and a reasoning budget. Without it, code, judgment, and reconnaissance run on the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`) from `oh-my-opencode-slim.jsonc`, and the `why`/`reflect` evidence roles run on `poteto-agent`.
 3. Start a real task with `/poteto-mode`, a goal, and a check that can pass or fail.
 
 Installing changes nothing until the user invokes a skill. Only `/setup-pstack` loads from the user's words. The [README](../../README.md) has the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
 If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/setup-pstack` and pick a smaller budget or cheaper models, and tune the seat chains in `oh-my-opencode-slim.jsonc`. A role set to `auto` or `inherit-parent` runs on the chat's model, which saves tokens when the chat runs on Auto or a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
 
-This port targets OpenCode. The skills use the Agent Skills format, so other tools can read them. The workflow skills, including `/poteto-mode`, `/how`, and `/why`, spawn subagents on configured agents and per-role models; in a tool with no Task-style subagent spawner, those parts may not work. The subagent roles assume the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`), with `poteto-agent` for the MCP-backed evidence roles.
+This port targets OpenCode. The skills use the Agent Skills format, so other tools can read them. The workflow skills, including `/poteto-mode`, `/how`, and `/why`, spawn subagents on the configured agents; no model names ship in the skills; in a tool with no Task-style subagent spawner, those parts may not work. The subagent roles assume the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`), with `poteto-agent` for the MCP-backed evidence roles.
 
 ## Start a task with `/poteto-mode`
 
