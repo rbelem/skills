@@ -24,6 +24,19 @@ This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream pro
 
 Skills with `disable-model-invocation: true` are user-invoked on Cursor via the slash menu. OpenCode (this build) does not derive slash commands from skills, so `commands/<name>.md` wraps each such skill (principles and `recall` excluded) in a slash command that loads the skill by exact id. `agents/` and `commands/` install by symlink like the skills below.
 
+## Model defaults
+
+Skill bodies carry `opencode-go/*` slug defaults picked from the local `benchmark-model-preset` recommendations, replacing upstream's Cursor-only model names. The reasoning variant rides the slug as a `#` suffix.
+
+| Roles | Default |
+|---|---|
+| code (`feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, `swarm workers`) | `opencode-go/deepseek-v4.1-flash#high` |
+| judgment (`judgment and prose`, `hardest tasks`, `how explainer`, `why synthesizer`, `reflect judgment, divergent, synthesizer`) | `opencode-go/glm-5.3#max` |
+| read-only discovery (`how explorer`, `why investigators`, `reflect tooling`) | `opencode-go/muse-spark-1.3-contributor#high` |
+| panels (`arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers`) | `opencode-go/glm-5.3#max`, `opencode-go/deepseek-v4.1-flash#high` |
+
+Upstream's speed modes are dropped; `/setup-pstack`'s budget sets each role's variant (`unlimited` top, `large` shipped, `medium` one step down, `small` floor). A re-port re-applies this table; `pstack-update` step 6 greps for the retired slugs.
+
 ## Install
 
 ```sh
