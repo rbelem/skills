@@ -12,7 +12,7 @@ This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream pro
 | Cursor rules file `pstack-models.md` (Cursor user config `rules` dir) | `~/.config/opencode/pstack-models.md` |
 | Cursor skills paths (user-level `~/…cursor…/skills`, workspace `.cursor`-relative) | `~/.config/opencode/skills/` / `.opencode/skills/` |
 | "background agent" | "background agent" |
-| `general` subagent type | `general` |
+| `generalPurpose` / `general` subagent type | oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`); `poteto-agent` where a role needs shell or MCP |
 | `deslop` skill from `cursor-team-kit` | `stop-slop` skill (`/stop-slop`) |
 | direct CLI runs (CLI/TUI verification) | direct CLI runs |
 | the `agent-browser` skill / "control skill" (UI verification) | the `agent-browser` skill |
@@ -24,18 +24,19 @@ This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream pro
 
 Skills with `disable-model-invocation: true` are user-invoked on Cursor via the slash menu. OpenCode (this build) does not derive slash commands from skills, so `commands/<name>.md` wraps each such skill (principles and `recall` excluded) in a slash command that loads the skill by exact id. `agents/` and `commands/` install by symlink like the skills below.
 
-## Model defaults
+## Agent seats and model routing
 
-Skill bodies carry `opencode-go/*` slug defaults picked from the local `benchmark-model-preset` recommendations, replacing upstream's Cursor-only model names. The reasoning variant rides the slug as a `#` suffix.
+Subagent spawns route through the oh-my-opencode-slim seats, whose model chains live in `oh-my-opencode-slim.jsonc`:
 
-| Roles | Default |
+| Role | Spawn |
 |---|---|
-| code (`feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, `swarm workers`) | `opencode-go/deepseek-v4.1-flash#high` |
-| judgment (`judgment and prose`, `hardest tasks`, `how explainer`, `why synthesizer`, `reflect judgment, divergent, synthesizer`) | `opencode-go/glm-5.3#max` |
-| read-only discovery (`how explorer`, `why investigators`, `reflect tooling`) | `opencode-go/muse-spark-1.3-contributor#high` |
-| panels (`arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers`) | `opencode-go/glm-5.3#max`, `opencode-go/deepseek-v4.1-flash#high` |
+| code delegates (`feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`) and ad-hoc helpers | `fixer`, no `model` |
+| judgment, prose, and design review (`how` explainer, second opinions, hardest-change design passes) | `oracle`, no `model` |
+| read-only reconnaissance (`how` explorers, recall slices, transcript mining) | `explorer`, no `model` |
+| evidence roles needing shell + MCP (`why` investigators/synthesizer, `reflect` reviewers/synthesizer) | `poteto-agent` + rule `model` |
+| panels (`arena`, `architect`, `interrogate`, `swarm` runners, workers, judges, reviewers) | `fixer` (writers) / `oracle` (judges) + rule `model` |
 
-Upstream's speed modes are dropped; `/setup-pstack`'s budget sets each role's variant (`unlimited` top, `large` shipped, `medium` one step down, `small` floor). A re-port re-applies this table; `pstack-update` step 6 greps for the retired slugs.
+Multi-model roles keep per-entry models from `~/.config/opencode/pstack-models.md`. `/setup-pstack` writes that rule and its budget (`unlimited` top, `large` shipped, `medium` one step down, `small` floor). Defaults come from the local `benchmark-model-preset` recommendations; the reasoning variant rides the slug as a `#` suffix. Seat chains already pin these same models as their heads, so the seat swap changes nothing about which model leads each role. Upstream's speed modes are dropped. A re-port re-applies this mapping; `pstack-update` step 6 greps for the retired slugs.
 
 ## Install
 

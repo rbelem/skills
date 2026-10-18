@@ -31,7 +31,7 @@ Launch all reviewers in a single message with the Task tool, one per entry on th
 | Reviewer A | `opencode-go/glm-5.3#max` |
 | Reviewer B | `opencode-go/deepseek-v4.1-flash#high` |
 
-Each reviewer gets `subagent_type: general`, `readonly: true`, and `model` set to its configured entry, or its table default when there is no configured line. Omit `model` for an `auto` or `inherit-parent` entry, so that reviewer runs on the parent model.
+Each reviewer gets `subagent_type: oracle` and `model` set to its configured entry, or its table default when there is no configured line. The seat is read-only. Omit `model` for an `auto` or `inherit-parent` entry, so that reviewer runs on the parent model.
 
 If the Task tool rejects a configured entry, run that reviewer on its family's table default and say so. Families go by the model name's prefix (`glm-*`, `deepseek-*`, `muse-*`, and so on). With no family match, use Reviewer A's default. If it rejects a table default, spawn with the closest equivalent from the valid slugs in its error message (prefer the same family and reasoning tier), and open a separate PR to update the default table. Do not block the review on the slug issue. Never treat an alias entry as a rejected slug or apply either fallback to it.
 

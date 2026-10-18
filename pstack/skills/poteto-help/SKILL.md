@@ -24,31 +24,31 @@ Infer the need from the message and the conversation. A named situation, such as
 
 Check the state that changes the answer, and mention it only when it does:
 
-- No `~/.config/opencode/pstack-models.md` means `/setup-pstack` hasn't run for this user, so every role uses its default model.
+- No `~/.config/opencode/pstack-models.md` means `/setup-pstack` hasn't run for this user, so the multi-model roles use their default models (seat roles always run on oh-my-opencode-slim).
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/create-verification-skill` when the question is about proving a change works.
 
-When the model rule is missing and it matters, ask whether the user wants to pick a model for each role and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
+When the model rule is missing and it matters, ask whether the user wants to pick a model for the multi-model roles and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
 
 - Now: give them `/setup-pstack` to type, and answer their question too.
-- Later: answer their question, and add one line saying every role keeps its default model until they run `/setup-pstack`.
+- Later: answer their question, and add one line saying the multi-model roles keep their default models until they run `/setup-pstack`.
 
 ## Get set up
 
 1. Install with the `skills` CLI (`skills add rbelem/skills -g`) or symlink each directory under `skills/` into `~/.config/opencode/skills/` and the two files under `agents/` into `~/.config/opencode/agent/` (see the repo README).
-2. Run [`/setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each role, and writes a rule. The rule applies to new chats.
+2. Run [`/setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each multi-model role, and writes a rule. The rule applies to new chats. Code, judgment, and reconnaissance run on the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`) from `oh-my-opencode-slim.jsonc`.
 3. Start a real task with `/poteto-mode`, a goal, and a check that can pass or fail.
 
 Installing changes nothing until the user invokes a skill. Only `/setup-pstack` loads from the user's words. The [README](../../README.md) has the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
-If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/setup-pstack` and pick a smaller budget or cheaper models. A role set to `auto` or `inherit-parent` runs on the chat's model, which saves tokens when the chat runs on Auto or a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
+If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/setup-pstack` and pick a smaller budget or cheaper models, and tune the seat chains in `oh-my-opencode-slim.jsonc`. A role set to `auto` or `inherit-parent` runs on the chat's model, which saves tokens when the chat runs on Auto or a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
 
-This port targets OpenCode. The skills use the Agent Skills format, so other tools can read them. The workflow skills, including `/poteto-mode`, `/how`, and `/why`, spawn subagents with per-role models; in a tool with no Task-style subagent spawner, those parts may not work.
+This port targets OpenCode. The skills use the Agent Skills format, so other tools can read them. The workflow skills, including `/poteto-mode`, `/how`, and `/why`, spawn subagents on configured agents and per-role models; in a tool with no Task-style subagent spawner, those parts may not work. The subagent roles assume the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`), with `poteto-agent` for the MCP-backed evidence roles.
 
 ## Start a task with `/poteto-mode`
 
 `/poteto-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. Read [`references/prompting.md`](references/prompting.md) before you help word one.
 
-`/poteto-mode` attaches to the message that names it. Start each new task with `/poteto-mode` to keep the style on. Mid-chat, "new task" makes the mode match a fresh playbook. `/poteto-mode` already uses `poteto-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn it with `subagent_type: "poteto-agent"`.
+`/poteto-mode` attaches to the message that names it. Start each new task with `/poteto-mode` to keep the style on. Mid-chat, "new task" makes the mode match a fresh playbook. `/poteto-mode` runs playbook-step subagents on your oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`). To get the poteto style from a subagent of your own, spawn `poteto-agent`.
 
 ## Pick a skill
 
@@ -80,7 +80,7 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Vet a performance number before reporting or acting on it | [`/benchmark-checklist`](../benchmark-checklist/SKILL.md) |
 | Run a large or cross-cutting change, or one to review after stepping away | [`/figure-it-out`](../figure-it-out/SKILL.md) |
 | Keep a decision log during a run, and review it afterward | [`/show-me-your-work`](../show-me-your-work/SKILL.md) |
-| Pick a model for each role and a reasoning budget | [`/setup-pstack`](../setup-pstack/SKILL.md) |
+| Pick a model for each multi-model role and a reasoning budget | [`/setup-pstack`](../setup-pstack/SKILL.md) |
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |
@@ -127,7 +127,7 @@ Principles are one-rule skills that `/poteto-mode` reads and cites in its replie
 |---|---|
 | The mode stopped applying after a few turns | Re-run `/poteto-mode` for the new task; it attaches to the message that names it. |
 | A question got treated as the next step of the last task | Say "new task", or say the turn doesn't need the mode. |
-| A new model choice had no effect | The rule from `/setup-pstack` applies to new chats. Start one. |
+| A new model choice had no effect | The rule from `/setup-pstack` applies to new chats. Seat models change in `oh-my-opencode-slim.jsonc` and apply after a restart. |
 | Runs cost more than expected | See the cost paragraph under Get set up. |
 | A skill didn't load on its own | Only `/setup-pstack` loads from the user's words. The others load when the user types them or when `/poteto-mode` runs them, and it doesn't run every skill. |
 | Parallel agents overwrote each other | Give each agent its own worktree, or run them as cloud agents, which each get their own machine. |
