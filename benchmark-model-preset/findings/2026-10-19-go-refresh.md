@@ -122,7 +122,23 @@ the chain for when it is signed in.
 - `qwen3.8-max` is capped at **810 req/mo** ($15 bucket) — that is why
   `qwen3.8-flash` (27,000 req/mo, $30) was added as the designer fallback.
 
-## 5. Open items
+## 5. Validation (post-edit)
+
+- `bunx oh-my-opencode-slim doctor --json` → `ok: true`, preset `default` ok.
+- Full every-entry probe of the edited config: **38/38 entries UP, 0 down**
+  (pre-edit baseline was 30 up / 8 down + 1 failover).
+- Live delegation: `@fast-generic` ran on
+  `opencode-go/minimax-m3.1-flash-free` (variant=low, **cost 0**), made one
+  completed bash tool call, returned the exact expected output.
+- Live council seat: `councillor-alpha` dispatched on
+  `opencode-go/kimi-k3` variant=max (cost $0.02) and answered — the new
+  2-model alpha chain resolves through `_modelArray` as designed.
+- `opencode-go/minimax-m3.1-flash-free` probed UP at #low/#medium/#high and
+  with no variant (the `opencode.jsonc` title/compaction/summary form).
+- Persisted: `chezmoi add` of `oh-my-opencode-slim.jsonc` + `opencode.jsonc`
+  (chezmoi commit 8133697); skill repo commit `c5544f1`.
+
+## 6. Open items
 
 - AA has not published a Coding/Agentic sub-index for M3.1 Flash yet.
   Re-check in a few days; if AA Coding lands near glm-5.3-flash, the free
