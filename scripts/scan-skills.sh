@@ -9,10 +9,14 @@
 # gate. The threshold is deliberately high: MEDIUM findings are reported,
 # HIGH and CRITICAL findings fail the check.
 #
+# Accepted findings live in .skillspector-baselines/<skill>.yaml — reviewed
+# glob rules, each with a reason. A skill with a baseline file is scanned
+# against it, so new findings in that skill still surface.
+#
 # Env:
 #   SKILLSPECTOR_BIN       scanner binary (default: skillspector)
 #   SKILLSPECTOR_FAIL_ON   severity that fails the check (default: HIGH)
-#   SKILLSPECTOR_BASELINE  baseline file for accepted findings
+#   SKILLSPECTOR_BASELINE  extra baseline file applied to every scan
 
 set -uo pipefail
 
@@ -21,7 +25,8 @@ cd "$REPO_ROOT" || exit 1
 
 BIN="${SKILLSPECTOR_BIN:-skillspector}"
 THRESHOLD="${SKILLSPECTOR_FAIL_ON:-HIGH}"
-BASELINE="${SKILLSPECTOR_BASELINE:-}"
+EXTRA_BASELINE="${SKILLSPECTOR_BASELINE:-}"
+BASELINE_DIR=".skillspector-baselines"
 
 if ! command -v "$BIN" >/dev/null 2>&1; then
   echo "scan-skills: FAIL scanner '$BIN' not on PATH" >&2
@@ -48,16 +53,21 @@ failed=0
 for skill in "${skills[@]}"; do
   out="$report/${skill//\//_}.json"
   args=(scan "./$skill" --no-llm --format json --output "$out")
-  [ -n "$BASELINE" ] && args+=(--baseline "$BASELINE")
 
-  if ! "$BIN" "${args[@]}" >/dev/null 2>&1; then
-    echo "scan-skills: FAIL $skill — scanner exited non-zero" >&2
-    failed=1
-    continue
+  baseline=""
+  if [ -f "$BASELINE_DIR/$skill.yaml" ]; then
+    baseline="$BASELINE_DIR/$skill.yaml"
+  elif [ -n "$EXTRA_BASELINE" ] && [ -f "$EXTRA_BASELINE" ]; then
+    baseline="$EXTRA_BASELINE"
   fi
+  [ -n "$baseline" ] && args+=(--baseline "$baseline")
+
+  # Exit 1 means the scanner found something; the report is still written.
+  # Only a missing report is an error.
+  "$BIN" "${args[@]}" >/dev/null 2>&1
 
   if [ ! -f "$out" ]; then
-    echo "scan-skills: FAIL $skill — no report written" >&2
+    echo "scan-skills: FAIL $skill — scanner produced no report" >&2
     failed=1
     continue
   fi
@@ -78,22 +88,25 @@ max_sev = (risk.get("max_issue_severity") or "NONE").upper()
 score = risk.get("score")
 issues = report.get("issues") or []
 suppressed = report.get("suppressed_count") or 0
+failing = order.index(max_sev) >= order.index(threshold)
 
-tag = "FAIL" if order.index(max_sev) >= order.index(threshold) else "ok  "
+tag = "FAIL" if failing else "ok  "
 print(f"scan-skills: {tag} {skill} — score={score} severity={risk.get('severity')} max_issue={max_sev} issues={len(issues)} suppressed={suppressed}")
 for issue in issues:
-    ident = issue.get("rule_id") or issue.get("id") or issue.get("category") or "issue"
-    message = str(issue.get("message") or issue.get("title") or issue.get("description") or "")
-    print(f"    - {issue.get('severity')} {ident}: {message[:160]}")
+    ident = issue.get("id") or issue.get("finding_id") or "issue"
+    pattern = issue.get("pattern") or issue.get("category") or ""
+    where = (issue.get("location") or {}).get("start_line")
+    message = str(issue.get("finding") or issue.get("explanation") or "")
+    print(f"    - {issue.get('severity')} {ident} {pattern} (line {where}): {message[:140]}")
 
-if order.index(max_sev) >= order.index(threshold):
+if failing:
     raise SystemExit(1)
 PY
   [ $? -ne 0 ] && failed=1
 done
 
 if [ "$failed" -ne 0 ]; then
-  echo "scan-skills: FAILED — fix the findings or accept them in a baseline" >&2
+  echo "scan-skills: FAILED — fix the findings or accept them in $BASELINE_DIR" >&2
   exit 1
 fi
 
