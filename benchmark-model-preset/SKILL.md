@@ -44,6 +44,56 @@ Pricing: **$0.15/$0.50** z.ai + Go (usage $15 → ~7,900/mo) · **OR $0.075/$0.2
 
 **Preset status (Aug 26):** swapped in as orchestrator+fixer for both presets — quality → `opencode-go/glm-5.3-flash`, value → `zai/glm-5.3-flash` (bifrost chain: zai → deepseek-v4-flash → opencode-go). Beats DS V4 Flash 0731 on AA (+5.2) at lower price; multimodal bonus for visual-coding/frontend work. **Observer: PASSED the controlled vision QA (Aug 26, round 3)** — 4/4 exact transcript (A1 code `DEEPSWE-VISION-QA-42` read exactly, no Q→O like flash-vision-exp), shapes detailed (circle/square/line, colors, unfilled), 2/2 clean reliability probes (1.6s/6.8s), matched MiniMax-M3 on every criterion at half the price → **observer swapped to flash (max) in both presets**. M3 kept as documented fallback (bifrost minimax-m3 chain intact). Open-source domestic-chip serving (ReplaySSM, W8A8, EPD) — performance varies by provider; speed not yet on AA.
 
+## DeepSeek V4.1-Flash-1017 Notes
+
+Released **Oct 17, 2026** — in-place weight upgrade, **same API ID**
+(`deepseek-flash`; Go: `opencode-go/deepseek-v4.1-flash`) and **same pricing**.
+No config edit needed — the upgrade flows through the existing ID (probe-verified
+live same-day, `#high` + `#low`). **Vendor-reported** (unverified, DeepSeek
+Harness/Mini-SWE-V2): DeepSWE v1.1 **77.0** (was 74.2), Terminal-Bench 4.0 42.3,
+AutomationBench v1.0.6 60.5, NL2Repo 68.2, plus native multimodal (BabyVision 92.5,
+Chartography 83.0). 1M ctx, MIT weights. Go terms are the most generous of any
+seat: **$80/mo cap, ~173K req/mo**, off-peak = half price (weekdays 01–04/06–10 UTC
+peak). Already in budget orchestrator tail + librarian.
+
+**Do NOT promote to fixer/observer on vendor numbers alone** — no independent
+AA/DeepSWE-leaderboard score yet for 1017 (released today). Revisit when verified
+scores land; the $80 bucket makes it the natural promotion candidate for a
+high-volume seat if quality confirms. Tie-break via `spawn-ori-eval` if close.
+
+**Testing (Oct 17, user call):** Bug Hunt Bench indie signal (1017 max 38.7 vs
+Opus 5.5 high 31.7, n=2–3, effort-mismatched) judged credible-enough to trial.
+`opencode-go/deepseek-v4.1-flash#high` is now head of budget **orchestrator** and
+**fixer** (Muse 1.3/1.2 demoted to fallbacks, chains otherwise intact).
+Revert = move the deepseek entry back to tail (orchestrator) / drop it (fixer).
+
+## MiniMax M3.1 Flash Notes
+
+Released **Oct 19, 2026** — free-only on Go (`opencode-go/minimax-m3.1-flash-free`,
+**Free, Unlimited reqs**, "limited time") and on Console
+(`opencode/minimax-m3.1-flash-free`, probe UP). 428B total / ~23B active MoE,
+sparse attention, native visual encoder, 1M ctx (512K out), multimodal
+(text+image+video in). Reasoning always-on, 5 efforts (low…max);
+`thinking.type=disabled` → 400. **Independent (AA):** Intelligence Index **42**
+(M3 = 29.2, M2.7 = 22.8). **Vendor-only:** DeepSWE v1.1 73.7, Terminal-Bench
+4.0 38.1 — no AA Coding/Agentic sub-index yet, no Arena appearance. Weights
+~Oct 23, license undisclosed. Go privacy row: training **Not used**, retention
+**0 days**; free previews are region-excluded in ~20 countries.
+
+**Smoke (Oct 19, `opencode-go/minimax-m3.1-flash-free#low`):** tool call PASS
+(1 bash call completed, exact output; 2-step shell OK) · vision PARTIAL
+(3/3 shapes exact with color + fill state, but the text token `VQA-7319-M3F`
+read as `V0A-7319-M3F` — Q→0, so **not observer-grade**; the GLM-5.3-Flash bar
+is 4/4 exact).
+
+**Preset status (Oct 19):** free head of **librarian** and **fast-generic**
+(both verified live, cost 0, and a live @fast-generic delegation ran on it),
+first fallback of **explorer**, free tail of **investigator**, and the
+`opencode.jsonc` title/compaction/summary model (replacing the retired
+`opencode/space-bunny-free`). Writers stay off it: Go has no paid M3.1 Flash,
+and its only coding signal is vendor-reported. Flip the root session model to
+it only if the AA-42 quality is acceptable for the main session.
+
 ## Qwen3.8-Flash-Next Notes
 
 Released **Aug 26, 2026** — Qwen4 architecture preview. 125B/6B active MoE + 51B n-gram embeddings + 4B MTP, GDN + Qwen Sparse Attention, 262K native ctx (1M ext), multimodal (HF `image-text-to-text`, qwen4_exp tag), Qwen Community License (open weights). Vendor: DeepSWE 58.7, SWE-bench Pro 62.5, GPQA 91.7, LCBv6 91.9, CoWorkBench 73.9, JobBench 55.7, Toolathlon 73.5.
@@ -79,7 +129,8 @@ OptChat compactor all point at `opencode-go`. Full inventory + probe results:
 Oct-16 refresh (beam-free, muse-1.2, luna, haiku, `opencode/*-free` wiring):
 [findings/2026-10-16-go-refresh.md](findings/2026-10-16-go-refresh.md).
 
-Live chains live in `oh-my-opencode-slim.jsonc` `presets.budget` — read them
+Live chains live in `oh-my-opencode-slim.jsonc` `presets.default` (the
+Oct-15 `presets.budget` was folded back into `default` on Oct 18) — read them
 there, never from a copy in this file. Seat rationale (the part the config
 cannot confess):
 
@@ -158,7 +209,13 @@ remove on request). Go caps exhausted now = the session stops/errors.
 2. Variant strings must exist in the model's models.dev `reasoning_options`
    values (glm-5.3-flash: low/high/max; kimi-k3: max; qwen3.8-*: low/medium/
    xhigh; space-bunny: low…max; mimo-v2.6-*: none). Unknown variant =
-   model-resolution error.
+   model-resolution error. **A bare-string model entry inherits the seat-level
+   variant** (Oct 19: `mimo-v2.6-flash` as a bare string inherited `high` and
+   died; models with `reasoning_options: []` need an explicit
+   `{id, variant: "default"}` — `"none"` is rejected too). The seat-level
+   `variant` is also what the head actually runs at (Oct 19: seat `low` beat
+   the head's per-entry `high` on a live delegation), so keep the seat
+   variant and the chain[0] per-entry variant equal.
 3. Chains: per-entry `{id, variant}` objects; the agent-level `variant` is only
    the chain[0] default. **Councillor seats** take the seat-level `variant`
    (per-entry object variants are ignored there).
@@ -172,6 +229,23 @@ remove on request). Go caps exhausted now = the session stops/errors.
    delegation run; `opencode api get
    /api/session/<id>/message` shows each agent's *applied* provider/model/variant.
    For one-off checks: `./scripts/probe-model.sh <provider/model[#variant]>`.
+7. **Probe every chain entry, not just the heads** (Oct 19). Head-only probing
+   hid eight broken entries: a retired model sitting mid-chain
+   (`space-bunny` on Go), two invalid variants (`kimi-k3#high`, `qwen3.8-max#high`
+   — the latter broke the whole designer seat), and four bare-string entries
+   inheriting an unusable seat variant. A head-only probe also reports "UP"
+   for a chain whose tail is dead. Probe each entry with
+   `probe-model.sh <id[#variant]>`; the seat name + entry list comes from
+   `probe-heads.py` with a per-entry loop.
+8. models.dev **lags the server**: on Oct 19 it still listed
+   `opencode-go/space-bunny` after Go retired it ("Model unavailable"), and
+   `cat-jam-free` / `step-5-preview-free` lingered weeks after their
+   retirements. A models.dev entry is a candidate, not a liveness proof.
+9. `opencode/*-free` (Console-attested) ids are **intermittent**, not dead:
+   on Oct 19 the same id served one probe and failed over on the next, and the
+   failover steered a *paid* model into a free-tier seat. `opencode-go/*-free`
+   (Go-gated) ids did not fail once all session. Prefer a Go-gated free head
+   on read-only seats and keep the Console-gated one behind it.
 
 ## Workflow
 

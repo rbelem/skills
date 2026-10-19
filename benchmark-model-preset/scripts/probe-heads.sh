@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Probe every chain head in a preset and fail loudly on any dead one.
 #
-# Usage: probe-heads.sh [preset] [seat...]   (default preset: budget)
+# Usage: probe-heads.sh [preset] [seat...]   (default preset: default)
 #
 # With seat args, only those seats are probed — refreshes usually touch one
 # or two chains, and a full run burns ~$0.40 of paid quota (oracle/designer/
@@ -21,7 +21,7 @@
 
 set -uo pipefail
 
-PRESET="${1:-budget}"
+PRESET="${1:-default}"
 if [ "$#" -gt 0 ]; then shift; fi
 # Any remaining args are a seat filter (e.g. `librarian fast-generic`,
 # `council.alpha`). Empty = all seats.
