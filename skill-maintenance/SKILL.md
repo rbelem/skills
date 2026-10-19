@@ -1,20 +1,23 @@
 ---
 name: skill-maintenance
-description: Maintain, update, and clean up installed OpenCode skills across both `~/.agents/skills/` (CLI-managed) and `~/.config/opencode/skills/` (plugin-managed). Use when users want to update skills, check for updates, remove duplicates, audit the skill inventory, or resolve stale or manually-installed skill folders.
+description: Maintain, update, and clean up installed OpenCode skills across the three skill homes on this box — ~/.agents/skills/ (skills CLI), ~/.config/opencode/skills/ (opencode + plugin-synced), and ~/.autolearn/personas/default/skills/ (our own local copies). Use when users want to update skills, check for updates, remove duplicates, audit the skill inventory, find a skill to install, scan skills for security, or resolve stale or manually-installed skill folders.
 ---
 
 # Skill Maintenance
 
-This skill covers how to update, audit, and remove skills in the two co-existing skill systems on this OpenCode setup.
+This skill covers how to update, audit, install, and remove skills in the skill
+systems on this OpenCode setup.
 
-There are two independent systems. Do not confuse them:
+There are three homes, plus one authoring source. Do not confuse them:
 
-| System | Path | Manager |
-|---|---|---|
-| System 1 | `~/.agents/skills/` | `skills` CLI (v1.5.15) |
-| System 2 | `~/.config/opencode/skills/` | oh-my-opencode-slim plugin (v2.1.1) |
+| Home | Path | Manager | Update path |
+|---|---|---|---|
+| 1. CLI-managed | `~/.agents/skills/` | `skills` CLI (v1.7.2) | `skills update --global --yes` |
+| 2. OpenCode-local | `~/.config/opencode/skills/` | hand-installed + opencode plugin discovery | per skill, by hand |
+| 3. Persona copies | `~/.autolearn/personas/default/skills/` | autolearn persona sync | per skill, by hand |
+| Authoring source | `~/Workspace/github.com/rbelem/skills/` | git repo | commit + push, then install from GitHub |
 
-## System 1: `~/.agents/skills/`
+## Home 1: `~/.agents/skills/`
 
 Managed by the `skills` CLI.
 
@@ -24,15 +27,20 @@ Managed by the `skills` CLI.
 ~/.agents/.skill-lock.json
 ```
 
-Tracks roughly 45 skills from 11 GitHub sources. Each entry contains:
+Currently **165 skills from 32 GitHub sources**. Read the counts from the lock
+rather than trusting this sentence — the file is the authority:
 
-- `source`
-- `sourceType`
-- `sourceUrl`
-- `skillPath`
-- `skillFolderHash`
-- `installedAt`
-- `updatedAt`
+```bash
+python3 -c "
+import json, collections
+d = json.load(open('/home/rodrigo/.agents/.skill-lock.json'))['skills']
+c = collections.Counter(v.get('source') for v in d.values())
+print(len(d), 'skills,', len(c), 'sources')
+"
+```
+
+Each entry contains `source`, `sourceType`, `sourceUrl`, `skillPath`,
+`skillFolderHash`, `installedAt`, `updatedAt`.
 
 ### Commands
 
@@ -96,97 +104,120 @@ List installed global skills with paths, scopes, and target agents:
 skills list --global --json
 ```
 
-Search for available skills interactively:
+### Finding a skill to install
+
+Do not hunt GitHub, npm, and the web for a skill. Two lookups cover it:
 
 ```bash
-skills find [query]
+# Interactive search across the published registry
+skills find <query>
+
+# One-shot JSON list of every published skill matching the query
+curl -s "https://skills.sh/api/search?q=<query>" \
+  | python3 -c "import json,sys; [print(s['id'], s.get('installs')) for s in json.load(sys.stdin)['skills']]"
 ```
 
-### Current GitHub sources
+`skills find` prints the top hits with install counts; the skills.sh API
+returns the whole match set with the same counts. Both name the
+`owner/repo` to pass to `skills add`. A skill is usually already published
+— `skills find webmcp` returned 100+ candidates, far more than any search
+engine surfaced.
 
-The 11 tracked sources are:
+### Untracked entries
 
-- `brianlovin/claude-config`
-- `vercel-labs/skills`
-- `vercel-labs/agent-browser`
-- `JuliusBrussee/caveman`
-- `github/awesome-copilot`
-- `greptileai/skills`
-- `mattpocock/skills`
-- `wshobson/agents`
-- `jetify-com/devbox`
-- `alibaba/open-code-review`
-- `Leonxlnx/taste-skill`
+Skills physically present in `~/.agents/skills/` but not listed in
+`~/.agents/.skill-lock.json` were installed manually, not via `skills add`.
+`skills update` will not touch them. Two shapes exist here:
 
-### Untracked skills
+- **Symlinks into the persona home** (42 entries):
+  `~/.agents/skills/<name> -> ~/.autolearn/personas/default/skills/<name>`.
+  These are our own local skills. The persona home is a copy, not the
+  source — edit `~/Workspace/github.com/rbelem/skills/<name>/` and keep the
+  copy in step.
+- **Symlinks into the workspace repo** (e.g. `webmcp`):
+  `~/.agents/skills/<name> -> ~/Workspace/github.com/rbelem/skills/<name>`.
+  Live edits, no copy step.
 
-Skills physically present in `~/.agents/skills/` but not listed in `~/.agents/.skill-lock.json` were installed manually, not via `skills add`. `skills update` will not touch them. They must be maintained by hand.
+Check for breakage with `find ~/.agents/skills -maxdepth 1 -xtype l` — a
+dangling symlink silently removes the skill from the agent's context.
 
-Examples of untracked skills include:
+## Home 2: `~/.config/opencode/skills/`
 
-- Security/IoT pentest toolkit: `apktool`, `chipsec`, `ffind`, `iotnet`, `jadx`, `jtagprobe`, `logicmso`, `netflows`, `nmap`, `onvifscan`, `picocom`, `telnetshell`, `wsdiscovery`, `vulnerability-scanning`
-- Writing skills: `write-a-skill`, `writing-beats`, `writing-fragments`, `writing-shape`, `edit-article`
-- Others: `caveman`, `caveman-compress`, `docling`, `agent-reach`, and similar
+Not a lock-managed system. It holds skills opencode discovers by directory,
+plus symlinks into the workspace repo. Current contents:
 
-## System 2: `~/.config/opencode/skills/`
+| Entry | Kind |
+|---|---|
+| `cua-driver`, `graphify` | plain directories, installed by hand |
+| `benchmark-model-preset` | symlink into `~/Workspace/github.com/rbelem/skills/` |
 
-Managed by the oh-my-opencode-slim plugin.
+The `oh-my-opencode-slim` plugin used to keep a manifest here at
+`~/.config/opencode/.oh-my-opencode-slim/skills-manifest.json`. That
+directory no longer exists and the plugin no longer syncs skills into this
+folder — do not look for a manifest, and do not describe one in a report.
+The plugin's own skills (`simplify`, `codemap`, `clonedeps`, `deepwork`,
+`reflect`, `oh-my-opencode-slim`, `release-smoke-test`, `worktrees`,
+`benchmark-model-preset`, `graphify`, `loop-engineering`) are documented by
+the `oh-my-opencode-slim` skill, not here.
 
-### Manifest file
+## Home 3: `~/.autolearn/personas/default/skills/`
 
-```text
-~/.config/opencode/.oh-my-opencode-slim/skills-manifest.json
+Copies of our own local-only skills, kept in sync with the workspace repo
+by the autolearn persona. Not in the lock, never touched by the `skills`
+CLI. Editing a skill here edits the copy; the source of truth is
+`~/Workspace/github.com/rbelem/skills/<name>/`.
+
+Our published skills (the 60 the lock attributes to `rbelem/skills`) install
+from GitHub instead, so a published skill has two copies on this box:
+the git checkout and the CLI-installed copy under `~/.agents/skills/`.
+Edit the checkout, then refresh the installed copy:
+
+```bash
+skills add rbelem/skills --skill <name> -g --full-depth -y < /dev/null
 ```
 
-Tracks the 11 bundled skills. Each entry contains:
+## Publishing our own skills
 
-- `status` — `managed` if the user has not modified the skill, `customized` if local changes exist
-- `packageVersion`
-- `sourceHash`
-- `lastManagedHash`
-- `lastSeenHash`
-- `stagedPath` — set for customized skills with pending updates
-- `updatedAt`
+1. Author in `~/Workspace/github.com/rbelem/skills/<name>/SKILL.md`.
+2. Commit and push.
+3. Install for this box: `skills add rbelem/skills --skill <name> -g --full-depth -y < /dev/null`.
 
-### Bundled skills
+Until a local-only skill is committed, it exists only in this checkout. A
+`git clean -fd` in the repo deletes untracked skill directories — check
+`git status` before cleaning anything.
 
-The 11 bundled skills are:
+## Security scan (skillspector)
 
-- `simplify`
-- `codemap`
-- `clonedeps`
-- `deepwork`
-- `reflect`
-- `oh-my-opencode-slim`
-- `release-smoke-test`
-- `worktrees`
-- `benchmark-model-preset`
-- `graphify`
-- `loop-engineering`
+Every skill runs with the agent's full permissions. NVIDIA's
+[SkillSpector](https://github.com/NVIDIA/SkillSpector) scans a skill for
+prompt injection, data exfiltration, privilege escalation, supply chain and
+rogue-agent patterns.
 
-### Update mechanism
-
-Updates are fully automatic. When the oh-my-opencode-slim npm plugin updates, a `skill-sync` hook copies new skill versions from the package's `src/skills/` into `~/.config/opencode/skills/`.
-
-Plugin cache location:
-
-```text
-~/.cache/opencode/packages/oh-my-opencode-slim@latest/
+```bash
+skillspector scan ./some-skill --no-llm          # static analysis
+skillspector scan ./some-skill --no-llm --format sarif --output report.sarif
+skillspector baseline ./some-skill -o .skillspector-baseline.yaml   # accept current findings
 ```
 
-Behavior by status:
+`--no-llm` keeps the scan static and offline. The binary comes from
+devbox-global (`devbox.d/skillspector`); inside the devbox shell, run it as
+`skillspector`. Outside one, the uv tool copy at `~/.local/bin/skillspector`
+needs a clean `PYTHONPATH`:
 
-- `managed` skills: the new version overwrites the old one automatically.
-- `customized` skills: the new version is staged to `~/.config/opencode/.oh-my-opencode-slim/skill-updates/<version>/` and is not applied automatically. The user must manually merge or accept the staged update.
+```bash
+env -u PYTHONPATH -u PYTHONHOME ~/.local/bin/skillspector scan ./some-skill --no-llm
+```
 
-No manual command is required for normal updates. They arrive after an OpenCode restart following a plugin update. To force a plugin update, change the version pin in `~/.config/opencode/opencode.json` under the `"plugin"` array. Currently this is just `"oh-my-opencode-slim"`, which resolves to `@latest`.
+The `rbelem/skills` repo runs it as a pre-commit hook and a CI job — see
+`.githooks/pre-commit` and `.github/workflows/skillspector.yml`. A finding
+there is a real signal, not noise: read the finding, fix the skill.
 
 ## Skill-to-Agent Assignment
 
 Agent skill assignments live in:
 
 ```text
-~/.config/opencode/oh-my-opencode-slim.json
+~/.config/opencode/oh-my-opencode-slim.jsonc
 ```
 
 The active preset's agent blocks define which skills each agent can use.
@@ -197,15 +228,16 @@ Syntax:
 - `["simplify", "code-review"]` — explicit allow list
 - `["*", "!find-skills"]` — all skills except the excluded ones
 
-Before removing a skill, always check `oh-my-opencode-slim.json` for references. If a skill name appears in an agent's `"skills"` array, deleting the skill folder will break that agent. Update the config first to remove the reference, then delete the folder.
+Before removing a skill, always check `oh-my-opencode-slim.jsonc` for references. If a skill name appears in an agent's `"skills"` array, deleting the skill folder will break that agent. Update the config first to remove the reference, then delete the folder.
 
 Example: `diagnose` was referenced in the `oracle` agent's skills list. Before deleting the `diagnose/` folder, the config was updated to reference `diagnosing-bugs` (the upstream-canonical name) instead.
 
 ## Duplicate Detection and Removal Workflow
 
 1. **List all installed skills**
-   - System 1: `skills list --global --json`
-   - System 2: `ls ~/.config/opencode/skills/`
+   - Home 1: `skills list --global --json`
+   - Home 2: `ls ~/.config/opencode/skills/`
+   - Home 3: `ls ~/.autolearn/personas/default/skills/`
 
 2. **Check lock file coverage**
    - Compare installed folder names in `~/.agents/skills/` against keys in `~/.agents/.skill-lock.json`.
@@ -226,7 +258,7 @@ Example: `diagnose` was referenced in the `oracle` agent's skills list. Before d
    - Keep the name that exists upstream; the other is a stale local copy.
 
 5. **Check config references**
-   - Search the skill name in `~/.config/opencode/oh-my-opencode-slim.json`.
+   - Search the skill name in `~/.config/opencode/oh-my-opencode-slim.jsonc`.
    - If referenced, update the config to use the canonical name before deleting the folder.
 
 6. **Remove the stale copy**
@@ -240,14 +272,15 @@ Example: `diagnose` was referenced in the `oracle` agent's skills list. Before d
 
 | Path | Purpose |
 |---|---|
-| `~/.agents/skills/` | Global skills (System 1, `skills` CLI) |
-| `~/.agents/.skill-lock.json` | Lock file tracking System 1 skills |
-| `~/.config/opencode/skills/` | Bundled skills (System 2, oh-my-opencode-slim) |
-| `~/.config/opencode/.oh-my-opencode-slim/skills-manifest.json` | Manifest tracking System 2 skills |
-| `~/.config/opencode/.oh-my-opencode-slim/skill-updates/<version>/` | Staged updates for customized System 2 skills |
-| `~/.config/opencode/oh-my-opencode-slim.json` | Plugin config: presets, agent models, skill/MCP assignments |
-| `~/.config/opencode/opencode.json` | OpenCode core config: plugin registration, providers |
-| `~/.cache/opencode/packages/oh-my-opencode-slim@latest/` | Cached plugin package (source of System 2 skill updates) |
+| `~/.agents/skills/` | Global skills (Home 1, `skills` CLI) |
+| `~/.agents/.skill-lock.json` | Lock file tracking Home 1 skills (165 skills, 32 sources) |
+| `~/.config/opencode/skills/` | Home 2 — opencode-discovered skills plus workspace symlinks |
+| `~/.autolearn/personas/default/skills/` | Home 3 — persona copies of our local skills |
+| `~/Workspace/github.com/rbelem/skills/` | Authoring source (git) for our own skills |
+| `~/.config/opencode/oh-my-opencode-slim.jsonc` | Plugin config: presets, agent models, skill/MCP assignments |
+| `~/.config/opencode/opencode.jsonc` | OpenCode core config: plugins, providers, MCP servers |
+| `~/.config/opencode/AGENTS.md` | Global steering rules |
+| `~/.config/opencode/docs/` | Topic docs (`web-wigolo.md`, `web-webmcp.md`, `session-transcripts.md`) |
 
 ## When to Use This Skill
 
@@ -256,6 +289,8 @@ Use this skill when the user asks to:
 - update skills
 - check for skill updates
 - remove or clean up skills
+- find or install a skill
+- scan skills for security
 - find duplicate skills
 - check which skills need removal
 - maintain or manage installed skills
@@ -269,8 +304,8 @@ Do NOT use this skill for:
 
 ## Safety Rules
 
-1. **Never delete a skill referenced in `oh-my-opencode-slim.json` without updating the config first.**
+1. **Never delete a skill referenced in `oh-my-opencode-slim.jsonc` without updating the config first.**
 2. **Always verify upstream before removing a "duplicate."** The locally older name might be canonical if the upstream repo renamed.
-3. **Do not touch `~/.config/opencode/skills/` manually.** Those folders are managed by the oh-my-opencode-slim plugin's auto-sync. If a System 2 skill is customized and has a staged update, let the user decide whether to accept or discard it.
-4. **Check both systems before reporting a skill as "missing" or "orphaned."** A skill may exist in one system but not the other.
+3. **Do not touch `~/.config/opencode/skills/` blindly.** Entries there are either hand-installed or symlinks into the workspace repo — check the link target before replacing one.
+4. **Check all three homes before reporting a skill as "missing" or "orphaned."** A skill may exist in one home but not the others.
 5. **Restart OpenCode after config changes** for them to take effect.

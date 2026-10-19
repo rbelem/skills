@@ -69,7 +69,7 @@ chezmoi git push
 
 ## Templating
 
-Create machine-specific configs. See [templates.md](references/templates.md) for full guide.
+Create machine-specific configs. Templates are Go templates rendered against your data, with the `chezmoi.` namespace and `.chezmoi` context available.
 
 Convert to template:
 ```bash
@@ -117,7 +117,7 @@ chezmoi cat ~/.bashrc  # Show rendered output
 
 ## Secrets Management
 
-Integrate password managers to avoid committing secrets. See [password-managers.md](references/password-managers.md) for all integrations.
+Integrate password managers to avoid committing secrets. The three patterns below cover 1Password, Bitwarden, and `pass`; pick the one that matches your vault.
 
 ### 1Password Example
 
@@ -199,7 +199,7 @@ sudo dnf install -y ripgrep fd-find bat
 
 ## Command Reference
 
-See [commands.md](references/commands.md) for complete command list.
+The commands used across this skill are listed in [Quick Reference](#quick-reference).
 
 ## Troubleshooting
 

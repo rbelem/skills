@@ -1,0 +1,23 @@
+# Accepted SkillSpector findings — skill-maintenance
+#
+# Each rule is a reviewed suppression with a reason. The scanner flags the
+# content below because the pattern is genuinely risky in general and
+# legitimate here. New findings in this skill are still reported.
+version: 2
+rules:
+  - id: "RA1"
+    path: "SKILL.md"
+    message: "*update skill*"
+    reason: "Updating skill files is this skill's purpose; it edits skill folders on request, not to hide anything."
+  - id: "TM1"
+    path: "SKILL.md"
+    message: "*rm -rf*"
+    reason: "Documented removal of a stale skill folder — the operation the skill exists to perform, scoped to ~/.agents/skills/<name>."
+  - id: "AE1"
+    path: "SKILL.md"
+    message: "*"
+    reason: "Coverage warning: the skill references files outside the skill folder (the skills lock, the plugin config), which are not part of the scanned artifact."
+  - id: "E1"
+    path: "SKILL.md"
+    message: "*api.github.com*"
+    reason: "Read-only GitHub API lookup used to verify an upstream skill name before removal."

@@ -1,27 +1,58 @@
 #!/usr/bin/env bash
-# Secret-scan guardrail for this repo. Fails the commit when a staged
-# change introduces a credential.
+# Pre-commit guardrail for this repo. Three checks, in order:
 #
-# Installed by: git config core.hooksPath .githooks
-# Runs: gitleaks git --staged -c .gitleaks.toml
+#   1. secret scan (gitleaks) — a staged change must not carry a credential
+#   2. skill structure check   — frontmatter, relative links, tracked-or-mirrored
+#   3. skillspector scan       — prompt injection, exfiltration, supply chain
 #
-# gitleaks is used from PATH when present, otherwise through
-# `nix run nixpkgs#gitleaks` (the nixpkgs version is 8.30.1, whose
-# subcommand is `git`, not the older `detect`).
-#
-# CI runs the same policy on every push and PR
-# (.github/workflows/gitleaks.yml) — this hook is the fast local signal.
+# Installed with `git config core.hooksPath .githooks`.
+# CI runs the same policy on every push and PR:
+#   .github/workflows/gitleaks.yml      (secret scan)
+#   .github/workflows/skillspector.yml  (structure + skillspector)
+# This hook is the fast local signal.
+
 set -uo pipefail
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
+status=0
+
+# --- 1. secret scan --------------------------------------------------------
 if command -v gitleaks >/dev/null 2>&1; then
-    GITLEAKS=(gitleaks)
+  GITLEAKS=(gitleaks)
 elif command -v nix >/dev/null 2>&1; then
-    GITLEAKS=(nix run nixpkgs#gitleaks --)
+  GITLEAKS=(nix run nixpkgs#gitleaks --)
 else
-    echo "secret-scan: gitleaks unavailable (need gitleaks on PATH or nix) — skipping" >&2
-    exit 0
+  echo "secret-scan: gitleaks unavailable (need gitleaks on PATH or nix) — skipping" >&2
+  GITLEAKS=()
 fi
 
-exec "${GITLEAKS[@]}" git --staged -c .gitleaks.toml --redact --no-banner
+if [ "${#GITLEAKS[@]}" -gt 0 ]; then
+  echo "secret-scan: running gitleaks"
+  if ! "${GITLEAKS[@]}" git --staged -c .gitleaks.toml --redact --no-banner; then
+    echo "secret-scan: FAILED — staged content carries a secret" >&2
+    status=1
+  fi
+fi
+
+# --- 2 + 3. skill checks on the staged skills ------------------------------
+mapfile -t staged_skills < <(
+  git diff --cached --name-only --diff-filter=ACMR \
+    | awk -F/ 'NF > 1 {print $1}' | sort -u
+)
+
+if [ "${#staged_skills[@]}" -gt 0 ]; then
+  echo "structure-check: ${staged_skills[*]}"
+  if ! ./scripts/check-skills.sh "${staged_skills[@]}"; then
+    status=1
+  fi
+
+  echo "skillspector: ${staged_skills[*]}"
+  if ! ./scripts/scan-skills.sh "${staged_skills[@]}"; then
+    status=1
+  fi
+else
+  echo "structure-check: no skill directories in this commit — skipping"
+fi
+
+exit "$status"

@@ -1,0 +1,41 @@
+name: skillspector
+
+# Guardrail for the skills this repo publishes.
+#
+# A skill runs with the agent's full permissions, so a malicious or sloppy
+# SKILL.md is a supply-chain problem for every install. The job fails the
+# build on HIGH/CRITICAL SkillSpector findings and on skill-structure
+# violations (frontmatter, dangling relative links, a skill that exists in
+# exactly one unversioned place).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install SkillSpector
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "skillspector @ git+https://github.com/NVIDIA/skillspector.git"
+
+      - name: Skill structure check
+        run: ./scripts/check-skills.sh
+
+      - name: SkillSpector scan
+        run: ./scripts/scan-skills.sh

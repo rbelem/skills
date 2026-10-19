@@ -1,0 +1,26 @@
+# Accepted SkillSpector findings — chezmoi
+#
+# This skill was copied from a third-party chezmoi guide. The flagged lines
+# are its documented core workflow, not agent behaviour.
+version: 2
+rules:
+  - id: "PE3"
+    path: "SKILL.md"
+    message: "*id_rsa*"
+    reason: "Documented chezmoi workflow: `chezmoi add --encrypt ~/.ssh/id_rsa` stores the key age-encrypted (encrypted_ prefix) instead of in plaintext. The skill teaches the encrypted path."
+  - id: "PE3"
+    path: "SKILL.md"
+    message: "*aws/credentials*"
+    reason: "Same documented encrypted-file workflow for the AWS credentials file."
+  - id: "TM2"
+    path: "SKILL.md"
+    message: "*sudo*"
+    reason: "Chained sudo inside a template alias example (apt/dnf upgrade); the skill does not execute it."
+  - id: "PE2"
+    path: "SKILL.md"
+    message: "*sudo*"
+    reason: "sudo appears in distro-specific alias examples inside a chezmoi template."
+  - id: "RA2"
+    path: "SKILL.md"
+    message: "*machine-specific*"
+    reason: "Wording match on the template section's introduction; no persistence is described."
