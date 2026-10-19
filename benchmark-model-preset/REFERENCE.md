@@ -353,49 +353,27 @@ Based on independently verified benchmarks available:
 $10/mo. Usage limits are **dollar-valued**: $12/5h, $30/week, $60/month (≈6× multiplier on $10).
 Per-model usage caps: $15 (new frontier), $30, or $60 (legacy) of usage included in the base $10 plan.
 
-**Model list (current)**
+**Model list:** live, from `./scripts/go-catalog.py` — model ids, prices,
+monthly caps, requests per 5h/week/month, privacy rows, free-model notes. The
+Sep-10 table that used to sit here was cut on 2026-10-19: it went stale
+silently, and the script that serves the same data cannot.
 
-New/changed rows (Sep 10) are at the top; historical rows below are unchanged except where marked superseded. Req columns are `—` where request counts were not published this cycle. GPT 5.6 Luna ($0.20/$1.20, $15) was already present and is unchanged.
-
-| Model | Req/5h | Req/week | Req/month | Usage | Price I/O |
-|---|---|---|---|---|---|
-| **Qwen3.8 Flash** | — | — | — | $30 | $0.15/$0.47 |
-| **DeepSeek V4.1 Flash** | — | — | — | $15 | $0.15/$0.60 off-peak (id `deepseek-flash`) |
-| **Hy4 preview** | — | — | — | $30 | $0.834/$2.501 |
-| **Grok 4.6** | — | — | — | $15 | $2.00/$6.00 |
-| **GLM-5.3-Flash** | — | — | — | $60 | $0.15/$0.50 |
-| Grok 4.5 | 120 | 300 | 600 | $15 | $2.00/$6.00 |
-| GPT 5.6 Luna | 2,050 | 5,100 | 10,250 | $15 | $0.20/$1.20 |
-| GLM-5.3 | **220** | 540 | **1,080** | $15 | $1.40/$4.40 |
-| GLM-5.2 | 880 | 2,150 | 4,300 | $60 | $1.40/$4.40 |
-| GLM-5.1 | 880 | 2,150 | 4,300 | $60 | $1.40/$4.40 |
-| Kimi K3 | **110** | 250 | **490** | $15 | $3.00/$15.00 |
-| Kimi K2.7 Code | 1,350 | 3,380 | 6,750 | $60 | $0.95/$4.00 |
-| Kimi K2.6 | 1,150 | 2,880 | 5,750 | $60 | $0.95/$4.00 |
-| LongCat-2.0 | 11,400 | 28,600 | 57,200 | $60 | $0.30/$1.20 |
-| MiMo-V2.5 | 30,100 | 75,200 | 150,400 | $60 | $0.14/$0.28 |
-| MiMo-V2.5-Pro | 3,250 | 8,150 | 16,300 | $15 | $0.435/$0.87 |
-| MiniMax M3 | 3,200 | 8,000 | 16,000 | $60 | $0.30/$1.20 |
-| MiniMax M2.7 | 3,400 | 8,500 | 17,000 | $60 | $0.30/$1.20 |
-| Muse Spark 1.2 Contributor | 45,300 | 113,300 | 226,600 | $60 | $0.10/$0.20 |
-| Qwen3.8 Max | **160** | 400 | **810** | $15 | $2.00/$6.00 |
-| Qwen3.7 Max | 340 | 840 | 1,690 | $60 | $2.50/$7.50 |
-| Qwen3.7 Plus | 4,300 | 10,800 | 21,600 | $60 | $0.40/$1.60 |
-| Qwen3.6 Plus | 3,300 | 8,200 | 16,300 | $60 | $0.50/$3.00 |
-| DeepSeek V4 Pro ⛔ | 1,050 | 2,600 | 5,200 | $15 | $0.66/$1.98 off-peak, $1.32/$3.96 peak |
-| DeepSeek V4 Flash ⛔ | 7,600 | 18,900 | 37,800 | $30 | $0.22/$0.66 off-peak, $0.44/$1.32 peak |
-| DeepSeek V4 Flash Vision Exp ⛔ | 3,800 | 9,450 | 18,900 | $15 | $0.22/$0.66 off-peak, $0.44/$1.32 peak |
-| Hy3 | 4,300 | 10,750 | 21,500 | $60 | $0.14/$0.58 |
-| Ox Alpha | Free (limited time) | — | — | — | Free |
-
-⛔ = **retired** — DeepSeek V4 Flash and V4 Flash Vision Exp retired **Sep 10, 2026** (legacy IDs reroute); DeepSeek V4 Pro retired **Sep 14, 2026**. DeepSeek V4.1 Flash supersedes all three.
+Retirement ledger (dated facts, kept): DeepSeek V4 Flash and V4 Flash Vision
+Exp retired **Sep 10, 2026** (legacy ids reroute); DeepSeek V4 Pro retired
+**Sep 14, 2026**; DeepSeek V4.1 Flash supersedes all three. `space-bunny`,
+`cat-jam-free` and `step-5-preview-free` left the Go catalog by Oct 19, 2026
+while models.dev still listed them.
 
 DeepSeek peak hours: 01:00–04:00 & 06:00–10:00 UTC Mon–Fri; all else off-peak. Request estimates based on observed token patterns (e.g. GLM-5.x ≈700 in/52K cached/150 out per req). Exceeding usage → auto-fallback to Zen balance if enabled, else free models (Ox Alpha).
 
-## OpenRouter Pricing (Live via MCP)
+## OpenRouter Pricing + AA Snapshot (prices 2026-07-09, AA indices same date)
 
-OpenRouter PAYG pricing for key models. Prices per 1M tokens (USD). Live data via `openrouter_models-list` or `openrouter_model-endpoints`.
-Often cheaper than Zen for the same model. Includes Artificial Analysis benchmarks.
+**The price columns are a 2026-07-09 snapshot.** Live numbers come from
+`openrouter_models-list` / `openrouter_model-endpoints`, or
+`curl https://openrouter.ai/api/v1/models` (public, no key). The AA columns
+are the dated archive — that granularity is not repeated elsewhere here.
+OpenRouter is not in the current routing (removed 2026-10-15: "if Go quota
+empties we stop"), so treat this table as history, not as a live option.
 
 | Model | OpenRouter Prompt | OpenRouter Completion | OpenRouter Cached | AA Intel | AA Coding | AA Agentic | Cheapest Provider |
 |---|---|---|---|---|---|---|---|
@@ -422,17 +400,16 @@ Often cheaper than Zen for the same model. Includes Artificial Analysis benchmar
 | Gemini 3.1 Pro | $2.00 | $12.00 | $0.20 | 46.5 | 68.8 | 21.4 | Google |
 | Nemotron 3 Ultra | Free | Free | — | 37.8 | 49.3 | 27.4 | NVIDIA |
 
-**Key takeaways:**
-- **OpenRouter is cheaper than Zen for Go-available models**: GLM-5.2 cheapest via DeepInfra at $1.12/$3.52 (vs $2.80/$8.80 Zen — 60% cheaper!) or Z.ai direct at $1.80/$6.16. DeepSeek V4 Flash ($0.09/$0.18 vs $0.14/$0.28 Zen).
-- **AA benchmarks are embedded in model metadata** — no separate scraping needed
-- **Provider choice matters**: GLM-5.2 ranges from $1.12/$3.52 (DeepInfra) to $2.80/$8.80 (Z.AI, Fireworks, etc.) — 60% price difference
-- **OpenRouter has models not on Go or Zen**: Some models available on neither platform (e.g., KAT-Coder-Pro, Ring-2.6)
+**Method notes:**
+- AA benchmarks are embedded in model metadata — no separate scraping needed.
+- Provider choice moves price a lot (same model, different host).
+- OpenRouter carries models absent from Go and Zen (e.g. KAT-Coder-Pro, Ring-2.6).
 
-Source: `openrouter_models-list` + `openrouter_benchmarks` (live MCP data).
+Source of the snapshot: `openrouter_models-list` + `openrouter_benchmarks`.
 
-## Design Arena ELO (Live, Jul 5 2026 — verified Jul 9, unchanged)
+## Design Arena ELO (snapshot: Jul 5 2026, verified Jul 9)
 
-From OpenRouter MCP `openrouter_models-list` — Design Arena ELO scores for Go-available models.
+Design Arena ELO scores for Go-available models, as read from OpenRouter MCP `openrouter_models-list` on Jul 5 2026.
 Higher ELO = better. Categories: `models` arena (code gen, UI, 3D, gamedev, dataviz, website) and `agents` arena (fullstack, webapps, mobileapps, slides).
 
 | Model | Website ELO | CodeCategories ELO | UI Component ELO | 3D ELO | Fullstack (agent) ELO | WebApps (agent) ELO |
@@ -452,62 +429,16 @@ Higher ELO = better. Categories: `models` arena (code gen, UI, 3D, gamedev, data
 - **Qwen3.7 Max** has the best UI component ELO among Go models (1331, #6 overall).
 - For pure UI/UX design tasks, GLM-5.2 > Kimi K2.6 > Qwen3.7 Max.
 
-## OpenCode Zen Pricing (July 9, 2026)
+## OpenCode Zen Pricing (table cut 2026-10-19)
 
-PAYG per 1M tokens (USD). Use when model isn't on Go or you exceed Go limits.
-**NEW on Zen (since Jun 17):** Claude Fable 5 ($10/$50), **Claude Sonnet 5** ($2/$10), **Grok 4.5** ($2/$6), **GPT 5.4 Nano** ($0.20/$1.25), GPT 5.3 Codex/Codex Spark.
-**BACK on Zen:** MiniMax M3 ($0.30/$1.20) — was "removed" in previous REFERENCE.
-**REMOVED from Zen (since Jun 17):** MiMo-V2.5 (paid), MiMo-V2.5-Pro, Claude Sonnet 4 (deprecated Jun 15).
-**Go-only models (no Zen fallback):** GLM-5.2, MiMo-V2.5 (paid removed from Zen), MiMo-V2.5-Pro (paid removed from Zen). Note: MiniMax M3 is now on Zen again via OpenAI-compatible endpoint.
+Zen is PAYG, not part of the current routing (Go-only since 2026-10-15), and
+this table went stale silently. Live prices:
+`https://opencode.ai/docs/zen/`. Snapshot facts kept below.
 
-| Model | Input | Output | Cached Read |
-|---|---|---|---|
-| DeepSeek V4 Flash Free | Free | Free | Free |
-| MiMo-V2.5 Free | Free | Free | Free |
-| North Mini Code Free | Free | Free | Free |
-| Nemotron 3 Ultra Free | Free | Free | Free |
-| Big Pickle | Free | Free | Free |
-| MiniMax M3 | $0.30 | $1.20 | $0.06 |
-| MiniMax M2.7 | $0.30 | $1.20 | $0.06 |
-| DeepSeek V4 Flash | $0.14 | $0.28 | $0.028 |
-| MiMo-V2.5 | $0.14 | $0.28 | $0.0028 |
-| MiMo-V2.5-Pro | $1.74 | $3.48 | $0.0145 |
-| MiniMax M2.5 | $0.30 | $1.20 | $0.06 |
-| Qwen3.5 Plus | $0.20 | $1.20 | $0.02 |
-| Qwen3.6 Plus | $0.50 | $3.00 | $0.05 |
-| Qwen3.7 Plus | $0.40 | $1.60 | $0.04 |
-| Qwen3.7 Max | $2.50 | $7.50 | $0.50 |
-| GLM-5.2 | $2.80 | $8.80 | $0.52 |
-| GLM-5.1 | $1.40 | $4.40 | $0.26 |
-| GLM-5 | $1.00 | $3.20 | $0.20 |
-| Kimi K2.7 Code | $0.95 | $4.00 | $0.19 |
-| Kimi K2.6 | $0.95 | $4.00 | $0.16 |
-| Kimi K2.5 | $0.60 | $3.00 | $0.10 |
-| DeepSeek V4 Pro | $1.74 | $3.48 | $0.145 |
-| Grok 4.5 (≤200K) | $2.00 | $6.00 | $0.50 |
-| Grok 4.5 (>200K) | $4.00 | $12.00 | $1.00 |
-| Grok Build 0.1 | $1.00 | $2.00 | $0.20 |
-| Claude Fable 5 | $10.00 | $50.00 | $1.00 |
-| Claude Opus 4.8 | $5.00 | $25.00 | $0.50 |
-| Claude Opus 4.7 | $5.00 | $25.00 | $0.50 |
-| Claude Opus 4.6 | $5.00 | $25.00 | $0.50 |
-| Claude Opus 4.5 | $5.00 | $25.00 | $0.50 |
-| Claude Sonnet 5 | $2.00 | $10.00 | $0.20 |
-| Claude Sonnet 4.6 | $3.00 | $15.00 | $0.30 |
-| Claude Haiku 4.5 | $1.00 | $5.00 | $0.10 |
-| GPT-5.5 (≤272K) | $5.00 | $30.00 | $0.50 |
-| GPT-5.5 (>272K) | $10.00 | $45.00 | $1.00 |
-| GPT-5.5 Pro | $30.00 | $180.00 | $30.00 |
-| GPT-5.4 (≤272K) | $2.50 | $15.00 | $0.25 |
-| GPT-5.4 (>272K) | $5.00 | $22.50 | $0.50 |
-| GPT-5.4 Pro | $30.00 | $180.00 | $30.00 |
-| GPT-5.4 Mini | $0.75 | $4.50 | $0.075 |
-| GPT-5.4 Nano | $0.20 | $1.25 | $0.02 |
-| GPT 5.3 Codex Spark | $1.75 | $14.00 | $0.175 |
-| Gemini 3.5 Flash | $1.50 | $9.00 | $0.15 |
-| Gemini 3.1 Pro (≤200K) | $2.00 | $12.00 | $0.20 |
-| Gemini 3.1 Pro (>200K) | $4.00 | $18.00 | $0.40 |
-| Gemini 3 Flash | $0.50 | $3.00 | $0.05 |
+**Snapshot 2026-07-09:** Claude Fable 5 ($10/$50) and Claude Sonnet 5 ($2/$10)
+were new on Zen; MiniMax M3 ($0.30/$1.20) was back on Zen; MiMo-V2.5 (paid),
+MiMo-V2.5-Pro and Claude Sonnet 4 were removed from Zen. Go-only models with
+no Zen fallback: GLM-5.2, MiMo-V2.5, MiMo-V2.5-Pro.
 
 ## Model to Provider Mapping
 
@@ -1019,9 +950,9 @@ Tencent's Hunyuan 3.0 — 295B MoE, 21B active, **Apache 2.0** open weights. Ope
 |---|---|---|
 | DeepSWE Leaderboard | https://deepswe.datacurve.ai/ | Pass@1, avg cost, avg time per coding task (v1.1 + v1) |
 | SWE-rebench | https://swe-rebench.com/ | Pass@1, Pass@5 per model on SWE-bench tasks |
-| OpenCode Go | https://opencode.ai/docs/go/ | Go subscription model list + request limits |
-| OpenCode Zen | https://opencode.ai/docs/zen | Zen PAYG pricing per 1M tokens (input/output/cached) |
-| models.dev | https://models.dev/ | Canonical model metadata (context window, modalities, tool support) |
+| OpenCode Go | https://opencode.ai/docs/go/ | Go subscription model list + request limits — parsed by `./scripts/go-catalog.py` |
+| OpenCode Zen | https://opencode.ai/docs/zen | Zen PAYG pricing per 1M tokens (input/output/cached) — out of the current routing |
+| models.dev | https://models.dev/api.json | Canonical model metadata (context window, modalities, tool support, reasoning_options) — cached by `./scripts/lint-preset.py` |
 | **Artificial Analysis** | **https://artificialanalysis.ai/models** | **Intelligence Index, output speed, cost per task, latency, context window, pricing — per-model pages have rich structured data** |
 | CloudPrice | https://cloudprice.net/models | Cross-provider pricing tables |
 | LM Arena Agent | https://arena.ai/leaderboard/agent | Causal treatment-effect ranking of agent orchestrator models across 5 signals, 947K+ sessions |
@@ -1109,12 +1040,19 @@ See request limits per model in the OpenCode Go Plan table above.
 
 ## Pricing Strategy Rules
 
-1. **Go subscription** is better for high-volume agents (Explorer, Librarian, Fixer) — $10/mo flat with generous limits
-2. **Zen PAYG** is better for occasional-use agents (Council, Oracle) — pay per token, no monthly commitment
-3. **Free models** (DeepSeek V4 Flash Free, MiMo-V2.5 Free, Nemotron 3 Super Free) are viable for experimental/toy presets only — unreliable quality
-4. **OpenRouter PAYG** is a viable third provider — often cheaper than Zen for the same model (e.g. GLM-5.2: $1.12/$3.52 on OpenRouter DeepInfra vs $2.80/$8.80 on Zen — 60% cheaper; DeepSeek V4 Flash: $0.09/$0.18 on OR vs $0.14/$0.28 on Zen). Use OpenRouter for models that are expensive on Zen or have better provider options (via `openrouter_model-endpoints`).
-5. **Same model on both Go + Zen** → use Go (already paid for), unless you need higher rate limits
-6. **Same model on OpenRouter vs Zen** → compare price with `openrouter_model-endpoints`; OpenRouter often wins on price and offers more provider choices
+1. **Go subscription** is the only paid route (2026-10-15 user call). $10/mo
+   flat, dollar-valued caps per model. High-volume seats (explorer, librarian,
+   fast-generic) run on Go free tiers and on the $0.10–$0.20 workhorses.
+2. **No PAYG overflow.** OpenRouter was deleted from every chain on 2026-10-15:
+   "if Go quota empties we stop". Zen and OpenRouter pricing below is history.
+3. **Free tiers** carry the high-volume read-only seats (librarian, explorer,
+   fast-generic) and never the writers — stop-not-overflow: a writer that
+   overflows onto a free model produces a worse commit than a failed one.
+4. **Go caps are the budget.** Spread seats across models so no single
+   dollar cap is the bottleneck; the live per-model caps come from
+   `./scripts/go-catalog.py`.
+5. **Same model on Go + Zen** → Go (already paid for), unless higher rate
+   limits are needed and PAYG overflow is allowed again.
 
 ## Cost to Run a Benchmark
 

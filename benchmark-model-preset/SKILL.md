@@ -87,12 +87,15 @@ read as `V0A-7319-M3F` — Q→0, so **not observer-grade**; the GLM-5.3-Flash b
 is 4/4 exact).
 
 **Preset status (Oct 19):** free head of **librarian** and **fast-generic**
-(both verified live, cost 0, and a live @fast-generic delegation ran on it),
-first fallback of **explorer**, free tail of **investigator**, and the
-`opencode.jsonc` title/compaction/summary model (replacing the retired
-`opencode/space-bunny-free`). Writers stay off it: Go has no paid M3.1 Flash,
-and its only coding signal is vendor-reported. Flip the root session model to
-it only if the AA-42 quality is acceptable for the main session.
+(verified live, cost 0; a live @fast-generic delegation ran on it), first
+fallback of **explorer**, free tail of **investigator**, head of the
+**orchestrator** chain and the **council.epsilon** seat (both user calls),
+and the `opencode.jsonc` title/compaction/summary model (replacing the retired
+`opencode/space-bunny-free`). Its only coding signal is vendor-reported
+(DeepSWE 73.7) and AA has no Coding/Agentic sub-index yet, so it is a
+reader/lookup seat first; the orchestrator and council seats are deliberate
+overrides of the "writers stay on paid heads" rule. Flip the root session
+model to it only if the AA-42 quality is acceptable for the main session.
 
 ## Qwen3.8-Flash-Next Notes
 
@@ -251,14 +254,25 @@ remove on request). Go caps exhausted now = the session stops/errors.
 
 ### Step 1: Gather Current State
 ```bash
-cat ~/.config/opencode/oh-my-opencode-slim.json
-cat ~/.config/opencode/opencode.json
+cat ~/.config/opencode/oh-my-opencode-slim.jsonc
+cat ~/.config/opencode/opencode.jsonc
+chezmoi diff ~/.config/opencode/oh-my-opencode-slim.jsonc ~/.config/opencode/opencode.jsonc
 ```
+The `chezmoi diff` line is not optional. The destination file is what the host
+reads; the source is what survives a `chezmoi apply`. Drift between them — a
+hand-edited MCP `enabled` vs `disabled` flag — is invisible in the files
+themselves and only shows up in the diff.
 
 ### Step 2: Fetch Latest Pricing + Benchmarks
 
 **Automated (agent-browser):** `./scripts/fetch-pricing.sh [--deepswe | --go | --zen | --swe | --arena | --openrouter | --all]`
 Prerequisite: `npm i -g agent-browser && agent-browser install`. See REFERENCE.md for manual scraping steps.
+
+**Go catalog (no browser):** `./scripts/go-catalog.py [--json | --table | --ids]`
+parses `https://opencode.ai/docs/go/` into the live model list, prices, monthly
+caps, request counts, privacy rows and free-model notes. The tables are in the
+raw HTML — no JS, no browser. Use it instead of hand-parsing the page; use
+`--ids` to diff the live catalog against models.dev.
 
 **Live via OpenRouter MCP** (no browser):
 - `openrouter_models-list` — catalog with pricing, context, AA benchmarks
@@ -273,9 +287,11 @@ Prerequisite: `npm i -g agent-browser && agent-browser install`. See REFERENCE.m
 - OpenRouter catalog (prices + AA indices + ctx): `curl https://openrouter.ai/api/v1/models` (public, no key)
 - DeepSWE raw trials (pass/fail per task×model run): `https://deepswe.datacurve.ai/artifacts/v1/trials.json` — aggregate pass@1 per model yourself; v1.1-era set only (no k3/glm-5.3/qwen3.8-max yet) — see findings/2026-08-24-benchmark-snapshot.md for an example aggregation
 - Arena Agent: `curl -sL https://arena.ai/leaderboard/agent/` → parse the escaped `\"rows\":[...]` JSON in the RSC payload (snapshot date in `lastUpdated`)
-- OpenCode Go/Zen: `curl https://opencode.ai/docs/go/` (HTML; note: the old
-  `go.md`/`zen.md` markdown routes were removed — 404 as of Oct 15, 2026) — the
-  page carries the full model list + per-model monthly/5-h/weekly caps
+- OpenCode Go/Zen: `./scripts/go-catalog.py` (parses the live Go page — model
+  list, prices, monthly/5-h/weekly caps, privacy, free-model notes). Raw
+  `curl https://opencode.ai/docs/go/` also works: the tables are in the HTML
+  (the old `go.md`/`zen.md` markdown routes were removed — 404 since Oct 15,
+  2026).
 - Design Arena: client-rendered; use `agent-browser eval` after load
 - DeepSWE/Arena pages are JS shells — curl alone gets nothing; agent-browser or the artifacts endpoint is required
 
@@ -283,17 +299,35 @@ Prerequisite: `npm i -g agent-browser && agent-browser install`. See REFERENCE.m
 
 ### Step 3: Test Endpoint Health
 Before recommending models, verify they are actually serving inference.
-Prefer the in-stack probes (they resolve variants and report the *applied*
-model + cost via the message API — raw curl cannot see failover):
+Climb the ladder, cheapest first — only step 3 costs quota.
+
+**1. Lint the config (FREE):** `./scripts/lint-preset.py [--preset default]`
+Cross-checks every chain entry against models.dev: variant validity, model
+existence, bare-string entries that inherit a seat variant, seat-vs-chain[0]
+variant mismatch. Catches the classes `doctor` cannot see (Oct 19: `doctor`
+said `ok: true` while the designer seat was dead on an invalid variant).
+
+**2. Diff against the live catalog (FREE):** `./scripts/go-catalog.py --ids`
+An id missing from the live Go catalog is retired server-side even when
+models.dev still lists it (models.dev lagged on `space-bunny` for weeks).
+`./scripts/go-catalog.py --diff-models-dev` prints the two-way diff —
+on Oct 19 it named `cat-jam-free`, `minimax-m2.7`, `space-bunny` and
+`step-5-preview-free` as models.dev-only. `probe-all-entries.sh` skips
+entries the live catalog dropped (reported RETIRED, no quota spent) unless
+you pass `--probe-retired`.
+
+**3. Probe what survives (PAID):** in-stack probes resolve variants and
+report the *applied* model + cost via the message API — raw curl cannot see
+failover.
 
 ```bash
-# Every chain head in the preset, live (run before dispatching lanes,
-# and after any preset edit — doctor passes with dead models in chains)
-./scripts/probe-heads.sh budget
+# Every chain entry, live (not just the heads — a dead mid-chain fallback
+# is invisible to a head-only probe)
+./scripts/probe-all-entries.sh default
 
 # Only the seats a refresh touched (a full run burns ~$0.40 of paid quota;
 # filtered runs are the daily habit, full runs are for structural edits)
-./scripts/probe-heads.sh budget librarian fast-generic
+./scripts/probe-all-entries.sh default librarian fast-generic
 
 # One model, e.g. a free name under both namespaces before declaring it dead
 ./scripts/probe-model.sh opencode/glm-5.3-flash-free#low
@@ -352,11 +386,38 @@ Switch the active preset and run a real coding task end-to-end. Confirm:
 - No cap errors in 30+ minutes of active use
 - Cost per task matches the projected budget
 
+**Session record shape** (the ground truth every probe reads; the parts live in
+`content`, NOT `parts`):
+
+```
+opencode api get /api/session/<id>/message
+  -> { data: [ { type:"assistant",
+                  model: { id, providerID, variant },   # the APPLIED model
+                  cost, tokens,
+                  content: [ {type:"text", text},
+                             {type:"tool", tool, input, state:{status,output}},
+                             {type:"reasoning", text} ] } ] }
+```
+`./scripts/session-report.py` prints that record as served-model + tool calls +
+text; feed it the endpoint output on stdin. A tool call is
+`content[] where type=="tool"`, and its result is `state.output`.
+
 ## See Also
 
-- [REFERENCE.md](REFERENCE.md) — data sources, pricing tables, pool strategy, cost heuristics, data quality notes, manual scraping guide
+Scripts — one line each, with the branch that reaches for it:
+
+- [scripts/lint-preset.py](scripts/lint-preset.py) — FREE config lint: variant validity, model existence, bare-string entries, seat/chain variant mismatch. Use after every preset edit, before any probe.
+- [scripts/go-catalog.py](scripts/go-catalog.py) — live Go catalog (models, prices, caps, request counts, privacy, free-model notes) parsed from the docs HTML. Use to price a model or to diff the live catalog against models.dev.
+- [scripts/probe-all-entries.sh](scripts/probe-all-entries.sh) — PAID: probes every chain entry in a preset, not only the heads. Use when a seat misbehaves or after a structural edit.
+- [scripts/probe-model.sh](scripts/probe-model.sh) — PAID: one model id, live, with the applied model + cost. Use to settle one candidate.
+- [scripts/probe-heads.sh](scripts/probe-heads.sh) — PAID: chain heads only. Use for a cheap smoke check; it cannot see a dead mid-chain fallback.
+- [scripts/smoke-model.sh](scripts/smoke-model.sh) — PAID: tool-call + vision QA for one model. Use before putting a model on the observer seat, or on a seat that runs shell commands.
+- [scripts/session-report.py](scripts/session-report.py) — prints a session record (applied model, tool calls, text) from the message API. Use to read what a probe or a delegation actually served.
+- [scripts/fetch-pricing.sh](scripts/fetch-pricing.sh) — automated data fetcher (agent-browser + OpenRouter API) for the benchmark leaderboards.
+- [scripts/test-endpoints.sh](scripts/test-endpoints.sh) — raw-HTTP endpoint health checker, used when the opencode stack itself is down.
+- [REFERENCE.md](REFERENCE.md) — benchmark archives, methodology, data-quality notes, manual scraping guide. Prices live in the live catalog, not in here.
 - [spawn-ori-eval](https://openrouter.ai/skills/spawn-ori-eval) — throwaway model eval on a pinned harness (Ori subprocess); live task-specific tie-break for preset choices. Install: `skills add https://openrouter.ai/skills/spawn-ori-eval -s spawn-ori-eval --agent opencode -g`
-- [scripts/fetch-pricing.sh](scripts/fetch-pricing.sh) — automated data fetcher (agent-browser + OpenRouter API)
-- [scripts/test-endpoints.sh](scripts/test-endpoints.sh) — live endpoint health checker for all OpenCode Go models
+- [scripts/fetch-pricing.sh](scripts/fetch-pricing.sh) — automated data fetcher (agent-browser + OpenRouter API) for the benchmark leaderboards.
+- [scripts/test-endpoints.sh](scripts/test-endpoints.sh) — raw-HTTP endpoint health checker, used when the opencode stack itself is down.
 - **OpenRouter MCP:** `openrouter_models-list`, `openrouter_benchmarks`, `openrouter_rankings-daily`, `openrouter_model-endpoints`
 - **OmniRoute MCP:** `omniroute_list_models_catalog`, `omnirroute_simulate_route`, `omnirroute_explain_route`, `omnirroute_check_quota`, `omnirroute_cost_report` — for subscription plan limits and routing verification

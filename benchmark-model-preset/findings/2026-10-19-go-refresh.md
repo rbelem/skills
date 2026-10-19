@@ -157,7 +157,6 @@ the chain for when it is signed in.
   error. Restart opencode (TUI or server) to register the seat.
 
 ## 6. Open items
-
 - AA has not published a Coding/Agentic sub-index for M3.1 Flash yet.
   Re-check in a few days; if AA Coding lands near glm-5.3-flash, the free
   model can take more seats.
@@ -170,3 +169,32 @@ the chain for when it is signed in.
   `opencode-go/minimax-m3.1-flash-free` (picked in the TUI). Flipping the
   root to the free model costs $0 and removes the Meta-training tier, at the
   price of AA 42 vs Muse's unverified index.
+
+## 7. Retro fixes (same session, after `/retro`)
+
+Nine findings from the retro, all closed:
+
+| # | Finding | Fix |
+|---|---|---|
+| 1 | `doctor` checks shape, not resolvability — it passed a dead designer seat | **`scripts/lint-preset.py`** — free, offline: variant validity, model existence, bare-string entries, seat-vs-chain[0] variant mismatch, empty chains. Live config: 0 errors, 0 warnings, 15 seats |
+| 2 | Liveness checks spent paid quota on free facts | **ladder in SKILL.md Step 3**: lint (free) → catalog diff (free) → probe only what survives. `probe-all-entries.sh` now skips catalog-retired ids (reported RETIRED, `--probe-retired` overrides) |
+| 3 | The Go catalog parser was re-derived inline every refresh | **`scripts/go-catalog.py`** — parses the live docs HTML into JSON / `--table` / `--ids` / `--diff-models-dev`; `scripts/out/` cached, gitignored |
+| 4 | See Also could not reach the probe tools | See Also now lists every script with its "use when" branch |
+| 5 | Session-record shape undiscoverable (`parts` vs `content`) | shape documented in Step 6; `scripts/session-report.py` prints it |
+| 6 | REFERENCE.md was a stale price cache the skill pointed at as truth | Go plan table, OpenRouter price columns and the Zen table cut; pricing rules rewritten to the live Go-only policy; AA/ELO tables kept as dated archive; Design Arena relabelled a snapshot |
+| 7 | Two style systems in the global AGENTS.md, one never firing | "Caveman Mode" load instruction removed; "terse by default" folded into the clarity rules, with the `caveman` skill as the explicit mode |
+| 8 | The skills repo's secret-scan guardrail was unwired | `.githooks/pre-commit` (canonical, gitleaks via PATH or nix), `.pre-commit-config.yaml` calls the same script, CI workflow committed, `core.hooksPath .githooks` installed, README documents it. Verified: a staged fake AWS key and GitHub token are blocked (exit 1) |
+| 9 | AGENTS.md lines that restate existing checks | "Commit Identity" trimmed to what identity-guard does not enforce; the zvec-grep block deleted (the server injects its own rules); Step 1 gained `chezmoi diff` |
+
+### Cross-checks that came out of the new tooling
+
+- `go-catalog.py --diff-models-dev`: models.dev lists 4 ids the live Go
+  catalog dropped — `cat-jam-free`, `minimax-m2.7`, `space-bunny`,
+  `step-5-preview-free`. models.dev is a candidate list, not liveness.
+- `lint-preset.py` caught a real mismatch in the live config: the
+  orchestrator chain head was written `#max` while the seat variant said
+  `high` — the seat variant wins at runtime, so the head ran at `high`.
+  Seat variant aligned to `max` (the written intent).
+- The user moved `opencode-go/minimax-m3.1-flash-free#max` to the head of
+  the orchestrator chain. That is a writer seat, so it overrides the
+  "free tiers stay off writers" rule — recorded, not silently accepted.

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Probe EVERY chain entry in a preset (and the root custom agents) for liveness.
 #
-# Usage: probe-all-entries.sh [preset] [seat-filter]
+# Usage: probe-all-entries.sh [preset] [seat-filter] [--probe-retired]
 #   probe-all-entries.sh default            # every entry, every seat
 #   probe-all-entries.sh default librarian  # only seats/ids matching "librarian"
+#   probe-all-entries.sh default "" --probe-retired   # also probe retired ids
 #
 # Why this exists next to probe-heads.sh: head-only probing reports a chain
 # as healthy while its tail is dead. The Oct 19, 2026 sweep found eight broken
@@ -14,11 +15,20 @@
 #
 # Cost: a full run is ~35 calls, most of them free tiers; the paid seats
 # (oracle/designer/council) dominate. Filter when you only need one seat.
+# Free pre-pass: an opencode-go id that the live Go catalog no longer lists is
+# retired, and probing it only burns quota to learn what the catalog already
+# says — those entries are reported RETIRED and skipped unless
+# --probe-retired is passed.
 
 set -uo pipefail
 
 PRESET="${1:-default}"
 FILTER="${2:-}"
+PROBE_RETIRED=0
+for arg in "$@"; do
+    [ "$arg" = "--probe-retired" ] && PROBE_RETIRED=1
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG="$HOME/.config/opencode/oh-my-opencode-slim.jsonc"
 
@@ -28,10 +38,27 @@ if [ -z "$ENTRIES" ]; then
     exit 2
 fi
 
+# Live Go catalog (cached, free): ids the server still serves.
+LIVE_IDS=""
+if [ "$PROBE_RETIRED" -eq 0 ]; then
+    LIVE_IDS=$(python3 "$SCRIPT_DIR/go-catalog.py" --ids 2>/dev/null)
+fi
+
 UP=0
 DOWN=0
+RETIRED=0
 while IFS=$'\t' read -r seat head; do
     [ -n "$FILTER" ] && [[ "$seat $head" != *"$FILTER"* ]] && continue
+    mid="${head%%#*}"
+    provider="${mid%%/*}"
+    model="${mid#*/}"
+    if [ -n "$LIVE_IDS" ] && [ "$provider" = "opencode-go" ]; then
+        if ! printf '%s\n' "$LIVE_IDS" | grep -qx -- "$model"; then
+            printf '%-22s %-48s %s\n' "$seat" "$head" "RETIRED (not in the live Go catalog)"
+            RETIRED=$((RETIRED + 1))
+            continue
+        fi
+    fi
     out=$("$SCRIPT_DIR/probe-model.sh" "$head" </dev/null 2>&1 | tail -1)
     printf '%-22s %-48s %s\n' "$seat" "$head" "$out"
     case "$out" in
@@ -41,6 +68,6 @@ while IFS=$'\t' read -r seat head; do
 done <<< "$ENTRIES"
 
 echo
-echo "Result: $UP up, $DOWN down."
+echo "Result: $UP up, $DOWN down, $RETIRED retired (skipped without --probe-retired)."
 [ "$DOWN" -gt 0 ] && exit 1
 exit 0
