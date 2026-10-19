@@ -38,7 +38,8 @@ fi
 # --- 2 + 3. skill checks on the staged skills ------------------------------
 mapfile -t staged_skills < <(
   git diff --cached --name-only --diff-filter=ACMR \
-    | awk -F/ 'NF > 1 {print $1}' | sort -u
+    | awk -F/ 'NF > 1 {print $1}' | sort -u \
+    | while read -r d; do [ -f "$d/SKILL.md" ] && echo "$d"; done
 )
 
 if [ "${#staged_skills[@]}" -gt 0 ]; then
