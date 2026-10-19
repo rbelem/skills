@@ -14,7 +14,16 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from probe_heads import strip_jsonc  # noqa: E402
+# probe-heads.py has a hyphen, so it is not importable by name.
+import importlib.util as _ilu
+
+_spec = _ilu.spec_from_file_location(
+    "probe_heads",
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "probe-heads.py"),
+)
+probe_heads = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(probe_heads)
+strip_jsonc = probe_heads.strip_jsonc
 
 
 def entries(model, seat_variant):

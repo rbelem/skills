@@ -87,8 +87,9 @@ root agents):
 | fixer | deepseek#high → muse-1.3#high → glm-5.3-flash#high → space-bunny#high → mimo | deepseek#high → muse-1.3#high → glm-5.3-flash#high → **muse-spark-1.2-contributor#high** → mimo `#default` |
 | observer | glm-5.3-flash#high | unchanged (M3.1 Flash not observer-grade: Q→0 token misread) |
 | council | glm-5.3#max → mimo-v2.6-pro (bare) | glm-5.3#max → mimo-v2.6-pro `#default` |
-| council.alpha | kimi-k3#max | kimi-k3#max → **glm-5.3** (K3 429 fallback) |
+| council.alpha | kimi-k3#max | kimi-k3#max → **glm-5.3** (K3 429 fallback) → reverted to **kimi-k3#max only** (user call: an alpha fallback is not wanted) |
 | council.delta | mimo-v2.6-pro (no variant) | + explicit `"variant": "default"` |
+| council.epsilon | — | **new seat**: `opencode-go/minimax-m3.1-flash-free` at `variant: max` (free 5th voice; user call) |
 | fast-generic | opencode/glm-5.3-flash-free#high → beam-free#high → haiku#low → glm-5.3-flash#low | **opencode-go/minimax-m3.1-flash-free#high** (head) → beam-free#high → opencode/glm-5.3-flash-free#high → haiku#low → glm-5.3-flash#low |
 | investigator | glm-5.3#high → deepseek#high → muse#high | same + **minimax-m3.1-flash-free#low** (free last-resort, read-only seat) |
 
@@ -137,6 +138,23 @@ the chain for when it is signed in.
   with no variant (the `opencode.jsonc` title/compaction/summary form).
 - Persisted: `chezmoi add` of `oh-my-opencode-slim.jsonc` + `opencode.jsonc`
   (chezmoi commit 8133697); skill repo commit `c5544f1`.
+
+### Council follow-up (user call, later Oct 19)
+
+- `council.presets.default.alpha` → single model `opencode-go/kimi-k3` (`max`);
+  the glm-5.3 fallback added earlier in the day was reverted.
+- **New seat `epsilon`** = `opencode-go/minimax-m3.1-flash-free` at
+  `variant: max` — free fifth voice (probe UP at #max, cost 0).
+- Roster is now 5 seats: alpha (K3) · beta (GLM-5.3) · gamma (qwen3.8-max) ·
+  delta (mimo-v2.6-pro) · epsilon (M3.1 Flash Free).
+- **A new seat needs a host restart to be dispatchable.** The v2 host freezes
+  the agent registry at server start — a config edit refreshes model chains
+  for new child dispatches but does NOT add agents
+  (`src/v2/config-change-coordinator.ts`: "There is deliberately no
+  host-registry reload here — session prompt/tool surfaces stay frozen").
+  Dispatching `councillor-epsilon` in the running session returned
+  "Unknown agent: councillor-epsilon"; that is the freeze, not a config
+  error. Restart opencode (TUI or server) to register the seat.
 
 ## 6. Open items
 
