@@ -1,0 +1,5 @@
+# Compiled Python bytecode must never ship inside a skill: the scanner
+# flags it as a concealed executable artifact (SC8/SC9) because normal
+# discovery skips it.
+__pycache__/
+*.py[cod]

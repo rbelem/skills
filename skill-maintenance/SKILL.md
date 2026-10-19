@@ -113,8 +113,8 @@ Do not hunt GitHub, npm, and the web for a skill. Two lookups cover it:
 skills find <query>
 
 # One-shot JSON list of every published skill matching the query
-curl -s "https://skills.sh/api/search?q=<query>" \
-  | python3 -c "import json,sys; [print(s['id'], s.get('installs')) for s in json.load(sys.stdin)['skills']]"
+curl -s -o /tmp/skills-search.json "https://skills.sh/api/search?q=<query>"
+python3 -c "import json; [print(s['id'], s.get('installs')) for s in json.load(open('/tmp/skills-search.json'))['skills']]"
 ```
 
 `skills find` prints the top hits with install counts; the skills.sh API
@@ -252,7 +252,8 @@ Example: `diagnose` was referenced in the `oracle` agent's skills list. Before d
    - Use the GitHub API (unauthenticated, public repos):
 
      ```bash
-     curl -s https://api.github.com/repos/<owner>/<repo>/contents/<path> | python3 -c "import json,sys; [print(x['name']) for x in json.load(sys.stdin) if x['type']=='dir']"
+     curl -s -o /tmp/repo-contents.json "https://api.github.com/repos/<owner>/<repo>/contents/<path>"
+     python3 -c "import json; [print(x['name']) for x in json.load(open('/tmp/repo-contents.json')) if x['type']=='dir']"
      ```
 
    - Keep the name that exists upstream; the other is a stale local copy.
