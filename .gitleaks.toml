@@ -1,0 +1,5 @@
+# Repo-local gitleaks config (v8). Extends upstream default rules.
+# Policy: add allowlist entries ONLY for provable non-secrets (placeholders,
+# obviously fake example values), each with a comment naming why.
+[extend]
+useDefault = true

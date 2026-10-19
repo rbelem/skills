@@ -1,0 +1,21 @@
+# Secret-scan guardrail.
+#
+# The canonical implementation is `.githooks/pre-commit`, installed with
+# `git config core.hooksPath .githooks`. This file describes the same policy
+# for people running the `pre-commit` tool.
+#
+# Hook shape: "system" requires a gitleaks binary on PATH. Install via
+# `nix profile install nixpkgs#gitleaks` or `nix shell nixpkgs#gitleaks --`
+# runs. The entry calls the shared hook script, so both paths apply the same
+# policy (gitleaks 8.30 uses `gitleaks git --staged`; the older `detect`
+# subcommand no longer exists).
+repos:
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks (detect committed + staged secrets)
+        entry: bash .githooks/pre-commit
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Secret-scan guardrail for this repo. Fails the commit when a staged
+# change introduces a credential.
+#
+# Installed by: git config core.hooksPath .githooks
+# Runs: gitleaks git --staged -c .gitleaks.toml
+#
+# gitleaks is used from PATH when present, otherwise through
+# `nix run nixpkgs#gitleaks` (the nixpkgs version is 8.30.1, whose
+# subcommand is `git`, not the older `detect`).
+#
+# CI runs the same policy on every push and PR
+# (.github/workflows/gitleaks.yml) — this hook is the fast local signal.
+set -uo pipefail
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+if command -v gitleaks >/dev/null 2>&1; then
+    GITLEAKS=(gitleaks)
+elif command -v nix >/dev/null 2>&1; then
+    GITLEAKS=(nix run nixpkgs#gitleaks --)
+else
+    echo "secret-scan: gitleaks unavailable (need gitleaks on PATH or nix) — skipping" >&2
+    exit 0
+fi
+
+exec "${GITLEAKS[@]}" git --staged -c .gitleaks.toml --redact --no-banner
