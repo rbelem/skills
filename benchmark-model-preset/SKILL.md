@@ -395,12 +395,15 @@ opencode api get /api/session/<id>/message
                   model: { id, providerID, variant },   # the APPLIED model
                   cost, tokens,
                   content: [ {type:"text", text},
-                             {type:"tool", tool, input, state:{status,output}},
+                             {type:"tool", name, executed,
+                               state:{status, input, content:[{type,text}], metadata}},
                              {type:"reasoning", text} ] } ] }
 ```
 `./scripts/session-report.py` prints that record as served-model + tool calls +
 text; feed it the endpoint output on stdin. A tool call is
-`content[] where type=="tool"`, and its result is `state.output`.
+`content[] where type=="tool"`; its name is `name` and its payload is
+`state.input` (arguments) and `state.content` (result text). v1 sessions
+used `tool` / `state.output` instead — `session-report.py` accepts both.
 
 ## See Also
 

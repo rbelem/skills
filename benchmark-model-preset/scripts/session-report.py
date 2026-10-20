@@ -30,14 +30,25 @@ for m in msgs:
             texts.append(c.get("text", ""))
         elif t == "tool":
             state = c.get("state") or {}
-            out = state.get("output")
-            if isinstance(out, dict):
+            # v2 puts the name in `name` and the payload in `state.{input,content}`.
+            # v1 used `tool` and `state.{input,output}`. Accept both.
+            inp = state.get("input")
+            if inp is None:
+                inp = c.get("input")
+            out = state.get("content")
+            if out is None:
+                out = state.get("output")
+            if isinstance(out, list):  # v2: [{type,text}, ...]
+                out = "\n".join(
+                    str(part.get("text", "")) for part in out if isinstance(part, dict)
+                )
+            elif isinstance(out, dict):
                 out = out.get("output") or out.get("stdout") or json.dumps(out)[:300]
             tools.append(
                 {
                     "tool": c.get("tool") or c.get("name"),
                     "status": state.get("status"),
-                    "input": str(c.get("input"))[:200],
+                    "input": str(inp)[:200],
                     "output": str(out)[:400],
                 }
             )
