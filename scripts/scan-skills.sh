@@ -32,6 +32,7 @@ if ! command -v "$BIN" >/dev/null 2>&1; then
   echo "scan-skills: FAIL scanner '$BIN' not on PATH" >&2
   echo "scan-skills: the nix package lives in devbox-global (devbox.d/skillspector);" >&2
   echo "scan-skills: outside the devbox shell use SKILLSPECTOR_BIN=\$HOME/.local/bin/skillspector" >&2
+  echo "scan-skills: with env -u PYTHONPATH - the uv install mixes in the profile's python3.14" >&2
   exit 1
 fi
 
@@ -64,7 +65,12 @@ for skill in "${skills[@]}"; do
 
   # Exit 1 means the scanner found something; the report is still written.
   # Only a missing report is an error.
-  "$BIN" "${args[@]}" >/dev/null 2>&1
+  # The uv install at ~/.local/bin/skillspector runs under python3.13 while
+  # the devbox profile's python3.14 site-packages sit on PYTHONPATH: the
+  # child then mixes the two interpreters and dies with
+  # "No module named 'pydantic_core._pydantic_core'", producing no report.
+  # Strip the two for the child; the nix package does not need them.
+  env -u PYTHONPATH -u PYTHONHOME "$BIN" "${args[@]}" >/dev/null 2>&1
 
   if [ ! -f "$out" ]; then
     echo "scan-skills: FAIL $skill — scanner produced no report" >&2
