@@ -1,0 +1,17 @@
+# Known skill-tree drift: the repo copy and the live copy differ, or the live
+# copy has no repo copy. scripts/check-skill-sync.sh reports these instead of
+# failing, so the pre-commit stays green; a NEW drift still fails.
+#
+# Fix an entry by making the two copies agree, then delete the line.
+#
+# The repo copy has the whole skill (REFERENCE.md, scripts/, findings/), the
+# persona copy only SKILL.md.
+benchmark-model-preset
+# The live copy is newer than the repo copy.
+bifrost-provider-add
+# The persona home holds it; the repo never got a copy.
+herdr
+# ~/.config/opencode/skills/<name> is a copy, not a link into the repo.
+benchmark-model-preset
+cua-driver
+graphify

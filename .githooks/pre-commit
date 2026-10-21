@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Pre-commit guardrail for this repo. Three checks, in order:
+# Pre-commit guardrail for this repo. Four checks, in order:
 #
 #   1. secret scan (gitleaks) — a staged change must not carry a credential
 #   2. skill structure check   — frontmatter, relative links, tracked-or-mirrored
 #   3. skillspector scan       — prompt injection, exfiltration, supply chain
+#   4. skill tree sync check   — the repo copy and the live copy agree
 #
 # Installed with `git config core.hooksPath .githooks`.
 # CI runs the same policy on every push and PR:
@@ -54,6 +55,14 @@ if [ "${#staged_skills[@]}" -gt 0 ]; then
   fi
 else
   echo "structure-check: no skill directories in this commit — skipping"
+fi
+
+# --- 4. skill tree sync ----------------------------------------------------
+# The skills an agent loads are the persona copies, not the repo copies. A
+# commit that changes one without the other leaves the loaded skill stale.
+echo "skill-sync: checking the repo copy against the live copy"
+if ! ./scripts/check-skill-sync.sh; then
+  status=1
 fi
 
 exit "$status"
