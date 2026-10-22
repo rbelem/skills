@@ -59,3 +59,11 @@ ln -s "$PWD/commands/<name>.md" ~/.config/opencode/command/<name>.md   # for eac
 - `.cursor-plugin/`, plugin manifest, upstream README
 
 These rely on Cursor-plugin infrastructure that has no OpenCode equivalent; port on demand.
+
+## Guardrails
+
+This repo's SkillSpector gate (`scripts/scan-skills.sh`) scans top-level skill directories only, so `pstack/skills/` is outside CI. A manual scan of the fork reports upstream's own findings, and they are carried verbatim on purpose — do not baseline them away:
+
+- `poteto-mode` — TM1 HIGH on `git push --force` (matched inside `git push --force-with-lease`, in a step that forbids the babysitter from force-pushing) and on `git reset --hard` (scoped to `origin/<branch>` in a worktree, in `playbooks/opening-a-pr.md`). Both strings are upstream's.
+- `typescript-best-practices` — AE1 HIGH, a partial reference analysis of `references/patterns.md`; the file exists.
+
