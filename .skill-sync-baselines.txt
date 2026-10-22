@@ -7,10 +7,51 @@
 # The repo copy has the whole skill (REFERENCE.md, scripts/, findings/), the
 # persona copy only SKILL.md.
 benchmark-model-preset
-# The live copy is newer than the repo copy.
-bifrost-provider-add
 # The persona home holds it; the repo never got a copy.
 herdr
+# Dropped from the repo on purpose (autolearn-generated skills and the
+# curator); the live copies stay, so the drift is expected.
+agent-browser-canvas-games
+autolearn-curator
+bifrost-provider-add
+bitwarden-template-substitution
+bitwarden-token-sync
+blesh-starship-conflict
+bws-cli-usage
+caddy-tls-debug
+constrained-qa
+council-report-synthesis
+devbox-add-setup-script
+devbox-binary-flake
+devbox-cache-architecture
+devbox-global-adr-format
+devbox-npm-flake
+devbox-services-secrets-restart
+devbox-single-user-install
+devbox-source-build
+discord-bot-invite
+dsh-tui-build-perf
+dsh-tui-coverage
+dsh-tui-live-smoke
+dsh-tui-mock-test-harness
+dsh-tui-rpc-failure-test
+dsh-tui-terminal-color-detect
+dsh-tui-ticket-workflow
+flatpak-addon-management
+game-balancing-debugging
+gh-silent-failure-debug
+k8s-nodeport-502-debug
+nix-disk-full-recovery
+nix-node-gyp-abi
+nix-python-override
+opencode-tools-limit
+opencode2-cow-worktree
+podman-compose-socket-override
+tailscale-tag-assertion
+update-flake-workflow
+verify-binary-runtime
+wigolo-fetch-fallback
+zet-add-service
 # ~/.config/opencode/skills/<name> is a copy, not a link into the repo.
 benchmark-model-preset
 cua-driver
