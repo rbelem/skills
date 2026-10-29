@@ -12,7 +12,7 @@ There are three homes, plus one authoring source. Do not confuse them:
 
 | Home | Path | Manager | Update path |
 |---|---|---|---|
-| 1. CLI-managed | `~/.agents/skills/` | `skills` CLI (v1.7.2) | `skills update --global --yes` |
+| 1. CLI-managed | `~/.agents/skills/` | `skills` CLI (v1.7.4) | `skills update --global --yes` |
 | 2. OpenCode-local | `~/.config/opencode/skills/` | hand-installed + opencode plugin discovery | per skill, by hand |
 | 3. Persona copies | `~/.autolearn/personas/default/skills/` | autolearn persona sync | per skill, by hand |
 | Authoring source | `~/Workspace/github.com/rbelem/skills/` | git repo | commit + push, then install from GitHub |
@@ -69,6 +69,23 @@ skills update --global --yes
 ```
 
 Without `--yes`, the command prompts for scope.
+
+Two silent no-ops to rule out before believing an update ran (v1.7.4):
+
+- **`--agent` is not an update flag.** `skills update` takes only
+  `-g`/`-p`/`-y`; `skills update -g --agent opencode` swallows `--agent` and
+  reads `opencode` as a *skill-name filter*, then prints
+  `No installed skills found matching: opencode` and exits 0 having done
+  nothing. Use `skills update -g -y`.
+- **`XDG_STATE_HOME` moves the lock.** The CLI resolves its lock as
+  `$XDG_STATE_HOME/skills/.skill-lock.json`, else `~/.agents/.skill-lock.json`,
+  and treats a missing file or one below lock version 3 as empty. This
+  environment exports `XDG_STATE_HOME=~/.local/state`, so a plain
+  `skills update -g -y` reports `No global skills tracked in lock file` while
+  the managed lock at `~/.agents/.skill-lock.json` holds the real entries.
+  Run `env -u XDG_STATE_HOME skills update -g -y` (and the same for
+  `skills add`), or the CLI writes a second, stale lock into
+  `~/.local/state/skills/`.
 
 Known failure mode (skills CLI v1.6.x): the bulk update can report
 `✗ Failed to update <name>` for every entry it finds. Its apply phase
