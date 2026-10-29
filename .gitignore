@@ -3,3 +3,6 @@
 # discovery skips it.
 __pycache__/
 *.py[cod]
+
+# Test dependencies for the pstack scripts trees (see scripts/test-pstack.sh).
+node_modules/
