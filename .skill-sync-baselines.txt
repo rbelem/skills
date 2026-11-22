@@ -56,3 +56,5 @@ zet-add-service
 benchmark-model-preset
 cua-driver
 graphify
+# treg ships from its own CLI/plugin install; there is no repo copy to link to.
+treg

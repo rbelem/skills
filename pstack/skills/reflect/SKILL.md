@@ -4,14 +4,6 @@ description: Spawn three parallel review subagents over the active transcript, s
 disable-model-invocation: true
 ---
 
-# Reflect
-
-Mine the current conversation for durable learnings, then route them into skill edits.
-
-Invoke when the user says "reflect" or "/reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
-
-## 1. Locate the active transcript
-
 Before fanning out, locate this conversation's transcript in the session transcript store (`opencode` sessions; query via `opencode` session commands, not the filesystem). Do not read sessions from unrelated projects. That crosses project boundaries and reads private chats from unrelated work.
 
 ```bash

@@ -3,18 +3,6 @@ name: setup-pstack
 description: Configure optional model overrides for pstack's multi-model roles and their reasoning budget. Detects your available models and writes an always-applied rule. Every pstack subagent runs on its oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or the `investigator` evidence agent, and no model names ship in the skills. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
 ---
 
-# Setup pstack
-
-Write `~/.config/opencode/pstack-models.md`, an always-applied rule with optional per-role model overrides. Every pstack subagent runs on an oh-my-opencode-slim seat (`fixer`, `oracle`, `explorer`) or on `investigator` for the `why`/`reflect` evidence roles, and passes no `model` unless this rule sets one. The rule exists for one need: specific models on the multi-model roles (the `why` and `reflect` evidence roles, the `arena`, `architect`, and `interrogate` panels, and `swarm workers`); skip this skill when the seats' own choices suit you.
-
-## Steps
-
-### 1. Detect available models
-
-Enumerate the model slugs you can pass to a `Task` subagent in this session. That is the dependable source. If OpenCode also exposes a models API or CLI that lists the user's entitled models, prefer it for completeness. If you cannot detect any, ask the user to paste the slugs they have access to. Never write a real slug you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid even though they are not detected slugs.
-
-### 2. Load current state
-
 If `~/.config/opencode/pstack-models.md` already exists, read it and treat its `# budget` line and its role values as the current choices. If it does not, start from an empty slate: no role has an override. A line whose role is not in step 5, such as `how explorer` or `bug-fix`, is from a retired role or now runs on a seat. Drop it.
 
 ### 3. Ask, map, and confirm
@@ -36,7 +24,7 @@ If `~/.config/opencode/pstack-models.md` already exists, read it and treat its `
 
 ### 4. Validate
 
-Every real slug written must be in the detected set. `inherit-parent` and `auto` always pass. If a chosen real slug is not available, stop and ask again.
+Every real slug written must be in the detected set and at `xhigh` or below. `inherit-parent` and `auto` always pass. If a chosen real slug is not available, stop and ask again.
 
 ### 5. Write the rule
 

@@ -6,14 +6,6 @@ icon: crown
 color: yellow
 ---
 
-# Poteto mode
-
-Bundled skills live at `../<name>/SKILL.md` from this file, so put this file's absolute path in every playbook-step delegate prompt, with the instruction to read it in full first, Principles index included.
-
-## Non-negotiables
-
-The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
-
 Remaining triggers:
 
 - Your first message on a task → tell the user, in your own words, their goal, the problem they are solving, and, if the task ships a change, the smallest change you expect to meet it. Don't wait for confirmation. If the evidence rules out the change the user asked for, show it and stop. Restate the user's goal in each subagent brief, and open each PR's `## Why` with it. Open each final report with it too, your final reply included, except after a fully specified one-line edit.
@@ -91,33 +83,19 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
-**Spawn your oh-my-opencode-slim seats for playbook-step subagents.** Code-writing delegates and ad-hoc helpers use `fixer`, read-only reconnaissance uses `explorer`, and judgment or prose uses `oracle`. Pass no `model`; each seat's preset chain in `oh-my-opencode-slim.jsonc` owns its model, variant, and fallbacks. The chat that receives `/poteto-mode` runs the playbook. Never delegate the playbook itself. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`, `arena`, `architect`) set their own spawns; respect what the skill prescribes.
+**Spawn your oh-my-opencode-slim seats for playbook-step subagents.** Code-writing delegates and ad-hoc helpers use `fixer`, read-only reconnaissance uses `explorer`, and judgment or prose uses `oracle`. Pass no `model`; each seat's preset chain in `oh-my-opencode-slim.jsonc` owns its model, variant, and fallbacks. Starting any agent, whether a `Task` subagent or a Project worker, the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of this skill's folder; the operator's rules live in a file that only loads from a slash command, so they reach another agent no other way. Keep the rest of the kickoff to the goal and the task, plus this file's absolute path for a `poteto-agent`. The chat that receives `/poteto-mode` runs the playbook. Never delegate the playbook itself. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`, `arena`, `architect`) set their own spawns; respect what the skill prescribes.
 
 **Defaults for every `Task` call.** `run_in_background: true` (a steer or resume of a running agent too, because a foreground call holds your turn while other reports wait), agent mode (readonly strips MCP), file pointers not inlined context, and the seat as the spawn target: `fixer` for code and mechanical work, `oracle` for judgment, prose, and design review, `explorer` for read-only reconnaissance. Pass no `model`; each seat's preset chain in `oh-my-opencode-slim.jsonc` owns its models, variants, and fallbacks. The hardest changes route their design or review pass to `oracle` and keep the write on `fixer`. Multi-model spawns take explicit models only from the `/setup-pstack` rule: the `arena`, `architect`, `interrogate`, and `swarm` roles spawn `fixer` (runners, workers) or `oracle` (judges, reviewers) and pass the rule's `model` when it sets one, and the `why` and `reflect` evidence roles spawn `investigator` (with the rule's model when set), because they need shell and MCP access, which the read-only seats deny.
 
 **Match the seat to the job.** Seat spawns ride the seat's configured variant; raise or lower it in `oh-my-opencode-slim.jsonc` when a line of work needs it. Rule-driven spawns keep the `#` variant mechanics: the `/setup-pstack` budget sets the starting variant, raise it one step, up to the top of the model's ladder, for the hardest or subtlest work, and lower it one step for judgment and two or more steps for routine work. The variant is the `#` suffix on the slug (`#low`, `#medium`, `#high`, `#max`, or the model's own ladder). Verification is the exception and stays on the `swarm workers` model and variant when the rule sets them; with no rule it runs on the `fixer` chain. Change only the variant, and keep the model the role names, so a diverse panel stays diverse. If the model has no variant at that level, use its nearest variant. A role on `auto` or `inherit-parent` stays on the parent model. If the Task tool rejects the adjusted slug, do not try another adjusted slug. Use the role's line, or no `model`, and say so. If the Task tool rejects that too, continue with the calling skill's fallback. A slug counts as rejected once a Task error says that the model is not valid, or leaves the slug out of its list of valid slugs. Never pass a rejected slug, and skip any fallback whose slug is already rejected. When the calling skill has no fallback, omit `model` so the subagent runs on its seat chain. When the calling skill's fallback runs out of slugs without saying what to do next, omit `model` too. Say so in both cases.
 
-You own every subagent's work. Review the diff and write your own summary, don't pass through what it said. A second opinion is the same prompt against a different model. Agreement is high-signal.
+You own every subagent's work. Review the diff and write your own summary. A second opinion is the same prompt on another vendor's model.
 
-**Fresh subagents by default.** Give new work to a fresh subagent with consolidated scope, meaning the original brief, every later directive, and the prior agent's report and branch. This holds for a fix round, a follow-up, a retry, and the next queue item. Resume, message, or queue a follow-up on an existing subagent only when the new work strictly needs state that lives in that agent and is costly to move: its local checkout, its uncommitted changes, or a process it still runs, such as a dev server, a simulator, or a babysit watcher. A stop or hold order to a running agent is not reuse. A role such as a PR owner outlives its agent. Once that agent returns, a fresh agent takes the role's next round. Interrupt-chained resumes silently drop directives, so fire a fresh subagent with consolidated scope rather than trusting a "done" summary.
+**Fresh subagents by default.** Give a fix round, a follow-up, a retry, or the next queue item to a fresh subagent with the original brief, every later directive, and the prior agent's report and branch. Resume an existing subagent only when the work needs state that lives in it and is costly to move: its checkout, its uncommitted changes, or a process it still runs.
 
 ## Writing the reply
 
-Write the reply clean as you draft it. A cleanup pass after drafting does not remove these patterns.
-
-- **Short declarative sentences.** One thought per sentence, ended with a period.
-- **No long-dash character anywhere.** Write a file-list bullet as a sentence ("`main.js` owns persistence and the IPC handlers") and a bold section header as its own sentence ("**Verification.** End to end via CDP").
-- **A colon as a mid-sentence connector is also out** (unslop rule 14). A colon before a list is fine.
-- **Terse is not an excuse to drop content.** Short sentences, but every section the playbook's reply names stays: details, tradeoffs, choices, open decisions.
-- **Frame impact for the consumer and the maintainer.** Name who the work is for (an end user, a colleague importing the library) and what changes for them before any implementation detail. Then what the next engineer who owns this code inherits. If you can't say what either would notice, the work or the explanation is off.
-- **Never fabricate a link, citation, or transcript reference.** Link only artifacts you produced or read this session.
-- **Every claim carries its evidence or its label in the same sentence.** Measured, inferred, or guess. A prediction or an unseen cause is a guess. Never hand the human a check you could run.
-
-Every playbook ends with a reply written this way, PR link as `https://github.com/<owner>/<repo>/pull/<number>`. Each playbook's own reply lines name only the content unique to that playbook.
-
-## Comments
-
-Comments follow the same rule as the reply. Write them clean as you go. Keep a comment only for a non-obvious *why* the code can't show. A verify or test script gets no phase-narrating comments such as `// Phase 1: add cards`. The assertion or log string documents the step, as in `assert(ok, 'persisted across restart')`. This applies to every file you produce, including the delegate's diff.
+Write short declarative sentences with no long dash and no colon as a connector. Lead with what changes for the user. Give each claim its evidence or a label (measured, inferred, or guess). Never hand the human a check you could run.
 
 ## Playbooks
 

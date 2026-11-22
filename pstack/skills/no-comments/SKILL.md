@@ -3,18 +3,6 @@ name: no-comments
 description: "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints."
 ---
 
-# No comments
-
-Spawn Comment Sicko. Act on accepted findings.
-
-Defer to Comment Sicko's fresh perspective.
-
-## Scope
-
-Use the caller's files or diff. Otherwise use the current diff against the base branch, default `main`, including the working tree.
-
-## Steps
-
 1. Spawn `Task` with `subagent_type: "comment-sicko"`. Pass the scope. Spawn each subagent per the Subagents section of the **poteto-mode** skill. Do not restate its rules.
 2. Inspect its report and diff. Reject application-code edits, scope escapes, exception-protected deletions, misstated `MUST KILL` reasons, and flags that treat kept intentional code as guilty. Reshape flags on our-code surprises stay actionable. Do not restore those comments. A keep survives only with proof it is about something we cannot change. Audit missed scoped lint and TypeScript suppressions. Correctness or safety suppressions stay actionable `MUST KILL`s. Restore deletions only with exact exceptions and scoped proof. Before accepting thin `IMPORTANT` or `do not remove` kills or keeps, run `/how` or `/why` on their symbol. If a kill is ambiguous, do not restore. If a keep is refuted or still ambiguous, delete it. Revert and rerun one rejected report with the failure named. Reject a second, report it open, and fail `/no-comments`.
 3. Fix trivial accepted flags directly by deleting a dead path, dropping a parameter, or using the real API. If any fix needs a shape, run `/architect` once for the accepted set and surrounding code. Stop at the sketch. Architect shapes. Step 4 implements.

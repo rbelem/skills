@@ -1,6 +1,6 @@
 # pstack (OpenCode port)
 
-Port of the **pstack** Cursor plugin by Lauren Tan ([poteto](https://github.com/poteto)) — source: <https://github.com/cursor/plugins/tree/main/pstack>, v0.15.36, MIT (see `LICENSE.upstream`).
+Port of the **pstack** Cursor plugin by Lauren Tan ([poteto](https://github.com/poteto)) — source: <https://github.com/cursor/plugins/tree/main/pstack>, v0.15.46, MIT (see `LICENSE.upstream`).
 
 This port targets **OpenCode**. Skill bodies are otherwise verbatim upstream prose with the mechanical substitutions below.
 
@@ -64,6 +64,6 @@ These rely on Cursor-plugin infrastructure that has no OpenCode equivalent; port
 
 This repo's SkillSpector gate (`scripts/scan-skills.sh`) scans top-level skill directories only, so `pstack/skills/` is outside CI. A manual scan of the fork reports upstream's own findings, and they are carried verbatim on purpose — do not baseline them away:
 
-- `poteto-mode` — TM1 HIGH on `git push --force` (matched inside `git push --force-with-lease`, in a step that forbids the babysitter from force-pushing) and on `git reset --hard` (scoped to `origin/<branch>` in a worktree, in `playbooks/opening-a-pr.md`). Both strings are upstream's.
+- `poteto-mode` — TM1 HIGH on `git push --force` (matched inside `git push --force-with-lease` in `playbooks/babysit.md`, a step that forbids the babysitter from force-pushing). The string is upstream's.
 - `typescript-best-practices` — AE1 HIGH, a partial reference analysis of `references/patterns.md`; the file exists.
 

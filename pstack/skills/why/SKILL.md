@@ -4,8 +4,6 @@ description: "Use for 'why does X work this way', 'why we picked Y', design rati
 disable-model-invocation: true
 ---
 
-# Why
-
 Investigate the motivation and intent behind code. The companion `how` skill answers what the code does and how it works. `why` answers what forces led to its shape.
 
 Each spawn below names a role line in the `pstack-models.md` rule. Set `model` to that line's value when the rule sets one; otherwise omit `model` and let the agent's own configuration apply. Leave `model` unset when the value is `auto` or `inherit-parent`. If the Task tool rejects a slug, drop the `model` and say so. Pick each subagent's reasoning variant for the job, per the Subagents section of the **poteto-mode** skill.

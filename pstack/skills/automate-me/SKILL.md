@@ -4,30 +4,6 @@ description: "Use for \"automate me\", \"create/update/refresh my -mode skill\",
 disable-model-invocation: true
 ---
 
-# Automate me
-
-A guided flow for turning the user's working conventions into a skill agents will follow. The output is one `-mode` skill tailored to them (e.g. `jay-mode`, `priya-mode`).
-
-This skill orchestrates three others: an inline mining pass (see step 1), the `write-a-skill` skill (authoring), and the **unslop** skill (prose discipline). It sequences them. It doesn't replace them.
-
-## Flow
-
-### 0. Check for an existing skill
-
-Look recursively for `.opencode/skills/**/*-mode/SKILL.md`, `~/.agents/skills/*-mode/SKILL.md`, and `~/.config/opencode/skills/*-mode/SKILL.md` matching the user's handle. Mode skills can live in a personal category directory (`.opencode/skills/<handle>/`), not only at the top level. If one exists, confirm intent with `question` (unless they already said "update my skill" or similar):
-
-- Update the existing skill (default for repeat runs)
-- Start fresh (rare, ask why before doing it)
-
-Update mode changes the rest of the flow:
-- Step 1 mines only history since the skill was last edited (`git log -1 --format=%cI <path>`).
-- Step 2 asks what's changed or missing, not what to capture from zero.
-- Step 4 edits the existing file in place. Preserve sections the user hasn't contradicted. Revise ones with new evidence. Add new sections only for genuinely new rules.
-
-### 1. Mine their history
-
-Locate the session transcripts before fanning out. Use the session transcript store (`opencode` sessions; query via `opencode` session commands, not the filesystem). Don't read sessions from unrelated projects. That crosses project boundaries and reads private chats from unrelated work.
-
 Survey recent agent conversations within that scope for recurring patterns. Run multiple parallel subagents across slices of history (e.g. last 2-4 weeks, split into 3 slices so each has enough material). Spawn each subagent per the Subagents section of the **poteto-mode** skill. Each slice mining subagent reads transcripts from the workspace-scoped path the parent provides, looks for the signals below, and returns a short structured list of patterns it saw with evidence pointers. Default signals worth hunting:
 
 - Response preferences (length, tone, format, "dumb it down" corrections)

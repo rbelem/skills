@@ -4,45 +4,6 @@ description: Guides users through pstack setup, /poteto-mode, and picking the sk
 disable-model-invocation: true
 ---
 
-# Poteto help
-
-Answer the user's question about pstack, hand them a prompt they can send, and link the file the answer came from. For a help question, don't start the work. The user asked how, and a pstack run spends real tokens, so let them send the prompt.
-
-A message that asks for work, such as "use pstack to fix this bug", is not a help question. Read [`poteto-mode`](../poteto-mode/SKILL.md), do the work under it, and mention once that starting the next task with `/poteto-mode` keeps the style on.
-
-This file maps questions to the skills and playbook files that hold the answers. Those files own the details. Read the file you route to before you quote it, and trust it when it disagrees with this map. The links here point into the installed skills tree, which the user may not be able to open, so give the user the file's public copy: `https://github.com/rbelem/skills/blob/main/pstack/` followed by its path.
-
-## Find out what they need
-
-Infer the need from the message and the conversation. A named situation, such as "which skill reviews a PR?", goes straight to its section. If the need is still unclear, ask one multiple-choice question with these options, then answer only the section they pick:
-
-- Get set up
-- Start a task with `/poteto-mode`
-- Pick a skill for a situation
-- Fix a run that went wrong
-- Make pstack my own
-
-Check the state that changes the answer, and mention it only when it does:
-
-- No `~/.config/opencode/pstack-models.md` is fine: every role runs on its oh-my-opencode-slim agent, and no model names ship in the skills. `/setup-pstack` writes overrides only when the user wants specific models on the multi-model roles.
-- No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/create-verification-skill` when the question is about proving a change works.
-- No formal verification skill in the project means no property is checked past what tests reach. Mention `/create-formal-verification-skill` when the question is about a race, an invariant, or another case tests rarely hit. When one exists and the code it covers changed after the commit it records as last in sync, mention `/maintain-formal-verification-skill` if the question touches that code.
-
-When the model rule is missing and it matters, ask whether the user wants to pick a model for the multi-model roles and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
-
-- Now: give them `/setup-pstack` to type, and answer their question too.
-- Later: answer their question, and add one line saying the multi-model roles run on their seat chains unless they pin models with `/setup-pstack`.
-
-## Get set up
-
-1. Install with the `skills` CLI (`skills add rbelem/skills -g`) or symlink each directory under `skills/` into `~/.config/opencode/skills/` and the two files under `agents/` into `~/.config/opencode/agent/` (see the repo README).
-2. Optional: run [`/setup-pstack`](../setup-pstack/SKILL.md) only if you want specific models on the multi-model roles; it writes per-role overrides and a reasoning budget. Without it, code, judgment, and reconnaissance run on the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`) from `oh-my-opencode-slim.jsonc`, and the `why`/`reflect` evidence roles run on `investigator`. It then offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
-3. Start a real task with `/poteto-mode`, a goal, and a check that can pass or fail.
-
-Installing changes nothing until the user invokes a skill. Only `/setup-pstack` loads from the user's words. The [README](../../README.md) has the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
-
-If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/setup-pstack` and pick a smaller budget or cheaper models, and tune the seat chains in `oh-my-opencode-slim.jsonc`. A role set to `auto` or `inherit-parent` runs on the chat's model, which saves tokens when the chat runs on Auto or a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
-
 This port targets OpenCode. The skills use the Agent Skills format, so other tools can read them. The workflow skills, including `/poteto-mode`, `/how`, and `/why`, spawn subagents on the configured agents; no model names ship in the skills; in a tool with no Task-style subagent spawner, those parts may not work. The subagent roles assume the oh-my-opencode-slim seats (`fixer`, `oracle`, `explorer`), with `investigator` for the MCP-backed evidence roles.
 
 ## Start a task with `/poteto-mode`
@@ -98,10 +59,9 @@ Close calls:
 
 - `/how` explains what the code does. `/why` explains the reasons. `/teach` runs one or both and explains the result plainly.
 - `/arena` gives every worker the same brief and merges the best parts. `/swarm` splits work into slices or a race and returns one report.
-- `/architect` implements right after it settles the design. Add "with checkpoint" to review the design before it writes code.
 - `/interrogate` reviews the diff. `/blast-radius` looks for breakage outside the diff and proves the one fact that makes the change safe.
 - `/recall` rebuilds context across recent chats. `/ketchup` covers only this chat since the user's last message. Resuming one specific chat or branch is the Session pickup playbook.
-- `/figure-it-out` designs one rigorous run. The Orchestrate playbook runs a program that spans days and many PRs. The Autonomous run playbook drives one task to a finish condition.
+- `/figure-it-out` designs one rigorous run. The Autonomous run playbook drives one task to a finish condition.
 
 Not in pstack:
 

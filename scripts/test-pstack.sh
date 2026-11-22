@@ -56,7 +56,7 @@ install_deps "$POTETO_MODE"
 run "statechart (node --test)" "$STATECHART" \
     node --disable-warning=ExperimentalWarning --test test/*.test.ts
 run "poteto-mode (bun test)" "$POTETO_MODE" \
-    bun test watch-pr check-plan.test.ts
+    bun test watch-pr
 run "poteto-mode (tsc --strict)" "$POTETO_MODE" \
     ./node_modules/.bin/tsc --project watch-pr/tsconfig.json --noEmit --strict
 

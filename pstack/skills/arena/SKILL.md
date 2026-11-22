@@ -4,16 +4,6 @@ description: "Spawn N parallel candidates at the same task, pick a base, graft t
 disable-model-invocation: true
 ---
 
-# Arena
-
-Open a todolist with one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) before launching anything.
-
-## Phase A: Frame
-
-Every candidate gets the same prompt, so the prompt is the contract.
-
-1. State the artifact each candidate is producing.
-2. Derive the rubric, 3-6 concrete gradeable criteria for what success looks like on *this* task. It is the picker's tool in Phase D. Candidates only see the task.
 3. Pick the runners. Each runner spawns as `fixer`. Pass a `model` only when the `arena runners` line in `~/.config/opencode/pstack-models.md` sets one, one entry per runner; with no rule, run every runner on the seat chain. An `auto` or `inherit-parent` entry in this line means the parent model, so omit `model` for it. If the Task tool rejects a configured entry, run that runner without a `model` and say so. A multi-model arena needs two or more entries on the `arena runners` line; set them with `/setup-pstack`. Spawn more runners when the arena covers multiple design directions. Use the same model N times when the work is generation-bound rather than judgment-sensitive. Pick each subagent's reasoning variant for the job, per the Subagents section of the **poteto-mode** skill.
 4. Give each candidate its own output location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.
 

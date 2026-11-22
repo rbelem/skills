@@ -4,10 +4,6 @@ description: "Sketch types, signatures, and module structure before code, then s
 disable-model-invocation: true
 ---
 
-# Architect
-
-Sketch types, function signatures, class shapes, and module boundaries with `not implemented` bodies and pseudocode. Synthesize across multiple model perspectives, then fill in code against the chosen sketch.
-
 ## Start
 
 Open a todolist with one entry per phase before starting.
