@@ -56,5 +56,15 @@ zet-add-service
 benchmark-model-preset
 cua-driver
 graphify
+# Skills installed from other sources (mattpocock/skills etc.) that have no
+# repo copy here, so OpenCode holds real directory copies.
+grilling
+grill-me
+retro
+setup-matt-pocock-skills
+teach
+to-questionnaire
+wait-what
+writing-for-agents
 # treg ships from its own CLI/plugin install; there is no repo copy to link to.
 treg
